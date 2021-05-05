@@ -34,8 +34,8 @@ build/libvector.a: lib/utility/vector.h build/vector_api.o | build
 
 # Programme de test.
 
-build/test.o: test.c | build
-	gcc -Wno-pointer-arith -Wall -Werror -pedantic --debug -c test.c -I ./lib/utility -o build/test.o
+build/test.o: test/test.c | build
+	gcc -Wno-pointer-arith -Wall -Werror -pedantic --debug -c test/test.c -I ./lib/utility -o build/test.o
 
 build/test: build/test.o build/libvector.a build/libdb.a | build
 	gcc build/test.o -L build -l vector -l db -o build/test
