@@ -7,6 +7,8 @@
 #include <stdio.h>
 
 
+
+
 vector lecture_table(
     FILE* file)
 {
