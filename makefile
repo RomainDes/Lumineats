@@ -32,15 +32,15 @@ build/libdb.a: lib/utility/db.h build/db.o | build
 build/libvector.a: lib/utility/vector.h build/vector_api.o | build
 	ar crs build/libvector.a build/vector_api.o
 
-# Programme de main.
+# Programme de test.
 
-build/main.o: main.c | build
-	gcc -Wno-pointer-arith -Wall -Werror -pedantic --debug -c main.c -I ./lib/utility -o build/main.o
+build/test.o: test.c | build
+	gcc -Wno-pointer-arith -Wall -Werror -pedantic --debug -c test.c -I ./lib/utility -o build/test.o
 
-build/main: build/main.o build/libvector.a build/libdb.a | build
-	gcc build/main.o -L build -l vector -l db -o build/main
+build/test: build/test.o build/libvector.a build/libdb.a | build
+	gcc build/test.o -L build -l vector -l db -o build/test
 
-# S'assure que le programme build/main existe et le lance à l'invite de commande.
-check: build/main
-	./build/main
+# S'assure que le programme build/test existe et le lance à l'invite de commande.
+check: build/test
+	./build/test
 
