@@ -23,6 +23,9 @@ build/db.o: lib/utility/db.c lib/utility/db.h lib/utility/vector_api.h lib/utili
 build/vector_api.o: lib/utility/vector_api.c lib/utility/vector_api.h lib/utility/vector_types.h | build
 	gcc -Wno-pointer-arith -Wall -Werror -pedantic --debug -c lib/utility/vector_api.c -I ./lib/utility -o build/vector_api.o
 
+build/livreur.o: lib/livreur.c lib/livreur.h | build
+	gcc -Wno-pointer-arith -Wall -Werror -pedantic --debug -c lib/livreur.c -I ./lib -o build/livreur.o
+
 # Lier les bibliothèques statique (ajout des fichiers objets dans la ligne de commande)
 
 

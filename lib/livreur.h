@@ -1,5 +1,15 @@
 #include <stdio.h>
-#include "livreur.c"
+#include "livreur.c" 
+#include "utility/vector.h"
+
+typedef struct livreur {
+    size_t id;
+    char nom[TAILLE_CHAMP_NOM];
+    vector cp;
+    char tel[10];
+    float solde;
+    char mdp[TAILLE_CHAMP_MDP];
+} livreur;
 
 //Permet a un livreur de se creer un compte en entrant toutes ses informations
 void creercomptelivreur(){
