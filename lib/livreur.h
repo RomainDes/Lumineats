@@ -9,6 +9,10 @@ typedef struct livreur {
     char mdp[TAILLE_CHAMP_MDP];
 } livreur;
 
+//Permet a un livreur de se connecter a son compte, renvoie l'id du compte ou on se 
+//connecte si on y parvient, 0 sinon
+int connecter_compte_livreur();
+
 //Permet a un livreur de se creer un compte en entrant toutes ses informations
 void creer_compte_livreur();
 
