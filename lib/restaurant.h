@@ -1,4 +1,6 @@
-#include "vector.h"
+#include "utility/vector.h"
+
+#define TAILLE_CHAMP  50
 
 typedef struct restaurant {
     size_t id;
