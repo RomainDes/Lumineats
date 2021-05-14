@@ -26,6 +26,12 @@ build/vector_api.o: lib/utility/vector_api.c lib/utility/vector_api.h lib/utilit
 build/livreur.o: lib/livreur.c lib/livreur.h | build
 	gcc -Wno-pointer-arith -Wall -Werror -pedantic --debug -c lib/livreur.c -I ./lib -o build/livreur.o
 
+build/client.o: lib/client.c lib/client.h lib/restaurant.h | build
+	gcc -Wno-pointer-arith -Wall -Werror -pedantic --debug -c lib/client.c -I ./lib -o build/client.o
+
+build/restaurant.o: lib/restaurant.c lib/restaurant.h | build
+	gcc -Wno-pointer-arith -Wall -Werror -pedantic --debug -c lib/restaurant.c -I ./lib -o build/restaurant.o
+
 # Lier les bibliothèques statique (ajout des fichiers objets dans la ligne de commande)
 
 
