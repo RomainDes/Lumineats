@@ -32,6 +32,7 @@ build/client.o: lib/client.c lib/client.h lib/restaurant.h lib/utility/vector.h 
 build/restaurant.o: lib/restaurant.c lib/restaurant.h lib/utility/vector.h | build
 	gcc -Wno-pointer-arith -Wall -Werror -pedantic --debug -c lib/restaurant.c -I ./lib -o build/restaurant.o
 
+
 # Lier les bibliothèques statique (ajout des fichiers objets dans la ligne de commande)
 
 
