@@ -8,32 +8,34 @@
 
 #define TAILLE_CHAMP_NOM 36
 
-// Peut être combiné. P. ex. 0xA = DERMATOLOGIE + MEDECINE_GENERALE.
-enum specialite_t
-{
-    CARDIOLOGIE         = 0x1,
-    DERMATOLOGIE        = 0x2,
-    ENDOCRINOLOGIE      = 0x4,
-    MEDECINE_GENERALE   = 0x8,
-    OPHTALMOLOGIE       = 0x10,
-    PEDIATRIE           = 0x20,
-};
 
-typedef struct docteur
-{
-    size_t index;   // Clé primaire.
-    char nom[TAILLE_CHAMP_NOM];
-    int specialites;
-    size_t index_hopital;   // Clé secondaire.
-} docteur;
 
-vector lecture_table(
-    FILE* fichier);
+vector lecture_table_clients(
+    FILE* file);
 
-void ecriture_table(
-    FILE* fichier,
+vector lecture_table_livreurs(
+    FILE* file);
+
+vector lecture_table_restaurants(
+    FILE* file);
+
+vector lecture_table_items(
+    FILE* file);
+
+void ecriture_table_clients(
+    FILE* file,
     vector const* db);
 
-// Renvoie 'vrai' si le docteur compte 'MEDECINE_GENERALE' parmi ses spécialités.
-bool est_generaliste(
-    void const* d);
+void ecriture_table_livreurs(
+    FILE* file,
+    vector const* db);
+
+void ecriture_table_restaurants(
+    FILE* file,
+    vector const* db);
+
+void ecriture_table_items(
+    FILE* file,
+    vector const* db);
+
+
