@@ -1,4 +1,5 @@
 #include "client.h"
+#include "restaurant.h"
 
 
                          /*----------COMPTE----------*/
