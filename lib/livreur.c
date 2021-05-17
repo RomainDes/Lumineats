@@ -17,34 +17,35 @@ void creer_compte_livreur(){
     //On fait entrer a l'utilisateur les valeurs de nom,mdp,tel et 
     //on cree un char* dans lequel l'utilisateur va rentrer
     //les differents codes postaux ou il livre
-    char* cp_actu, restau;
+    char* cp_actu;
+    char* restau;
     int cpt, check;
     livreur nouv_livreur;
     vector dblivreurs;
 
     printf("Veuillez entrer votre nom : ");
-    scanf("%s \n", nouv_livreur->nom);
+    scanf("%s \n", nouv_livreur.nom);
     dblivreurs = lecture_table_livreurs(livreur.csv);
-    
+
 
     printf("Veuillez entrer votre mot de passe : ");
-    scanf("%s \n", nouv_livreur->mdp);
+    scanf("%s \n", nouv_livreur.mdp);
 
     printf("Veuillez entrer votre numero de telephone (En entrant les espaces): ");
-    scanf("%s \n", nouv_livreur->tel);
+    scanf("%s \n", nouv_livreur.tel);
 
     cpt = 0;
     while(cp_actu != 0 && cpt<MAX_CP){
-        printf("Veuillez entrer un code postal ou vous pouvez livrer (Entrez 0 pour arreter")
+        printf("Veuillez entrer un code postal ou vous pouvez livrer (Entrez 0 pour arreter");
         scanf("%s \n", cp_actu);
         if (cp_actu != 0){
-            nouv_livreur->deplacements[cpt]=cp_actu;
+            nouv_livreur.deplacements[cpt]=cp_actu;
             cpt += 1;
         }
     }
 
     printf("Dependez vous d'un restaurant ? Si oui entrez 1 sinon entrez 0 :");
-    scanf("%i \n", check);
+    scanf("%d \n", &check);
     if(check){
         printf("Entrez le nom du restaurant dont vous dependez : ");
         scanf("%s \n", restau);
