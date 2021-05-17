@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "livreur.h"
+#include "restaurant.h"
 
 //Permet a un livreur de se connecter a son compte, renvoie l'id du compte ou on se 
 //connecte si on y parvient, 0 sinon
@@ -18,15 +19,39 @@ void creer_compte_livreur(){
     //on cree un char* dans lequel l'utilisateur va rentrer
     //les differents codes postaux ou il livre
     char* cp_actu;
-    char* restau;
-    int cpt, check;
+    char* nom_restau;
+    int cpt, check, valid;
     livreur nouv_livreur;
-    vector dblivreurs;
+    livreur* livreur_actuel;
+    FILE * fichierlivreur;
+    FILE * fichierrestau;
+    iterator actu, fin;
+    restaurant* restau_actuel;
+    int trouve = 0;
 
-    printf("Veuillez entrer votre nom : ");
-    scanf("%s \n", nouv_livreur.nom);
-    dblivreurs = lecture_table_livreurs(livreur.csv);
+    fichierlivreur = fopen("./database/livreur.csv", "r+");
+    vector dblivreur = lecture_table_livreurs(fichierlivreur);
 
+    fichierrestau = fopen("./database/restaurants.csv", "r");
+    vector dbrestau = lecture_table_restaurants(fichierrestau);
+
+    valid = 0;
+    while(valid == 0){
+        printf("Veuillez entrer votre nom : ");
+        scanf("%s \n", nouv_livreur.nom);
+        //On verifie que le nom n'est pas deja présent dans la bd
+        actu = begin(&dblivreur);
+        fin = end(&dblivreur);
+        valid = 1;
+        while (actu.element != fin.element && valid == 1){
+            livreur_actuel = (struct livreur*) actu.element;
+            if (livreur_actuel->nom == nouv_livreur.nom){
+                valid = 0;
+            }
+        increment(&actu, 1);
+        }
+    }
+    
 
     printf("Veuillez entrer votre mot de passe : ");
     scanf("%s \n", nouv_livreur.mdp);
@@ -35,6 +60,7 @@ void creer_compte_livreur(){
     scanf("%s \n", nouv_livreur.tel);
 
     cpt = 0;
+    cp_actu = "1";
     while(cp_actu != 0 && cpt<MAX_CP){
         printf("Veuillez entrer un code postal ou vous pouvez livrer (Entrez 0 pour arreter");
         scanf("%s \n", cp_actu);
@@ -44,18 +70,44 @@ void creer_compte_livreur(){
         }
     }
 
+    nom_restau = "";
     printf("Dependez vous d'un restaurant ? Si oui entrez 1 sinon entrez 0 :");
     scanf("%d \n", &check);
     if(check){
-        printf("Entrez le nom du restaurant dont vous dependez : ");
-        scanf("%s \n", restau);
+        while(trouve == 0){
+            printf("Entrez le nom du restaurant dont vous dependez : ");
+            scanf("%s \n", nom_restau);
 
-        //Recherche de ce nom dans la bd et recuperation de l'id
+            //Recherche de ce nom dans la bd et recuperation de l'id
+            actu = begin(&dbrestau);
+            fin = end(&dbrestau);
+            cpt = 0;
+            while(actu.element != fin.element && trouve == 0){
+                restau_actuel = (struct restaurant*) actu.element;
+                if (restau_actuel->nom == nom_restau){
+                    trouve = 1;
+                    nouv_livreur.restaurant = cpt;
+                }
+                cpt += 1;
+                increment(&actu, 1);
+            }
+            if (trouve == 0){
+                printf("Erreur, restaurant  nom présent dans la base de donnee");
+            }
+        }
+    }
+    else{
+        nouv_livreur.restaurant = 0;
     }
 
-    //On finit par transformer la struct livreur en csv pour ouvrir le fichier
-    //et stocker les informations dedans (on l'ajoute a la fin de la db avec index
-    //=indexmax + 1 et solde = 0)
+    nouv_livreur.solde = 0;
+
+    //On finit par ajouter la struct livreur au fichier csv
+    //(on l'ajoute a la fin de la db avec index = indexmax + 1)
+    nouv_livreur.id = dblivreur.num_elements;
+
+    push_back(&dblivreur, &nouv_livreur);
+    ecriture_table_livreurs(fichierlivreur, &dblivreur);
 
     return;
 }
