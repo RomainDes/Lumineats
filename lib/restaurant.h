@@ -1,25 +1,26 @@
 #include "utility/vector.h"
+#include "utility/db.h"
 
-#define TAILLE_CHAMP  50
+#include <stdlib.h>
 
 typedef struct restaurant {
     size_t id;
-    char nom[TAILLE_CHAMP];
-    char mdp[TAILLE_CHAMP];
-    vector cp;
-    char tel[10];
-    char type[TAILLE_CHAMP];
-    vector menu;
+    char nom[TAILLE_NOM];
+    char mdp[TAILLE_MDP];
+    char code_postal[5];
+    char tel[14];
+    char type[TAILLE_TYPE];
+    char menu[TAILLE_MENU];
     float solde;
 } restaurant;
 
-typedef struct menu {
+typedef struct item {
     size_t id;
-    char nom[TAILLE_CHAMP];
-    vector ingredients;
+    char nom[TAILLE_NOM];
+    char* ingredients[MAX_INGRE];
     float prix;
     
-} menu;
+} item;
 
 //Permet a un livreur de se connecter a son compte, renvoie l'id du compte auquel on se 
 //connecte si on y parvient, 0 sinon

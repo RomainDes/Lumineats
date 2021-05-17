@@ -1,15 +1,14 @@
 #include "utility/vector.h"
-
-#define TAILLE_CHAMP  50
+#include "utility/db.h"
 
 typedef struct client              //Structure pour la table client
 {
     size_t id;
-    char nom[TAILLE_CHAMP];
-    size_t code_postal;
-    char telephone[10];
+    char nom[TAILLE_NOM];
+    char code_postal[5];
+    char tel[14];
     float solde;
-    char mot_de_passe[TAILLE_CHAMP];
+    char mdp[TAILLE_MDP];
 } client;
 
 

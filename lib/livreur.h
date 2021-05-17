@@ -1,14 +1,15 @@
 #include "utility/vector.h"
+#include "utility/db.h"
 
-#define TAILLE_CHAMP  50
 
 typedef struct livreur {
     size_t id;
-    char nom[TAILLE_CHAMP];
-    vector cp;
-    char tel[10];
+    char nom[TAILLE_NOM];
+    char* deplacements[MAX_CP];
+    char tel[14];
+    size_t restaurant;
     float solde;
-    char mdp[TAILLE_CHAMP];
+    char mdp[TAILLE_MDP];
 } livreur;
 
 //Permet a un livreur de se connecter a son compte, renvoie l'id du compte ou on se 
