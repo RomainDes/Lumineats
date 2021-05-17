@@ -31,7 +31,7 @@ vector lecture_table_livreurs(
 
     vector base_donnee = make_vector(sizeof(livreurs),0, growth_factor_doubling);
     
-    while(fscanf(file, "%zu,%s,%s,%s,%zu,%f,%s", &livreurs.id, livreurs.nom, *livreurs.deplacements, livreurs.tel, &livreurs.restaurant, &livreurs.solde, livreurs.mdp) == 7)
+    while(fscanf(file, "%zu,%127[^,],%127[^,],%127[^,],%zu,%f,%127[^,]", &livreurs.id, livreurs.nom, *livreurs.deplacements, livreurs.tel, &livreurs.restaurant, &livreurs.solde, livreurs.mdp) == 7)
     {
         push_back(&base_donnee, &livreurs);
     }
@@ -47,7 +47,7 @@ vector lecture_table_restaurants(
 
     vector base_donnee = make_vector(sizeof(resto),0, growth_factor_doubling);
     
-    while(fscanf(file, "%zu,%s,%s,%s,%s,%s,%s,%f", &resto.id, resto.nom, resto.mdp, resto.code_postal, resto.tel, resto.type, resto.menu, &resto.solde) == 8)
+    while(fscanf(file, "%zu,%127[^,],%127[^,],%127[^,],%127[^,],%127[^,],%127[^,],%f", &resto.id, resto.nom, resto.mdp, resto.code_postal, resto.tel, resto.type, resto.menu, &resto.solde) == 8)
     {
         push_back(&base_donnee, &resto);
     }
@@ -63,7 +63,7 @@ vector lecture_table_items(
 
     vector base_donnee = make_vector(sizeof(items),0, growth_factor_doubling);
     
-    while(fscanf(file, "%zu,%s,%s,%f", &items.id, items.nom, *items.ingredients, &items.prix) == 4)
+    while(fscanf(file, "%zu,%127[^,],%127[^,],%f", &items.id, items.nom, *items.ingredients, &items.prix) == 4)
     {
         push_back(&base_donnee, &items);
     }
