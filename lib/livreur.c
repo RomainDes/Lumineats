@@ -15,12 +15,48 @@ int connecter_compte_livreur(){
 void creer_compte_livreur(){
     //On commence par creer une structure livreur.
     //On fait entrer a l'utilisateur les valeurs de nom,mdp,tel et 
-    //on cree une struct vector dans laquelle l'utilisateur va rentrer
-    //les differents codes postaux (apres avoir rentré au préalable 
-    //le nombre de codes postaux ?)
+    //on cree un char* dans lequel l'utilisateur va rentrer
+    //les differents codes postaux ou il livre
+    char* cp_actu, restau;
+    int cpt, check;
+    livreur nouv_livreur;
+    vector dblivreurs;
+
+    printf("Veuillez entrer votre nom : ");
+    scanf("%s \n", nouv_livreur->nom);
+    dblivreurs = lecture_table_livreurs(livreur.csv);
+    
+
+    printf("Veuillez entrer votre mot de passe : ");
+    scanf("%s \n", nouv_livreur->mdp);
+
+    printf("Veuillez entrer votre numero de telephone (En entrant les espaces): ");
+    scanf("%s \n", nouv_livreur->tel);
+
+    cpt = 0;
+    while(cp_actu != 0 && cpt<MAX_CP){
+        printf("Veuillez entrer un code postal ou vous pouvez livrer (Entrez 0 pour arreter")
+        scanf("%s \n", cp_actu);
+        if (cp_actu != 0){
+            nouv_livreur->deplacements[cpt]=cp_actu;
+            cpt += 1;
+        }
+    }
+
+    printf("Dependez vous d'un restaurant ? Si oui entrez 1 sinon entrez 0 :");
+    scanf("%i \n", check);
+    if(check){
+        printf("Entrez le nom du restaurant dont vous dependez : ");
+        scanf("%s \n", restau);
+
+        //Recherche de ce nom dans la bd et recuperation de l'id
+    }
+
     //On finit par transformer la struct livreur en csv pour ouvrir le fichier
     //et stocker les informations dedans (on l'ajoute a la fin de la db avec index
     //=indexmax + 1 et solde = 0)
+
+    return;
 }
 
 //Permet a un liveur de supprimer son compte et toutes les information y etant contenues
