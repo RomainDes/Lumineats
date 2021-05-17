@@ -2,6 +2,9 @@
     "C_Cpp.intelliSenseEngine": "Tag Parser",
     "files.associations": {
         "stdlib.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "restaurant.h": "c",
+        "vector.h": "c",
+        "db.h": "c"
     }
 }

@@ -1,24 +1,22 @@
-#include "db.h"
-
-#include "vector_api.h"
-#include "vector_types.h"
+#include "utility/db.h"
+#include "utility/vector.h"
+#include "link.h"
 
 #include <stdbool.h>
 #include <stdio.h>
 
 
-
+ float const growth_factor_doubling = 2.;
 
 vector lecture_table_clients(
     FILE* file)
 {
-    float const growth_factor_doubling = 2.;
 
     client user;
 
     vector base_donnee = make_vector(sizeof(user),0, growth_factor_doubling);
     
-    while(fscanf(file, "%zu,%127[^,],%zu,%127[^,],%f,%127[^,]", &user.id, user.nom, &user.code_postal, user.telephone, user.solde, user.mot_de_passe) == 6)
+    while(fscanf(file, "%zu,%127[^,],%127[^,],%127[^,],%f,%127[^,]", &user.id, user.nom, user.code_postal, user.tel, &user.solde, user.mdp) == 6)
     {
         push_back(&base_donnee, &user);
     }
@@ -28,15 +26,14 @@ vector lecture_table_clients(
 vector lecture_table_livreurs(
     FILE* file)
 {
-    float const growth_factor_doubling = 2.;
+   
+    livreur livreurs;
 
-    livreur livreur;
-
-    vector base_donnee = make_vector(sizeof(livreur),0, growth_factor_doubling);
+    vector base_donnee = make_vector(sizeof(livreurs),0, growth_factor_doubling);
     
-    while(fscanf(file, "%zu,%127[^,],%zu,%127[^,],%f,%127[^,]", &livreur.id, livreur.nom, &livreur.code_postal, livreur.telephone, livreur.solde, livreur.mot_de_passe) == 6)
+    while(fscanf(file, "%zu,%s,%s,%s,%zu,%f,%s", &livreurs.id, livreurs.nom, *livreurs.deplacements, livreurs.tel, &livreurs.restaurant, &livreurs.solde, livreurs.mdp) == 7)
     {
-        push_back(&base_donnee, &livreur);
+        push_back(&base_donnee, &livreurs);
     }
     return base_donnee;
 }
@@ -44,15 +41,15 @@ vector lecture_table_livreurs(
 vector lecture_table_restaurants(
     FILE* file)
 {
-    float const growth_factor_doubling = 2.;
 
-    restaurant restau;
 
-    vector base_donnee = make_vector(sizeof(restau),0, growth_factor_doubling);
+    restaurant resto;
+
+    vector base_donnee = make_vector(sizeof(resto),0, growth_factor_doubling);
     
-    while(fscanf(file, "%zu,%127[^,],%127[^,],%zu,%127[^,],%127[^,],%zu,%f", &restau.id, restau.nom, restau.mdp, &restau.cp, restau.tel, restau.type, &restau.menu, restau.solde) == 8)
+    while(fscanf(file, "%zu,%s,%s,%s,%s,%s,%s,%f", &resto.id, resto.nom, resto.mdp, resto.code_postal, resto.tel, resto.type, resto.menu, &resto.solde) == 8)
     {
-        push_back(&base_donnee, &restau);
+        push_back(&base_donnee, &resto);
     }
     return base_donnee;
 }
@@ -62,11 +59,11 @@ vector lecture_table_items(
 {
     float const growth_factor_doubling = 2.;
 
-    items items;
+    item items;
 
     vector base_donnee = make_vector(sizeof(items),0, growth_factor_doubling);
     
-    while(fscanf(file, "%zu,%127[^,],%zu,%f", &items.id, items.nom, items.ingredients, items.prix) == 4)
+    while(fscanf(file, "%zu,%s,%s,%f", &items.id, items.nom, *items.ingredients, &items.prix) == 4)
     {
         push_back(&base_donnee, &items);
     }
@@ -80,7 +77,7 @@ void ecriture_table_clients(
         for(iterator i = begin(db), e = end(db); compare(i, e) != 0; increment(&i, 1))
         {
             client const* user = (client*)i.element;
-            fprintf(file, "%zu,%127[^,],%zu,%127[^,],%f,%127[^,]\n", user->id, user->nom, user->code_postal, user->telephone, user->solde, user->mot_de_passe);
+            fprintf(file, "%zu,%s,%s,%s,%f,%s", user->id, user->nom, user->code_postal, user->tel, user->solde, user->mdp);
         }
 
 
@@ -92,8 +89,8 @@ void ecriture_table_livreurs(
 {
         for(iterator i = begin(db), e = end(db); compare(i, e) != 0; increment(&i, 1))
         {
-            livreur const* livreur = (livreur*)i.element;
-            fprintf(file, "%zu,%127[^,],%zu,%127[^,],%f,%127[^,]\n", livreur->id, livreur->nom, livreur->code_postal, livreur->telephone, livreur->solde, livreur->mot_de_passe);
+            livreur const* livreurs = (livreur*)i.element;
+            fprintf(file, "%zu,%s,%s,%s,%zu,%f,%s", livreurs->id, livreurs->nom, (char*)livreurs->deplacements, livreurs->tel, livreurs->restaurant, livreurs->solde, livreurs->mdp);
         }
 
 
@@ -105,8 +102,8 @@ void ecriture_table_restaurants(
 {
         for(iterator i = begin(db), e = end(db); compare(i, e) != 0; increment(&i, 1))
         {
-            restaurant const* restau = (restaurant*)i.element;
-            fprintf(file, "%zu,%127[^,],%127[^,],%zu,%127[^,],%127[^,],%zu,%f\n", restau->id, restau->nom, restau->mdp, restau->cp, restau->tel, restau->type, restau->menu, restau->solde);
+            restaurant const* resto = (restaurant*)i.element;
+            fprintf(file, "%zu,%s,%s,%s,%s,%s,%s,%lf", resto->id, resto->nom, resto->mdp, resto->code_postal, resto->tel, resto->type, resto->menu, resto->solde);
         }
 
 
@@ -118,8 +115,8 @@ void ecriture_table_items(
 {
         for(iterator i = begin(db), e = end(db); compare(i, e) != 0; increment(&i, 1))
         {
-            items const* items = (items*)i.element;
-            fprintf(file, "%zu,%127[^,],%zu,%f\n", items->id, items->nom, items->ingredients, items->prix);
+            item const* items = (item*)i.element;
+            fprintf(file, "%zu,%s,%s,%lf", items->id, items->nom, (char*)items->ingredients, items->prix);
         }
 
 

@@ -6,7 +6,14 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#define TAILLE_CHAMP_NOM 36
+#define TAILLE_NOM 30
+#define TAILLE_MDP 50
+#define TAILLE_TYPE 20
+#define TAILLE_MENU 40
+
+#define MAX_CP 15
+#define MAX_INGRE 10
+
 
 
 

@@ -17,19 +17,19 @@ build:
 
 # Ajout des compilations du code
 
-build/db.o: lib/utility/db.c lib/utility/db.h lib/utility/vector_api.h lib/utility/vector_types.h | build
-	gcc -Wno-pointer-arith -Wall -Werror -pedantic --debug -c lib/utility/db.c -I ./lib/utility -o build/db.o
+build/db.o: lib/utility/db.c lib/utility/db.h lib/utility/vector.h lib/link.h | build
+	gcc -Wno-pointer-arith -Wall -Werror -pedantic --debug -c lib/utility/db.c -I ./lib -o build/db.o
 
 build/vector_api.o: lib/utility/vector_api.c lib/utility/vector_api.h lib/utility/vector_types.h | build
 	gcc -Wno-pointer-arith -Wall -Werror -pedantic --debug -c lib/utility/vector_api.c -I ./lib/utility -o build/vector_api.o
 
-build/livreur.o: lib/livreur.c lib/livreur.h lib/utility/vector.h | build
+build/livreur.o: lib/livreur.c lib/livreur.h lib/utility/vector.h lib/utility/db.h | build
 	gcc -Wno-pointer-arith -Wall -Werror -pedantic --debug -c lib/livreur.c -I ./lib -o build/livreur.o
 
-build/client.o: lib/client.c lib/client.h lib/restaurant.h lib/utility/vector.h | build
+build/client.o: lib/client.c lib/client.h lib/restaurant.h lib/utility/vector.h lib/utility/db.h | build
 	gcc -Wno-pointer-arith -Wall -Werror -pedantic --debug -c lib/client.c -I ./lib -o build/client.o
 
-build/restaurant.o: lib/restaurant.c lib/restaurant.h lib/utility/vector.h | build
+build/restaurant.o: lib/restaurant.c lib/restaurant.h lib/utility/vector.h lib/utility/db.h | build
 	gcc -Wno-pointer-arith -Wall -Werror -pedantic --debug -c lib/restaurant.c -I ./lib -o build/restaurant.o
 
 
@@ -42,13 +42,14 @@ build/libdb.a: lib/utility/db.h build/db.o | build
 build/libvector.a: lib/utility/vector.h build/vector_api.o | build
 	ar crs build/libvector.a build/vector_api.o
 
-build/liblink.a: lib/link.h build/restaurant.o build/client.o build/livreur.o | build
-	ar crs build/liblink.a build/restaurant.o build/client.o build/livreur.o
+build/liblink.a: lib/link.h build/restaurant.o build/client.o build/livreur.o| build
+	ar crs build/librestaurant.a build/restaurant.o build/client.o build/livreur.o
+
 
 # Programme de test.
 
 build/test.o: test/test.c | build
-	gcc -Wno-pointer-arith -Wall -Werror -pedantic --debug -c test/test.c -I ./lib/utility -o build/test.o
+	gcc -Wno-pointer-arith -Wall -Werror -pedantic --debug -c test/test.c -I ./lib -o build/test.o
 
 build/test: build/test.o build/libvector.a build/libdb.a build/liblink.a | build
 	gcc build/test.o -L build -l vector -l db -l link -o build/test
