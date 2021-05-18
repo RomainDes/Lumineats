@@ -9,7 +9,66 @@ int connecter_compte_livreur(){
     //a l'utilisateur d'entrer son mot de passe et on verifie si il correspond au mdp
     //present dans la db a la ligne correspondant au nom entré.
     //Si nom entré pas dans la db on redemande, idem pour mdp si il correspond pas
-    return 0;
+    //On laisse 3 essais pour rentrer le mot de passe
+    int valid = 0;
+    char username[TAILLE_NOM];
+    char password[TAILLE_MDP];
+    livreur* livreur_dans_bd;
+    FILE * fichierlivreur;
+    iterator actu, fin;
+    int essai = 3;
+    int res;
+
+    fichierlivreur = fopen("./database/livreur.csv", "r");
+    vector dblivreur = lecture_table_livreurs(fichierlivreur);
+
+    //On demande le nom d'utilisateur et virifie qu'il est bien dans la db
+    while (valid == 0){
+
+        printf("Veuillez entrer votre nom d'utilisateur : ");
+        scanf("%s \n", username);
+
+        actu = begin(&dblivreur);
+        fin = end(&dblivreur);
+
+        while(actu.element != fin.element && valid == 0){
+            livreur_dans_bd = (struct livreur*) actu.element;
+            if (livreur_dans_bd->nom == username){
+                valid = 1;
+            }
+            else{
+                increment(&actu, 1);
+            }
+        }
+        //A la fin de cette boucle, on aura dans livreur_dans_db la struct livreur correspondant au compte auquel on veut
+        //se connecter, on aura donc plus besoin de la chercher
+        if(valid == 0){
+            printf("Nom d'utilisateur invalide, veuillez réessayer.\n");
+        }
+    }
+    //On remet valid a 0 pour le test du mot de passe
+    valid = 0;
+    while(essai > 0 && valid == 0){
+        printf("Veuillez entrer votre mot de passe. Il vous reste %i essais\n", essai);
+        scanf("%s \n", password);
+        if (livreur_dans_bd->mdp == password){
+            valid = 1;
+        }
+        else{
+            printf("Mot de passe incorrect, veuillez reessayer.\n");
+            essai -= 1;
+        }
+    }
+    //On recupere l'id du compte si on a entré le bon mdp
+    if (valid == 1){
+        res = livreur_dans_bd->id;
+    }
+    else{
+        res = 0;
+    }
+
+    fclose(fichierlivreur);
+    return res;
 }
 
 //Permet a un livreur de se creer un compte en entrant toutes ses informations
@@ -108,6 +167,9 @@ void creer_compte_livreur(){
 
     push_back(&dblivreur, &nouv_livreur);
     ecriture_table_livreurs(fichierlivreur, &dblivreur);
+
+    fclose(fichierlivreur);
+    fclose(fichierrestau);
 
     return;
 }
