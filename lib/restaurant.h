@@ -7,16 +7,18 @@ typedef struct restaurant {
     size_t id;
     char nom[TAILLE_NOM];
     char mdp[TAILLE_MDP];
-    char code_postal[5];
-    char tel[14];
+    char code_postal[6];
+    char tel[15];
     char type[TAILLE_TYPE];
-    char menu[TAILLE_MENU];
+    int nb_menu;
+    int menu[TAILLE_MENU];
     float solde;
 } restaurant;
 
 typedef struct item {
     size_t id;
     char nom[TAILLE_NOM];
+    int nb_ingr;
     char* ingredients[MAX_INGRE];
     float prix;
     

@@ -6,7 +6,8 @@ typedef struct livreur {
     size_t id;
     char nom[TAILLE_NOM];
     char* deplacements[MAX_CP];
-    char tel[14];
+    int nb_deplacements;
+    char tel[15];
     size_t restaurant;
     float solde;
     char mdp[TAILLE_MDP];
