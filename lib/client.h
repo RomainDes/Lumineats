@@ -5,8 +5,8 @@ typedef struct client              //Structure pour la table client
 {
     size_t id;
     char nom[TAILLE_NOM];
-    char code_postal[5];
-    char tel[14];
+    char code_postal[6];
+    char tel[15];
     float solde;
     char mdp[TAILLE_MDP];
 } client;

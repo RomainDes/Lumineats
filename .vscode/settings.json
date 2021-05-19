@@ -5,6 +5,8 @@
         "stdio.h": "c",
         "restaurant.h": "c",
         "vector.h": "c",
-        "db.h": "c"
+        "db.h": "c",
+        "type_traits": "c",
+        "stdbool.h": "c"
     }
 }
