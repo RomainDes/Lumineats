@@ -355,7 +355,29 @@ void modifier_resto_livreur(int id){
 void modifier_compte_livreur(int id){
     //On combine les trois fonctions au dessus en demandant a l'utilisateur ce qu'il
     //souhaite  modifier
+    int value;
+    printf("Veuillez taper 1, 2 ou 3 selon ce que vous souhaitez modifier : \n1) Codes postaux de livraison\n2) Numero de tel\n3) Restaurant affilié");
+    scanf("\n%i\n",&value);
+
+    switch (value)
+    {
+    case 1:
+        modifier_cp_livreur(id);
+        break;
+    case 2:
+        modifier_tel_livreur(id);
+        break;
+    case 3:
+        modifier_resto_livreur(id);
+        break;
+    default:
+        printf("Valeur incorrecte, veuillez recommencer\n");
+        break;
+    }
+
+    return;
 }
+
 
 //Permet à un liveur de consulter la somme d'argent qu'il a sur son solde 
 void consulter_solde_livreur(int id){
