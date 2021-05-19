@@ -2,6 +2,31 @@
 #include "livreur.h"
 #include "restaurant.h"
 
+//Fonction utilitaire permettant de trouver dans la base de donnee
+//les informations du compte avec l'id id
+iterator trouver_livreur_avec_id(int id){
+    FILE* fichierlivreur;
+    fichierlivreur = fopen("./database/livreur.csv", "r");
+    vector dblivreur = lecture_table_livreurs(fichierlivreur);
+
+    iterator actu;
+    int trouve = 0;
+    livreur * livreur_dans_bd;
+
+    actu = begin(&dblivreur);
+
+    while(trouve == 0){
+        livreur_dans_bd = (struct livreur*) actu.element;
+        if(livreur_dans_bd->id == id){
+            trouve = 1;
+        }
+        increment(&actu, 1);
+    }
+
+    fclose(fichierlivreur);
+    return actu;
+}
+
 //Permet a un livreur de se connecter a son compte, renvoie l'id du compte ou on se 
 //connecte si on y parvient, 0 sinon
 int connecter_compte_livreur(){
@@ -87,6 +112,7 @@ void creer_compte_livreur(){
     iterator actu, fin;
     restaurant* restau_actuel;
     int trouve = 0;
+    livreur* dernier_livreur;
 
     fichierlivreur = fopen("./database/livreur.csv", "r+");
     vector dblivreur = lecture_table_livreurs(fichierlivreur);
@@ -145,7 +171,7 @@ void creer_compte_livreur(){
                 restau_actuel = (struct restaurant*) actu.element;
                 if (restau_actuel->nom == nom_restau){
                     trouve = 1;
-                    nouv_livreur.restaurant = cpt;
+                    nouv_livreur.restaurant = restau_actuel->id;
                 }
                 cpt += 1;
                 increment(&actu, 1);
@@ -163,7 +189,12 @@ void creer_compte_livreur(){
 
     //On finit par ajouter la struct livreur au fichier csv
     //(on l'ajoute a la fin de la db avec index = indexmax + 1)
-    nouv_livreur.id = dblivreur.num_elements;
+    
+    increment (&fin, -1);
+    dernier_livreur = (struct livreur*)fin.element;
+
+    nouv_livreur.id = dernier_livreur->id + 1;
+    
 
     push_back(&dblivreur, &nouv_livreur);
     ecriture_table_livreurs(fichierlivreur, &dblivreur);
@@ -175,44 +206,171 @@ void creer_compte_livreur(){
 }
 
 //Permet a un liveur de supprimer son compte et toutes les information y etant contenues
-void supprimer_compte_livreur(){
+void supprimer_compte_livreur(int id){
     //On ouvre le fichier csv des livreurs, on cherche l'index du compte ou on est 
     //connecté et on supprime la ligne dans le fichier csv
     //Ensuite, on fait "remonter" les lignes d'apres en réduisant tous leurs indexs
     //de 1
+    FILE* fichierlivreur;
+    fichierlivreur = fopen("./database/livreur.csv","r+");
+    vector dblivreur = lecture_table_livreurs(fichierlivreur);
+
+    iterator iterateur;
+
+    iterateur = trouver_livreur_avec_id(id);
+
+    erase(&dblivreur, iterateur);
+
+    return;
 }
 
 //Permet a un livreur de modifier les cp ou il lui est possible de livrer
-void modifier_cp_livreur(){
+void modifier_cp_livreur(int id){
     //On ouvre le fichier csv des livreurs, on récupere la ligne correspondant a 
-    //l'index du compte ou on est connecté, on récupere sous forme de vecteur la liste
+    //l'index du compte ou on est connecté, on récupere la liste
     //des codes postaux.
-    //On remplace ensuite ce vecteur par un nouveau dans lequel l'utilisateur va rentrer 
-    //la nouvelle liste de ses codes postaux
+    //On remplace avec la nouvelle liste de ses codes postaux
+
+    FILE* fichierlivreur;
+    fichierlivreur = fopen("./database/livreur.csv","r+");
+    vector dblivreur = lecture_table_livreurs(fichierlivreur);
+
+    livreur* livreur_connecte;
+    iterator iterateur;
+    int cpt;
+    char* cp_actu;
+
+    iterateur = trouver_livreur_avec_id(id);
+    livreur_connecte = (struct livreur*) iterateur.element; 
+
+    cpt = 0;
+    cp_actu = "1";
+    while(cp_actu != 0 && cpt<MAX_CP){
+        printf("Veuillez entrer un code postal ou vous pouvez livrer (Entrez 0 pour arreter");
+        scanf("%s \n", cp_actu);
+        if (cp_actu != 0){
+            livreur_connecte->deplacements[cpt]=cp_actu;
+            cpt += 1;
+        }
+    }
+
+    set(iterateur, (void *)livreur_connecte);
+    ecriture_table_livreurs(fichierlivreur, &dblivreur);
+
+    fclose(fichierlivreur);
+
+    return;
 }
 
 //Permet a un livreur de modifier son numero de telephone 
-void modifier_tel_livreur(){
+void modifier_tel_livreur(int id){
     //Idem qu'au dessus sauf qu'on modifie le string du telephone
+    FILE* fichierlivreur;
+    fichierlivreur = fopen("./database/livreur.csv","r+");
+    vector dblivreur = lecture_table_livreurs(fichierlivreur);
+
+    livreur* livreur_connecte;
+    iterator iterateur;
+
+    iterateur = trouver_livreur_avec_id(id);
+    livreur_connecte = (struct livreur*) iterateur.element; 
+
+    printf("Veuillez entrer votre numero de telephone (En entrant les espaces): ");
+    scanf("%s \n", livreur_connecte->tel);
+
+    set(iterateur, (void *)livreur_connecte);
+    ecriture_table_livreurs(fichierlivreur, &dblivreur);
+
+    fclose(fichierlivreur);
+
+    return;
 }
 
+
 //Permet a un livreur de modifier ou retirer son exclusivité à un restaurateur
-void modifier_resto_livreur(){
+void modifier_resto_livreur(int id){
     //On commence par faire la meme chose qu'au dessus
     //Ensuite on demande si on veut retirer ou changer l'exclu
     //Si on retire, on change la valeur a 0, et sinon on demande a l'utilisateur
     //de rentrer le nom du resto, on cherche ce nom sur la bd des restos et on
     //recup l'id de ce resto
+    FILE* fichierlivreur;
+    fichierlivreur = fopen("./database/livreur.csv","r+");
+    vector dblivreur = lecture_table_livreurs(fichierlivreur);
+
+    FILE* fichierresto;
+    fichierresto = fopen("./database/livreur.csv","r");
+    vector dbrestau = lecture_table_restaurants(fichierresto);
+
+    livreur* livreur_connecte;
+    iterator iterateur, actu, fin;
+    char* nom_restau;
+    int check = 0, trouve = 0;
+    restaurant* restau_actuel;
+    int cpt;
+
+    iterateur = trouver_livreur_avec_id(id);
+    livreur_connecte = (struct livreur*) iterateur.element; 
+
+    nom_restau = "";
+    printf("Dependez vous d'un restaurant ? Si oui entrez 1 sinon entrez 0 :");
+    scanf("%d \n", &check);
+    if(check){
+        while(trouve == 0){
+            printf("Entrez le nom du restaurant dont vous dependez : ");
+            scanf("%s \n", nom_restau);
+
+            //Recherche de ce nom dans la bd et recuperation de l'id
+            actu = begin(&dbrestau);
+            fin = end(&dbrestau);
+            cpt = 0;
+            while(actu.element != fin.element && trouve == 0){
+                restau_actuel = (struct restaurant*) actu.element;
+                if (restau_actuel->nom == nom_restau){
+                    trouve = 1;
+                    livreur_connecte->restaurant = restau_actuel->id;
+                }
+                cpt += 1;
+                increment(&actu, 1);
+            }
+            if (trouve == 0){
+                printf("Erreur, restaurant  nom présent dans la base de donnee");
+            }
+        }
+    }
+    else{
+        livreur_connecte->restaurant = 0;
+    }
+
+    set(iterateur, (void *)livreur_connecte);
+    ecriture_table_livreurs(fichierlivreur, &dblivreur);
+
+    fclose(fichierlivreur);
+    fclose(fichierresto);
+
+    return;
 }
 
 //Permet a un livreur de modifier les differents elements vu ci dessus
-void modifier_compte_livreur(){
+void modifier_compte_livreur(int id){
     //On combine les trois fonctions au dessus en demandant a l'utilisateur ce qu'il
     //souhaite  modifier
 }
 
 //Permet à un liveur de consulter la somme d'argent qu'il a sur son solde 
-void consulter_solde_livreur(){
+void consulter_solde_livreur(int id){
     //On ouvre la bd livreur et on recup la valeur de la solde a la ligne du compte
     //auquel on est connecté
+
+    iterator iterateur;
+    livreur * livreur_dans_bd;
+
+    iterateur = trouver_livreur_avec_id(id);
+
+    livreur_dans_bd = (struct livreur*) iterateur.element;
+    
+    printf("Le solde sue ce compte est de %f euros", livreur_dans_bd->solde);
+
+    return;
 }
+

@@ -12,6 +12,9 @@ typedef struct livreur {
     char mdp[TAILLE_MDP];
 } livreur;
 
+//Fonction servant a retrouver les informations d'un compte id
+iterator trouver_livreur_avec_id(int id);
+
 //Permet a un livreur de se connecter a son compte, renvoie l'id du compte ou on se 
 //connecte si on y parvient, 0 sinon
 int connecter_compte_livreur();
@@ -20,19 +23,19 @@ int connecter_compte_livreur();
 void creer_compte_livreur();
 
 //Permet a un liveur de supprimer son compte et toutes les information y etant contenues
-void supprimer_compte_livreur();
+void supprimer_compte_livreur(int id);
 
 //Permet a un livreur de modifier les cp ou il lui est possible de livrer
-void modifier_cp_livreur();
+void modifier_cp_livreur(int id);
 
 //Permet a un livreur de modifier son numero de telephone 
-void modifier_tel_livreur();
+void modifier_tel_livreur(int id);
 
 //Permet a un livreur de modifier ou retirer son exclusivité à un restaurateur
-void modifier_resto_livreur();
+void modifier_resto_livreur(int id);
 
 //Permet a un livreur de modifier les differents elements vu ci dessus
-void modifier_compte_livreur();
+void modifier_compte_livreur(int id);
 
 //Permet à un liveur de consulter la somme d'argent qu'il a sur son compte 
-void consulter_solde_livreur();
+void consulter_solde_livreur(int id);
