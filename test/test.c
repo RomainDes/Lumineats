@@ -43,7 +43,7 @@ int main()
         TEST(strcmp(r->code_postal, "13001") == 0);
         TEST(strcmp(r->tel, "04 13 13 13 13") == 0);
         TEST(strcmp(r->type, "Provencal") == 0);
-        TEST(r->menu[0] == 1);
+        TEST(r->menu[0] == 15);
         TEST(r->menu[1] == 4);
         TEST(r->menu[2] == 5);
         TEST(r->menu[3] == 0);
@@ -61,10 +61,10 @@ int main()
         TEST(r->menu[2] == 0);
         TEST(r->solde == 44.00);
 
-        FILE *test_db_restaurants_copie = fopen("database/copie-restaurants.csv", "w");
+        FILE *test_db_restaurants_copie = fopen("build/test-db/copie-restaurants.csv", "w");
         ecriture_table_restaurants(test_db_restaurants_copie, &restaurants);
         fclose(test_db_restaurants_copie);
-        TEST_FILE("database/restaurants.csv", "database/copie-restaurants.csv");
+        TEST_FILE("database/restaurants.csv", "build/test-db/copie-restaurants.csv");
 
         destroy(&restaurants);
     }
@@ -95,10 +95,10 @@ int main()
         TEST(strcmp(i->ingredients[4], "") == 0);
         TEST(i->prix == 12.0);
 
-        FILE *test_db_items_copie = fopen("database/items-copie.csv", "w");
+        FILE *test_db_items_copie = fopen("build/test-db/copie-items.csv", "w");
         ecriture_table_items(test_db_items_copie, &items);
         fclose(test_db_items_copie);
-        TEST_FILE("database/items.csv", "database/items-copie.csv");
+        TEST_FILE("database/items.csv", "build/test-db/copie-items.csv");
 
         destroy(&items);
     }
@@ -136,10 +136,10 @@ int main()
         TEST(l->solde == 0);
         TEST(strcmp(l->mdp, "jeanneausecours") == 0);
 
-        FILE *test_db_livreurs_copie = fopen("database/copie-livreurs.csv", "w");
+        FILE *test_db_livreurs_copie = fopen("build/test-db/copie-livreurs.csv", "w");
         ecriture_table_livreurs(test_db_livreurs_copie, &livreurs);
         fclose(test_db_livreurs_copie);
-        TEST_FILE("database/livreurs.csv", "database/copie-livreurs.csv");
+        TEST_FILE("database/livreurs.csv", "build/test-db/copie-livreurs.csv");
 
         destroy(&livreurs);
     }
@@ -168,10 +168,10 @@ int main()
         TEST(strcmp(c->tel, "06 99 88 77 66") == 0);
         TEST(c->solde == 15);
 
-        FILE *test_db_clients_copie = fopen("database/clients-copie.csv", "w");
+        FILE *test_db_clients_copie = fopen("build/test-db/copie-clients.csv", "w");
         ecriture_table_clients(test_db_clients_copie, &clients);
         fclose(test_db_clients_copie);
-        TEST_FILE("database/clients.csv", "database/clients-copie.csv");
+        TEST_FILE("database/clients.csv", "build/test-db/copie-clients.csv");
 
         destroy(&clients);
     }
