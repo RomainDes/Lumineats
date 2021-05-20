@@ -21,12 +21,12 @@
 #include <stdio.h>
 
 // Valeurs pour le harnais de test spécifiques à ce programme.
-int const tests_total = 76;
+int const tests_total = 300;
 int const test_column_width = 60;
 
 int main()
 {
-    system("rm -rf build/test-db && mkdir -p build/test-db && cp -a test/db/. build/test-db");
+    system("rm -rf build/test-db && mkdir -p build/test-db ");
 
     // Tests de lecture et d'écriture de la table 'restaurants'.
     {
@@ -175,6 +175,32 @@ int main()
 
         destroy(&clients);
     }
+
+    //Tests pour les fonctions de restaurant.c
+    {
+        //Tests pour créer un compte restaurant
+        {
+            //Créer un nouveau compte resto introduit dans la db restaurant
+            creer_compte_resto();
+
+            FILE *test_db_restaurants = fopen("database/restaurants.csv", "r");
+            vector restaurants = lecture_table_restaurants(test_db_restaurants);
+            fclose(test_db_restaurants);
+
+            TEST(size(restaurants) == 4);
+
+            restaurant *r = (restaurant*)value(end(&restaurants));
+            TEST(r->id == 4);
+            TEST(strcmp(r->nom, "LaBoucherie") == 0);
+            TEST(strcmp(r->mdp, "260895") == 0);
+            TEST(strcmp(r->code_postal, "13180") == 0);
+            TEST(strcmp(r->tel, "06 95 94 26 42") == 0);
+            TEST(strcmp(r->type, "Viande") == 0);
+            TEST(r->menu[0] == 0);
+            TEST(r->solde == 0.00);
+        }
+    }
+    
 
     return tests_total - tests_successful;
 }

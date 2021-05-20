@@ -43,7 +43,7 @@ build/libvector.a: lib/utility/vector.h build/vector_api.o | build
 	ar crs build/libvector.a build/vector_api.o
 
 build/liblink.a: lib/link.h build/restaurant.o build/client.o build/livreur.o| build
-	ar crs build/librestaurant.a build/restaurant.o build/client.o build/livreur.o
+	ar crs build/liblink.a build/restaurant.o build/client.o build/livreur.o
 
 
 # Programme de test.
@@ -52,7 +52,7 @@ build/test.o: test/test.c | build
 	gcc -Wno-pointer-arith -Wall -Werror -pedantic --debug -c test/test.c -I ./lib -o build/test.o
 
 build/test: build/test.o build/libvector.a build/libdb.a build/liblink.a | build
-	gcc build/test.o -L build -l vector -l db -o build/test
+	gcc build/test.o -L build -l vector -l db -l link -o build/test
 
 # S'assure que le programme build/test existe et le lance à l'invite de commande.
 check: build/test
