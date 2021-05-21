@@ -11,13 +11,6 @@
 #include "utility/vector.h"
 #include "link.h"
 
-
-#include <sys/stat.h>
-#include <unistd.h>
-
-#if defined(__linux__)
-    #define  _POSIX_C_SOURCE 200809L
-#endif
 #include <stdio.h>
 
 // Valeurs pour le harnais de test spécifiques à ce programme.
@@ -26,11 +19,10 @@ int const test_column_width = 60;
 
 int main()
 {
-    system("rm -rf build/test-db && mkdir -p build/test-db && cp -a test/db/. build/test-db");
 
     // Tests de lecture et d'écriture de la table 'restaurants'.
     {
-        FILE *test_db_restaurants = fopen("database/restaurants.csv", "r");
+        FILE *test_db_restaurants = fopen("test/test-db/restaurants.csv", "r");
         vector restaurants = lecture_table_restaurants(test_db_restaurants);
         fclose(test_db_restaurants);
 
@@ -41,9 +33,9 @@ int main()
         TEST(strcmp(r->nom, "Chez Michel") == 0);
         TEST(strcmp(r->mdp, "please") == 0);
         TEST(strcmp(r->code_postal, "13001") == 0);
-        TEST(strcmp(r->tel, "04 13 13 13 13") == 0);
+        TEST(strcmp(r->tel, "0413131313") == 0);
         TEST(strcmp(r->type, "Provencal") == 0);
-        TEST(r->menu[0] == 15);
+        TEST(r->menu[0] == 1);
         TEST(r->menu[1] == 4);
         TEST(r->menu[2] == 5);
         TEST(r->menu[3] == 0);
@@ -54,24 +46,24 @@ int main()
         TEST(strcmp(r->nom, "Joe's International House of Pancakes") == 0);
         TEST(strcmp(r->mdp, "jetensuppli") == 0);
         TEST(strcmp(r->code_postal, "13010") == 0);
-        TEST(strcmp(r->tel, "04 22 33 44 55") == 0);
+        TEST(strcmp(r->tel, "0422334455") == 0);
         TEST(strcmp(r->type, "Americain") == 0);
         TEST(r->menu[0] == 6);
         TEST(r->menu[1] == 7);
         TEST(r->menu[2] == 0);
         TEST(r->solde == 44.00);
 
-        FILE *test_db_restaurants_copie = fopen("build/test-db/copie-restaurants.csv", "w");
+        FILE *test_db_restaurants_copie = fopen("test/test-db/copie-restaurants.csv", "w");
         ecriture_table_restaurants(test_db_restaurants_copie, &restaurants);
         fclose(test_db_restaurants_copie);
-        TEST_FILE("database/restaurants.csv", "build/test-db/copie-restaurants.csv");
+        TEST_FILE("test/test-db/restaurants.csv", "test/test-db/copie-restaurants.csv");
 
         destroy(&restaurants);
     }
 
     // Tests de lecture et d'écriture de la table 'items'.
     {
-        FILE *test_db_items = fopen("database/items.csv", "r");
+        FILE *test_db_items = fopen("test/test-db/items.csv", "r");
         vector items = lecture_table_items(test_db_items);
         fclose(test_db_items);
 
@@ -95,17 +87,17 @@ int main()
         TEST(strcmp(i->ingredients[4], "") == 0);
         TEST(i->prix == 12.0);
 
-        FILE *test_db_items_copie = fopen("build/test-db/copie-items.csv", "w");
+        FILE *test_db_items_copie = fopen("test/test-db/copie-items.csv", "w");
         ecriture_table_items(test_db_items_copie, &items);
         fclose(test_db_items_copie);
-        TEST_FILE("database/items.csv", "build/test-db/copie-items.csv");
+        TEST_FILE("test/test-db/items.csv", "test/test-db/copie-items.csv");
 
         destroy(&items);
     }
 
     // Tests de lecture et d'écriture de la table 'livreurs'.
     {
-        FILE *test_db_livreurs = fopen("database/livreurs.csv", "r");
+        FILE *test_db_livreurs = fopen("test/test-db/livreurs.csv", "r");
         vector livreurs = lecture_table_livreurs(test_db_livreurs);
         fclose(test_db_livreurs);
 
@@ -136,17 +128,17 @@ int main()
         TEST(l->solde == 0);
         TEST(strcmp(l->mdp, "jeanneausecours") == 0);
 
-        FILE *test_db_livreurs_copie = fopen("build/test-db/copie-livreurs.csv", "w");
+        FILE *test_db_livreurs_copie = fopen("test/test-db/copie-livreurs.csv", "w");
         ecriture_table_livreurs(test_db_livreurs_copie, &livreurs);
         fclose(test_db_livreurs_copie);
-        TEST_FILE("database/livreurs.csv", "build/test-db/copie-livreurs.csv");
+        TEST_FILE("test/test-db/livreurs.csv", "test/test-db/copie-livreurs.csv");
 
         destroy(&livreurs);
     }
 
     // Tests de lecture et d'écriture de la table 'clients'.
     {
-        FILE *test_db_clients = fopen("database/clients.csv", "r");
+        FILE *test_db_clients = fopen("test/test-db/clients.csv", "r");
         vector clients = lecture_table_clients(test_db_clients);
         fclose(test_db_clients);
 
@@ -168,13 +160,39 @@ int main()
         TEST(strcmp(c->tel, "06 99 88 77 66") == 0);
         TEST(c->solde == 15);
 
-        FILE *test_db_clients_copie = fopen("build/test-db/copie-clients.csv", "w");
+        FILE *test_db_clients_copie = fopen("test/test-db/copie-clients.csv", "w");
         ecriture_table_clients(test_db_clients_copie, &clients);
         fclose(test_db_clients_copie);
-        TEST_FILE("database/clients.csv", "build/test-db/copie-clients.csv");
+        TEST_FILE("test/test-db/clients.csv", "test/test-db/copie-clients.csv");
 
         destroy(&clients);
     }
+
+    //Tests pour les fonctions de restaurant.c
+    {
+        //Tests pour créer un compte restaurant
+        {
+            // //Créer un nouveau compte resto introduit dans la db restaurant
+            // creer_compte_resto();
+
+            // FILE *test_db_restaurants = fopen("database/restaurants.csv", "r");
+            // vector restaurants = lecture_table_restaurants(test_db_restaurants);
+            // fclose(test_db_restaurants);
+
+            // TEST(size(restaurants) == 1);
+
+            // restaurant *r = (restaurant*)value(begin(&restaurants));
+            // TEST(r->id == 1);
+            // TEST(strcmp(r->nom, "LaBoucherie") == 0);
+            // TEST(strcmp(r->mdp, "260895") == 0);
+            // TEST(strcmp(r->code_postal, "13180") == 0);
+            // TEST(strcmp(r->tel, "0695942642") == 0);
+            // TEST(strcmp(r->type, "Viande") == 0);
+            // TEST(r->menu[0] == 0);
+            // TEST(r->solde == 0.00);
+        }
+    }
+    
 
     return tests_total - tests_successful;
 }

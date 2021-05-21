@@ -77,6 +77,8 @@ vector lecture_table_restaurants(
 
     restaurant resto;
 
+    //resto = make_restaurant();
+
     vector base_donnee = make_vector(sizeof(resto),0, growth_factor_doubling);
     
     while(c != EOF){
