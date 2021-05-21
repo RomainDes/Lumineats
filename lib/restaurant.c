@@ -16,7 +16,9 @@ void creer_compte_resto(){
 
     int exist;
     
-      
+    //Permet de savoir si la base de donnée existe ou non 
+    //S'il elle n'existe pas on créer le fichier et on met l'index à 1
+    //Sinon on prend l'inex + 1 du dernier dernier index
     if( access("database/restaurants.csv", F_OK ) == -1){
         exist = 0;
         FILE *fichierresto_create = fopen("database/restaurants.csv", "w");
@@ -28,6 +30,7 @@ void creer_compte_resto(){
     vector dbresto = lecture_table_restaurants(fichierresto_read);
     fclose(fichierresto_read);
 
+    
     if(exist == 0){
         erase(&dbresto, begin(&dbresto));
         restaurants.id = 1;
@@ -37,7 +40,7 @@ void creer_compte_resto(){
     printf("Nom :");
     scanf("%s", restaurants.nom); //LaBoucherie
 
-    while(nom_resto_exist(&dbresto, restaurants.nom) == 1){
+    while(nom_resto_exist(&dbresto, restaurants.nom) >= 1){
         //demander de nouveau le nom du restaurant
         printf("Nom :");
         scanf("%s", restaurants.nom);
@@ -65,28 +68,20 @@ void creer_compte_resto(){
     destroy(&dbresto);
 }
 
-//On lit toute la base de donnée pour savoir si il existe déjà le nom
+//On lit toute la base de donnée pour savoir si il existe déjà le nom, renvoie 0 si il n'existe pas sinon l'index où il existe
 int nom_resto_exist(vector const* dbresto, char nom[TAILLE_NOM]){
 
-    int error = 0;
-    int i = 0;
+    int index = 1;
     for(iterator r = begin(dbresto), e = end(dbresto); compare(r, e) != 0; increment(&r, 1)){
         restaurant const* resto = (restaurant*)r.element;
 
-        while(resto->nom[i] != '\0' && nom[i] != '\0'){
-            if( resto->nom[i] == nom[i] )  error = 1;
-            else error = 0;
-            i++;
+        if(compare_char(resto->nom,nom) == 1)   return index;
+        else {
+            index++;
         }
-
-        if( resto->nom[i] == nom[i] )  error = 1;
-        else error = 0;
-
-        if(error == 1)   return error;
-    
     }
 
-    return error;
+    return 0;
 }
 
 
@@ -95,7 +90,51 @@ int nom_resto_exist(vector const* dbresto, char nom[TAILLE_NOM]){
 //present dans la db a la ligne correspondant au nom entré.
 //Si nom entré pas dans la db on redemande, idem pour mdp si il correspond pa
 int connecter_compte_resto(){
-    return 0;
+    int index = 0;
+    char nom[TAILLE_NOM];
+    char mdp[TAILLE_MDP];
+    char *quitter = "quitter";
+
+    FILE * fichierresto = fopen("database/restaurants.csv", "r");
+    vector dbresto = lecture_table_restaurants(fichierresto);
+    fclose(fichierresto);
+
+    while(index == 0){
+        printf("Nom :");
+        scanf("\n%127[^\n]", nom);
+        index = nom_resto_exist(&dbresto, nom);
+        //demander de nouveau le nom du restaurant
+        
+        if(nom == quitter)  return 0;
+    }
+
+    restaurant *r = (restaurant*)value(at(&dbresto,index-1));
+  
+    printf("Mdp :");
+    scanf("%s", mdp);
+
+    while(compare_char(r->mdp, mdp) != 1){
+        printf("Mdp :");
+        scanf("%s", mdp);
+        if(mdp == quitter)  return 0;
+    }
+
+    
+    return index;
+}
+
+int compare_char(const char *a,const char*b){
+    int same;
+    int i = 0;
+    while(a[i] != '\0' && b[i] != '\0'){
+            if( a[i] == b[i] )  same = 1;
+            else return 0;
+            i++;
+    }
+    if( a[i] == b[i] )  same = 1;
+    else same = 0;
+
+    return same;
 }
 
 void supprimer_compte(){

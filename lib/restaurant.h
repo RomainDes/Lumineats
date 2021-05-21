@@ -25,6 +25,7 @@ typedef struct item {
     
 } item;
 
+int compare_char(const char *a,const char*b);
 
 //restaurant make_restaurant();
 void * counter();
