@@ -172,24 +172,24 @@ int main()
     {
         //Tests pour créer un compte restaurant
         {
-            //Créer un nouveau compte resto introduit dans la db restaurant
-            creer_compte_resto();
+            // //Créer un nouveau compte resto introduit dans la db restaurant
+            // creer_compte_resto();
 
-            FILE *test_db_restaurants = fopen("database/restaurants.csv", "r");
-            vector restaurants = lecture_table_restaurants(test_db_restaurants);
-            fclose(test_db_restaurants);
+            // FILE *test_db_restaurants = fopen("database/restaurants.csv", "r");
+            // vector restaurants = lecture_table_restaurants(test_db_restaurants);
+            // fclose(test_db_restaurants);
 
-            TEST(size(restaurants) == 1);
+            // TEST(size(restaurants) == 1);
 
-            restaurant *r = (restaurant*)value(begin(&restaurants));
-            TEST(r->id == 1);
-            TEST(strcmp(r->nom, "LaBoucherie") == 0);
-            TEST(strcmp(r->mdp, "260895") == 0);
-            TEST(strcmp(r->code_postal, "13180") == 0);
-            TEST(strcmp(r->tel, "0695942642") == 0);
-            TEST(strcmp(r->type, "Viande") == 0);
-            TEST(r->menu[0] == 0);
-            TEST(r->solde == 0.00);
+            // restaurant *r = (restaurant*)value(begin(&restaurants));
+            // TEST(r->id == 1);
+            // TEST(strcmp(r->nom, "LaBoucherie") == 0);
+            // TEST(strcmp(r->mdp, "260895") == 0);
+            // TEST(strcmp(r->code_postal, "13180") == 0);
+            // TEST(strcmp(r->tel, "0695942642") == 0);
+            // TEST(strcmp(r->type, "Viande") == 0);
+            // TEST(r->menu[0] == 0);
+            // TEST(r->solde == 0.00);
         }
     }
     
