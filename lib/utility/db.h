@@ -16,6 +16,8 @@
 #define MAX_CP 15
 #define MAX_INGRE 10
 
+//Compte auquel on est connecté
+size_t index_resto;
 
 vector lecture_table_clients(
     FILE* file);

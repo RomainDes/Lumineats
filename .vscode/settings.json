@@ -8,6 +8,8 @@
         "db.h": "c",
         "type_traits": "c",
         "stdbool.h": "c",
-        "vector_types.h": "c"
+        "vector_types.h": "c",
+        "unistd.h": "c",
+        "string.h": "c"
     }
 }

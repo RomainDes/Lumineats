@@ -17,6 +17,8 @@
 int const tests_total = 76;
 int const test_column_width = 60;
 
+
+
 int main()
 {
 
@@ -33,7 +35,7 @@ int main()
         TEST(strcmp(r->nom, "Chez Michel") == 0);
         TEST(strcmp(r->mdp, "please") == 0);
         TEST(strcmp(r->code_postal, "13001") == 0);
-        TEST(strcmp(r->tel, "0413131313") == 0);
+        TEST(strcmp(r->tel, "04 13 13 13 13") == 0);
         TEST(strcmp(r->type, "Provencal") == 0);
         TEST(r->menu[0] == 1);
         TEST(r->menu[1] == 4);
@@ -46,7 +48,7 @@ int main()
         TEST(strcmp(r->nom, "Joe's International House of Pancakes") == 0);
         TEST(strcmp(r->mdp, "jetensuppli") == 0);
         TEST(strcmp(r->code_postal, "13010") == 0);
-        TEST(strcmp(r->tel, "0422334455") == 0);
+        TEST(strcmp(r->tel, "04 22 33 44 55") == 0);
         TEST(strcmp(r->type, "Americain") == 0);
         TEST(r->menu[0] == 6);
         TEST(r->menu[1] == 7);
@@ -170,27 +172,50 @@ int main()
 
     //Tests pour les fonctions de restaurant.c
     {
-        //Tests pour créer un compte restaurant
-        {
-            // //Créer un nouveau compte resto introduit dans la db restaurant
-            // creer_compte_resto();
+        // //Tests pour créer un compte restaurant
+        // {
+        //     index_resto = 0;
+        //     //Créer un nouveau compte resto introduit dans la db restaurant
+        //     index_resto = creer_compte_resto();
 
-            // FILE *test_db_restaurants = fopen("database/restaurants.csv", "r");
-            // vector restaurants = lecture_table_restaurants(test_db_restaurants);
-            // fclose(test_db_restaurants);
+        //     //Se déconnecter
+        //     //index_resto = 0;
 
-            // TEST(size(restaurants) == 1);
+        //     FILE *test_db_restaurants = fopen("database/restaurants.csv", "r");
+        //     vector restaurants = lecture_table_restaurants(test_db_restaurants);
+        //     fclose(test_db_restaurants);
+        //     TEST(size(restaurants) == 1);
+        //     destroy(&restaurants);
+        // }
+        // //Tests pour se connecter à un compte restaurant
+        // {
+            
+        //     index_resto = connecter_compte_resto();
 
-            // restaurant *r = (restaurant*)value(begin(&restaurants));
-            // TEST(r->id == 1);
-            // TEST(strcmp(r->nom, "LaBoucherie") == 0);
-            // TEST(strcmp(r->mdp, "260895") == 0);
-            // TEST(strcmp(r->code_postal, "13180") == 0);
-            // TEST(strcmp(r->tel, "0695942642") == 0);
-            // TEST(strcmp(r->type, "Viande") == 0);
-            // TEST(r->menu[0] == 0);
-            // TEST(r->solde == 0.00);
-        }
+        //     TEST(index_resto == 1);
+        // }
+        // //Tests pour supprimer un compte restaurant et les items qu'il a crée
+        // {
+        //     //Se déconnecter
+        //     index_resto = 0;
+
+        //     creer_compte_resto();
+
+        //     //Se déconnecter
+        //     index_resto = 0;
+
+        //     index_resto = connecter_compte_resto();
+        //     supprimer_compte_resto(index_resto);
+                
+        //     FILE *test_db_restaurants = fopen("database/restaurants.csv", "r");
+        //     vector restaurants = lecture_table_restaurants(test_db_restaurants);
+        //     fclose(test_db_restaurants);
+
+        //     TEST(size(restaurants) == 1);
+
+
+        //     destroy(&restaurants);
+        // }
     }
     
 
