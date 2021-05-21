@@ -14,7 +14,7 @@
 #include <stdio.h>
 
 // Valeurs pour le harnais de test spécifiques à ce programme.
-int const tests_total = 85;
+int const tests_total = 76;
 int const test_column_width = 60;
 
 int main()
