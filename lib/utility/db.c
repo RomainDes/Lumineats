@@ -71,7 +71,7 @@ vector lecture_table_restaurants(
     FILE* file)
 {
 
-    int c;
+    int c = 0;
 
     int i = 0;
 
@@ -113,7 +113,7 @@ vector lecture_table_items(
 
     while(c != EOF){
         
-        fscanf(file, "%zu,%127[^,],", &items.id, items.nom);
+        fscanf(file, "%zu,%zu,%127[^,],", &items.id, &items.restaurant, items.nom);
 
         while(c != ','){
             if(j==0)    items.ingredients[i] = malloc(sizeof(char));
@@ -204,7 +204,7 @@ void ecriture_table_items(
     {
         if(j != 0)  fputc('\n', file);
         item const* items = (item*)i.element;
-        fprintf(file, "%zu,%s,", items->id, items->nom);
+        fprintf(file, "%zu,%zu,%s,", items->id, items->restaurant, items->nom);
         for(int j = 0; j < items->nb_ingr; j++){
             fputs(items->ingredients[j], file);
             if(j != items->nb_ingr-1)    fputc(';', file);   

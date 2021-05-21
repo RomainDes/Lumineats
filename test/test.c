@@ -17,6 +17,8 @@
 int const tests_total = 76;
 int const test_column_width = 60;
 
+
+
 int main()
 {
 
@@ -170,35 +172,50 @@ int main()
 
     //Tests pour les fonctions de restaurant.c
     {
-        //Tests pour créer un compte restaurant
-        {
+        // //Tests pour créer un compte restaurant
+        // {
+        //     index_resto = 0;
         //     //Créer un nouveau compte resto introduit dans la db restaurant
+        //     index_resto = creer_compte_resto();
+
+        //     //Se déconnecter
+        //     //index_resto = 0;
+
+        //     FILE *test_db_restaurants = fopen("database/restaurants.csv", "r");
+        //     vector restaurants = lecture_table_restaurants(test_db_restaurants);
+        //     fclose(test_db_restaurants);
+        //     TEST(size(restaurants) == 1);
+        //     destroy(&restaurants);
+        // }
+        // //Tests pour se connecter à un compte restaurant
+        // {
+            
+        //     index_resto = connecter_compte_resto();
+
+        //     TEST(index_resto == 1);
+        // }
+        // //Tests pour supprimer un compte restaurant et les items qu'il a crée
+        // {
+        //     //Se déconnecter
+        //     index_resto = 0;
+
         //     creer_compte_resto();
 
+        //     //Se déconnecter
+        //     index_resto = 0;
+
+        //     index_resto = connecter_compte_resto();
+        //     supprimer_compte_resto(index_resto);
+                
         //     FILE *test_db_restaurants = fopen("database/restaurants.csv", "r");
         //     vector restaurants = lecture_table_restaurants(test_db_restaurants);
         //     fclose(test_db_restaurants);
 
         //     TEST(size(restaurants) == 1);
 
-        //     restaurant *r = (restaurant*)value(begin(&restaurants));
-        //     TEST(r->id == 1);
-        //     TEST(strcmp(r->nom, "LaBoucherie") == 0);
-        //     TEST(strcmp(r->mdp, "260895") == 0);
-        //     TEST(strcmp(r->code_postal, "13180") == 0);
-        //     TEST(strcmp(r->tel, "06 95 94 26 42") == 0);
-        //     TEST(strcmp(r->type, "Viande") == 0);
-        //     TEST(r->menu[0] == 0);
-        //     TEST(r->solde == 0.00);
-        // }
-        // //Tests pour se connecter à un compte restaurant
-        // {
-        //     int index;
-            
-        //     index = connecter_compte_resto();
 
-        //     TEST(index == 1);
-        }
+        //     destroy(&restaurants);
+        // }
     }
     
 
