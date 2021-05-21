@@ -2,13 +2,14 @@
 #include "utility/db.h"
 
 #include <stdlib.h>
+#include <unistd.h>
 
 typedef struct restaurant {
     size_t id;
     char nom[TAILLE_NOM];
     char mdp[TAILLE_MDP];
     char code_postal[6];
-    char tel[15];
+    char tel[11];
     char type[TAILLE_TYPE];
     int nb_menu;
     int menu[TAILLE_MENU];
@@ -26,6 +27,8 @@ typedef struct item {
 
 
 //restaurant make_restaurant();
+void * counter();
+
 
 //Permet de créer un compte pour un restaurant avec les 
 //informations suivante : le nom, le code postal, 
