@@ -33,7 +33,7 @@ int main()
         TEST(strcmp(r->nom, "Chez Michel") == 0);
         TEST(strcmp(r->mdp, "please") == 0);
         TEST(strcmp(r->code_postal, "13001") == 0);
-        TEST(strcmp(r->tel, "0413131313") == 0);
+        TEST(strcmp(r->tel, "04 13 13 13 13") == 0);
         TEST(strcmp(r->type, "Provencal") == 0);
         TEST(r->menu[0] == 1);
         TEST(r->menu[1] == 4);
@@ -46,7 +46,7 @@ int main()
         TEST(strcmp(r->nom, "Joe's International House of Pancakes") == 0);
         TEST(strcmp(r->mdp, "jetensuppli") == 0);
         TEST(strcmp(r->code_postal, "13010") == 0);
-        TEST(strcmp(r->tel, "0422334455") == 0);
+        TEST(strcmp(r->tel, "04 22 33 44 55") == 0);
         TEST(strcmp(r->type, "Americain") == 0);
         TEST(r->menu[0] == 6);
         TEST(r->menu[1] == 7);
@@ -186,7 +186,7 @@ int main()
         //     TEST(strcmp(r->nom, "LaBoucherie") == 0);
         //     TEST(strcmp(r->mdp, "260895") == 0);
         //     TEST(strcmp(r->code_postal, "13180") == 0);
-        //     TEST(strcmp(r->tel, "0695942642") == 0);
+        //     TEST(strcmp(r->tel, "06 95 94 26 42") == 0);
         //     TEST(strcmp(r->type, "Viande") == 0);
         //     TEST(r->menu[0] == 0);
         //     TEST(r->solde == 0.00);
@@ -198,7 +198,7 @@ int main()
         //     index = connecter_compte_resto();
 
         //     TEST(index == 1);
-        // }
+        }
     }
     
 

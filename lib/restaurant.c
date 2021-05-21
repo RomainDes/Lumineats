@@ -38,24 +38,24 @@ void creer_compte_resto(){
     else    restaurants.id = index_counter(&dbresto);
 
     printf("Nom :");
-    scanf("%s", restaurants.nom); //LaBoucherie
+    scanf("\n%127[^\n]", restaurants.nom); //LaBoucherie
 
     while(nom_resto_exist(&dbresto, restaurants.nom) >= 1){
         //demander de nouveau le nom du restaurant
         printf("Nom :");
-        scanf("%s", restaurants.nom);
+        scanf("\n%127[^\n]", restaurants.nom);
     }
 
     //demander le mdp, code_postal, téléphone, type de cuisine (possible de créer une fonction create_resto)
     
     printf("MotdePasse :");
-    scanf("%s", restaurants.mdp);
+    scanf("\n%127[^\n]", restaurants.mdp);
     printf("Code postal :");
-    scanf("%s", restaurants.code_postal); //13180
+    scanf("\n%127[^\n]", restaurants.code_postal); //13180
     printf("Téléphone :");
-    scanf("%s", restaurants.tel); //0695942642
+    scanf("\n%127[^\n]", restaurants.tel); //0695942642
     printf("Type :");
-    scanf("%s", restaurants.type); //Viande
+    scanf("\n%127[^\n]", restaurants.type); //Viande
     restaurants.menu[0] = 0;
     restaurants.nb_menu = 0;
     restaurants.solde = 0.00;
@@ -111,11 +111,11 @@ int connecter_compte_resto(){
     restaurant *r = (restaurant*)value(at(&dbresto,index-1));
   
     printf("Mdp :");
-    scanf("%s", mdp);
+    scanf("\n%127[^\n]", mdp);
 
     while(compare_char(r->mdp, mdp) != 1){
         printf("Mdp :");
-        scanf("%s", mdp);
+        scanf("\n%127[^\n]", mdp);
         if(mdp == quitter)  return 0;
     }
 

@@ -9,7 +9,7 @@ typedef struct restaurant {
     char nom[TAILLE_NOM];
     char mdp[TAILLE_MDP];
     char code_postal[6];
-    char tel[11];
+    char tel[15];
     char type[TAILLE_TYPE];
     int nb_menu;
     int menu[TAILLE_MENU];
