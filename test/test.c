@@ -216,6 +216,20 @@ int main()
 
         //     destroy(&restaurants);
         // }
+        // //Tests pour ajouter un nouvel items dans la db items
+        // {
+        //     index_resto = connecter_compte_resto();
+
+        //     modifier_menu();
+        //      FILE *test_db_items = fopen("database/items.csv", "r");
+        //      vector items = lecture_table_items(test_db_items);
+        //      fclose(test_db_items);
+
+        //      TEST(size(items) == 7);
+
+        //      destroy(items);
+
+        // }
     }
     
 
