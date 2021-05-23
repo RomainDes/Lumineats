@@ -31,7 +31,7 @@ typedef struct item {
     
 } item;
 
-int index_counter(vector const* dbresto);
+int index_counter(vector const* dbresto, char structure);
 
 int compare_char(const char *a,const char*b);
 
@@ -53,7 +53,7 @@ int connecter_compte_resto();
 
 //Permet de supprimer un compte de la base de données et 
 //les références dans les items créé par celui-ci.
-void supprimer_compte_resto(int index);
+void supprimer_compte_resto();
 
 
 //Permet de modifier le menu d'un restaurant grâce aux trois 
@@ -64,15 +64,19 @@ void modifier_menu();
 //Permet d'ajouter un nouvel item qui n'existe pas dans la 
 //base de donnée des menus, il faudra donc ajouter cette 
 //items dans cette base de donnée.
-void ajouter_nouvel_item();
+void creer_nouvel_item();
 
 
 //Permet d'ajouter un item existant dans la base de donnée 
 //menu (celui-ci peut-être utilisé par d'autre restaurant)
-void ajouter_item_existant();
+void ajouter_item();
+
+int ajouter_item_menu(int menu);
 
 //Permet de supprimer un item présent dans la db de menu
 void supprimer_item();
+
+
 
 //Permet de consulter le solde du restaurant 
 void consulter_solde_restaurant();

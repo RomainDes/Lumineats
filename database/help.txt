@@ -1,0 +1,3 @@
+Ce dossier contient toutes les bases de donnée, quand aucune donnée 
+n'a été rentré alors les fichiers.csv n'existent pas encore. 
+Ils seront créée lors de l'execution.
