@@ -13,7 +13,7 @@ float const growth_factor_doubling = 2.;
 vector lecture_table_clients(
     FILE* file)
 {
-    char c;
+    char c = ' ';
     client user;
 
     vector base_donnee = make_vector(sizeof(user),0, growth_factor_doubling);

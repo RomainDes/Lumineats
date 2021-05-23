@@ -12,15 +12,27 @@ typedef struct client              //Structure pour la table client
 } client;
 
 
+int index_client_counter(vector const* dbclient);
+
+iterator trouver_client_avec_id(int id);
+
 void creer_compte_client();
 
-void supprimer_compte_client();
+int nom_client_exist(vector const* dbclient, char nom[TAILLE_NOM]);
 
-void modifier_profil_client();
+int connecter_compte_client();
 
-void consulter_solde_client();
+void supprimer_compte_client(int id);
 
-void crediter_solde_client();
+void modifier_cp_client(int id);
+
+void modifier_tel_client(int id);
+
+void modifier_compte_client(int id);
+
+void consulter_solde_client(int id);
+
+void crediter_solde_client(int id);
 
 void debiter_solde_client();
 
@@ -36,6 +48,6 @@ void voir_liste_item();
 
 void restreindre_liste_item();
 
-void ajouter_item();
+void ajouter_item_commande();
 
-void supprimer_item();
+void supprimer_item_commande();

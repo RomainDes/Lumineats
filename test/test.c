@@ -216,6 +216,55 @@ int main()
 
         //     destroy(&restaurants);
         // }
+
+    }
+
+        //Tests pour les fonctions de client.c
+    {
+        //Tests pour créer un compte client
+        {
+            //Créer un nouveau compte resto introduit dans la db client
+            //creer_compte_client();
+
+            //Se déconnecter
+            //index_resto = 0;
+
+            FILE *test_db_clients = fopen("database/clients.csv", "r");
+            vector clients = lecture_table_clients(test_db_clients);
+            fclose(test_db_clients);
+            TEST(size(clients) == 1);
+            destroy(&clients);
+        }
+        //Tests pour se connecter à un compte client
+        {
+            
+            int index_client;
+            index_client = connecter_compte_client();
+
+            TEST(index_client == 1);
+        }
+        //Tests pour supprimer un compte client
+        {
+            //Se déconnecter
+            // index_client = 0;
+
+            //creer_compte_client();
+
+            //Se déconnecter
+            int index_client = 0;
+
+            index_resto = connecter_compte_client();
+            supprimer_compte_client(index_client);
+                
+            FILE *test_db_client = fopen("database/clients.csv", "r");
+            vector clients = lecture_table_clients(test_db_client);
+            fclose(test_db_client);
+
+            TEST(size(clients) == 1);
+
+
+            destroy(&clients);
+        }
     }
     
 
