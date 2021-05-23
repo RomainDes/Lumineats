@@ -187,37 +187,38 @@ void supprimer_compte_resto(){
             fclose(fichieritems_write);
         }
         //Supprimer le resto index
-        if( access("database/restaurants.csv", F_OK ) != -1){
-            FILE * fichierresto_read = fopen("database/restaurants.csv", "r");
-            vector dbresto = lecture_table_restaurants(fichierresto_read);
-            fclose(fichierresto_read);
+        
+        FILE * fichierresto_read = fopen("database/restaurants.csv", "r");
+        vector dbresto = lecture_table_restaurants(fichierresto_read);
+        fclose(fichierresto_read);
 
-            erase(&dbresto, at(&dbresto,index_resto-1));
+        erase(&dbresto, at(&dbresto,index_resto-1));
 
-            FILE * fichierresto_write = fopen("database/restaurants.csv", "w");
-            ecriture_table_restaurants(fichierresto_write, &dbresto);
-            fclose(fichierresto_write);
+        FILE * fichierresto_write = fopen("database/restaurants.csv", "w");
+        ecriture_table_restaurants(fichierresto_write, &dbresto);
+        fclose(fichierresto_write);
 
-            index_resto = 0;
-        }
+        index_resto = 0;
     }
     else    printf("Vous n'êtes pas connecter à un compte.\n");
     
 }
 
 void modifier_menu(){
-    int choix;
+    char choix;
 //On appelle les trois sous-fonctions suivante
     if(index_resto > 0){
-        printf("1 - Créer nouvel item\n2 - Ajouter un item\n3 - Supprimer un item\n'q' pour quitter\n");
-        scanf("%i", &choix);
-        if(choix == 1)  creer_nouvel_item();
-        else if(choix == 2) ajouter_item();
-        else if(choix == 3) supprimer_item();
-        else if(choix == 'q'){}
-        else{
-            printf("Erreur, veuillez recommencer.\n");
-            modifier_menu();
+        while(choix != 'q'){
+            printf("1 - Créer nouvel item\n2 - Ajouter un item\n3 - Supprimer un item\n'q' pour quitter\n");
+            scanf("%c", &choix);
+            if(choix == '1')  creer_nouvel_item();
+            else if(choix == '2') ajouter_item();
+            else if(choix == '3') supprimer_item();
+            else if(choix == 'q'){}
+            else{
+                printf("Erreur, veuillez recommencer.\n");
+                modifier_menu();
+            }
         }
     }
     else    printf("Vous n'êtes pas connecté à un compte.\n");
@@ -286,11 +287,76 @@ void creer_nouvel_item(){
     FILE * fichieritem_write = fopen("database/items.csv", "w");
     ecriture_table_items(fichieritem_write, &dbitem);
     fclose(fichieritem_write);
+
+    //Ajouter l'index menu au restaurant index_resto
+    int menu;
+
+    menu = items.id;
+
+    ajouter_item_menu(menu);
+
+    printf("Le menu a été crée et ajouté à votre restaurant.\n");
 }
 
 void ajouter_item(){
 //On ajoute l'id d'un item de la db menu dans les menus du 
 //restaurant que l'on traite dans la db restaurant.
+    int menu=-1;
+    FILE * fichieritem_read = fopen("database/items.csv", "r");
+    vector dbitem = lecture_table_items(fichieritem_read);
+    fclose(fichieritem_read);
+
+    printf("Ajoutez un menu :\n");
+
+    for(iterator i = begin(&dbitem), e = end(&dbitem); compare(i, e) != 0; increment(&i, 1))
+    {
+        item const* items = (item*)i.element;
+        printf("Menu n°%zu : %s\n", items->id, items->nom);
+    }
+    
+    while( menu != 0 ){
+        printf("Vous ajoutez le menu n° (0 pour quitter):\n");
+        scanf("%i", &menu);
+        if (menu != 0){
+            ajouter_item_menu(menu);
+        printf("Le menu a été ajouté à votre restaurant.\n");
+        }
+        else    printf("Aucun menu n'a été ajouté.\n");
+    }    
+}
+
+int ajouter_item_menu(int menu){
+    FILE * fichierresto_read = fopen("database/restaurants.csv", "r");
+    vector dbresto = lecture_table_restaurants(fichierresto_read);
+    fclose(fichierresto_read);
+
+    //items prend la ligne du restaurant
+    iterator i = at(&dbresto,index_resto-1);
+    restaurant * resto = (restaurant*)i.element;
+    //Mettre les nouveaux menus
+    int exist = 0;
+    int nb_menu = 0;
+    while(resto->menu[nb_menu] != 0 && exist == 0){
+        if (menu == resto->menu[nb_menu]){
+            exist = 1;
+            printf("Cet item existe déjà dans votre menu.\n");
+            return exist;
+        }
+        nb_menu++;
+    }
+
+    if(exist == 0){
+        resto->menu[nb_menu] = menu;
+        resto->menu[nb_menu + 1] = 0;
+        resto->nb_menu = nb_menu+1;
+
+        FILE * fichierresto_write = fopen("database/restaurants.csv", "w");
+        ecriture_table_restaurants(fichierresto_write, &dbresto);
+        fclose(fichierresto_write);
+    }
+
+    return exist;
+    
 }
 
 void supprimer_item(){

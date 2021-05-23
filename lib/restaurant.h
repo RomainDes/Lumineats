@@ -71,6 +71,8 @@ void creer_nouvel_item();
 //menu (celui-ci peut-être utilisé par d'autre restaurant)
 void ajouter_item();
 
+int ajouter_item_menu(int menu);
+
 //Permet de supprimer un item présent dans la db de menu
 void supprimer_item();
 

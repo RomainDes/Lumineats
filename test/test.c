@@ -174,12 +174,12 @@ int main()
     {
         // //Tests pour créer un compte restaurant
         // {
-        //     index_resto = 0;
-        //     //Créer un nouveau compte resto introduit dans la db restaurant
-        //     index_resto = creer_compte_resto();
+            // index_resto = 0;
+            // //Créer un nouveau compte resto introduit dans la db restaurant
+            // index_resto = creer_compte_resto();
 
-        //     //Se déconnecter
-        //     //index_resto = 0;
+            // //Se déconnecter
+            // index_resto = 0;
 
         //     FILE *test_db_restaurants = fopen("database/restaurants.csv", "r");
         //     vector restaurants = lecture_table_restaurants(test_db_restaurants);
@@ -218,16 +218,12 @@ int main()
         // }
         // //Tests pour ajouter un nouvel items dans la db items
         // {
-        //     index_resto = connecter_compte_resto();
+            
+            index_resto = 1;
 
-        //     modifier_menu();
-        //      FILE *test_db_items = fopen("database/items.csv", "r");
-        //      vector items = lecture_table_items(test_db_items);
-        //      fclose(test_db_items);
+            modifier_menu();
 
-        //      TEST(size(items) == 7);
-
-        //      destroy(items);
+            destroy(&items);
 
         // }
     }
