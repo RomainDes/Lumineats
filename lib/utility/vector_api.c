@@ -258,8 +258,12 @@ iterator at(
     vector const* v,
     size_t const index)
 {
+    int i = 0;
+    while(*(char*)(v->data + i * v->element_size) != index){
+        i++;
+    }
     return (iterator){
-        .element = v->data + index * v->element_size,
+        .element = v->data + i * v->element_size,
         .elem_size = v -> element_size,
     };
 }

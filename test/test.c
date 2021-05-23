@@ -43,7 +43,7 @@ int main()
         TEST(r->menu[3] == 0);
         TEST(r->solde == 50.00);
 
-        r = (restaurant*)value(at(&restaurants, 2));
+        r = (restaurant*)value(at(&restaurants, 3));
         TEST(r->id == 3);
         TEST(strcmp(r->nom, "Joe's International House of Pancakes") == 0);
         TEST(strcmp(r->mdp, "jetensuppli") == 0);
@@ -79,7 +79,7 @@ int main()
         TEST(strcmp(i->ingredients[2], "") == 0);
         TEST(i->prix == 25.00);
 
-        i = (item*)value(at(&items, 6));
+        i = (item*)value(at(&items, 7));
         TEST(i->id == 7);
         TEST(strcmp(i->nom, "petit-dej du champion") == 0);
         TEST(strcmp(i->ingredients[0], "oeufs") == 0);
@@ -117,7 +117,7 @@ int main()
         TEST(l->solde == 20);
         TEST(strcmp(l->mdp, "lafranceauxfrancais") == 0);
 
-        l = (livreur*)value(at(&livreurs, 2));
+        l = (livreur*)value(at(&livreurs, 3));
         TEST(l->id == 3);
         TEST(strcmp(l->nom, "Mickey Mouse") == 0);
         TEST(strcmp(l->tel, "06 11 22 33 44") == 0);
@@ -154,7 +154,7 @@ int main()
         TEST(strcmp(c->tel, "04 10 20 30 40") == 0);
         TEST(c->solde == 0);
 
-        c = (client*)value(at(&clients, 2));
+        c = (client*)value(at(&clients, 3));
         TEST(c->id == 3);
         TEST(strcmp(c->nom, "Quentin Tarantino") == 0);
         TEST(strcmp(c->mdp, "jaimeguillaume") == 0);
@@ -174,61 +174,48 @@ int main()
     {
         // //Tests pour créer un compte restaurant
         // {
-            // index_resto = 0;
-            // //Créer un nouveau compte resto introduit dans la db restaurant
-            // index_resto = creer_compte_resto();
+        //     index_resto = 0;
+        //     //Créer un nouveau compte resto introduit dans la db restaurant
+        //     index_resto = creer_compte_resto();
 
-            // //Se déconnecter
-            // index_resto = 0;
+        //     //Se déconnecter
+        //     index_resto = 0;
 
-        //     FILE *test_db_restaurants = fopen("database/restaurants.csv", "r");
-        //     vector restaurants = lecture_table_restaurants(test_db_restaurants);
-        //     fclose(test_db_restaurants);
-        //     TEST(size(restaurants) == 1);
-        //     destroy(&restaurants);
         // }
         // //Tests pour se connecter à un compte restaurant
         // {
             
         //     index_resto = connecter_compte_resto();
 
-        //     TEST(index_resto == 1);
         // }
-        // //Tests pour supprimer un compte restaurant et les items qu'il a crée
+        //Tests pour supprimer un compte restaurant et les items qu'il a crée
         // {
-        //     //Se déconnecter
-        //     index_resto = 0;
+            // //Se déconnecter
+            // index_resto = 0;
 
-        //     creer_compte_resto();
+            // index_resto = creer_compte_resto();
 
-        //     //Se déconnecter
-        //     index_resto = 0;
+            // //Se déconnecter
+            // index_resto = 0;
 
         //     index_resto = connecter_compte_resto();
         //     supprimer_compte_resto(index_resto);
-                
-        //     FILE *test_db_restaurants = fopen("database/restaurants.csv", "r");
-        //     vector restaurants = lecture_table_restaurants(test_db_restaurants);
-        //     fclose(test_db_restaurants);
-
-        //     TEST(size(restaurants) == 1);
-
-
-        //     destroy(&restaurants);
         // }
         // //Tests pour ajouter un nouvel items dans la db items
         // {
             
-            //index_resto = 1;
+        //     index_resto = connecter_compte_resto();
 
-            // modifier_menu();
+        //     modifier_menu();
 
-            // destroy(&items);
 
+        // }
+        // //Tests pour supprimer un item
+        // {
+        //     supprimer_item();
         // }
         // //Tests pour consulter le solde du restaurant
         // {
-        //     index_resto = 1;
 
         //     consulter_solde_restaurant();
         // }
