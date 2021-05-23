@@ -219,12 +219,18 @@ int main()
         // //Tests pour ajouter un nouvel items dans la db items
         // {
             
-            index_resto = 1;
+            //index_resto = 1;
 
-            modifier_menu();
+            // modifier_menu();
 
-            destroy(&items);
+            // destroy(&items);
 
+        // }
+        // //Tests pour consulter le solde du restaurant
+        // {
+        //     index_resto = 1;
+
+        //     consulter_solde_restaurant();
         // }
     }
     

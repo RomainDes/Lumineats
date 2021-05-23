@@ -361,8 +361,20 @@ int ajouter_item_menu(int menu){
 
 void supprimer_item(){
 //On supprime un ligne dans la db menu
+
 }
 
 void consulter_solde_restaurant(){
 //On affiche le solde du restaurant que l'on traite
+    if(index_resto > 0){
+        FILE * fichierresto_read = fopen("database/restaurants.csv", "r");
+        vector dbresto = lecture_table_restaurants(fichierresto_read);
+        fclose(fichierresto_read);
+
+        iterator i = at(&dbresto,index_resto-1);
+        restaurant *const resto = (restaurant*)i.element;
+
+        printf("Solde : %.2f\n", resto->solde);
+    }
+    else    printf("Vous n'êtes pas connecté à un compte.\n");
 }
