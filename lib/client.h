@@ -14,7 +14,7 @@ typedef struct client              //Structure pour la table client
 
 int index_client_counter(vector const* dbclient);
 
-iterator trouver_client_avec_id(int id);
+// iterator trouver_client_avec_id(int id);
 
 void creer_compte_client();
 
