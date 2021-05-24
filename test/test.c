@@ -227,24 +227,24 @@ int main()
         //Tests pour créer un compte client
         {
             //Créer un nouveau compte resto introduit dans la db client
-            //creer_compte_client();
+            creer_compte_client();
 
             //Se déconnecter
             //index_resto = 0;
 
-            // FILE *test_db_clients = fopen("database/clients.csv", "r");
-            // vector clients = lecture_table_clients(test_db_clients);
-            // fclose(test_db_clients);
-            // TEST(size(clients) == 1);
-            // destroy(&clients);
+            FILE *test_db_clients = fopen("database/clients.csv", "r");
+            vector clients = lecture_table_clients(test_db_clients);
+            fclose(test_db_clients);
+            TEST(size(clients) == 1);
+            destroy(&clients);
         }
         //Tests pour se connecter à un compte client
         {
             
-            // int index_client;
-            // index_client = connecter_compte_client();
+            int index_client;
+            index_client = connecter_compte_client();
 
-            // TEST(index_client == 1);
+            TEST(index_client == 1);
         }
         //Tests pour supprimer un compte client
         {
