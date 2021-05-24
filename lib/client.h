@@ -34,15 +34,15 @@ void consulter_solde_client(int id);
 
 void crediter_solde_client(int id);
 
-void debiter_solde_client();
+void debiter_solde_client(int id, float val);
 
-void crediter_solde_resto();
+void crediter_solde_restaurant(int id, float val);
 
-void crediter_solde_livreur();
+void crediter_solde_livreur(int id, float val);
 
-void voir_liste_resto();
+void voir_liste_restau();
 
-void restreindre_liste_resto();
+void restreindre_liste_restau();
 
 void voir_liste_item();
 
