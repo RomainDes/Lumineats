@@ -1,5 +1,6 @@
 #include "client.h"
 #include "restaurant.h"
+#include "livreur.h"
 
 #include <stdio.h>
 
@@ -343,22 +344,97 @@ void crediter_solde_client(int id){
 
 //Permet de débiter le solde d'un client
 
-void debiter_solde_client(){
+void debiter_solde_client(int id, float val){
+    //On ouvre la bd client et on soustrait la valeur du solde de la ligne de compte à la valeur entrée en paramètre
+    //du compte auquel on est connecté
 
+    FILE *fichierclient_read = fopen("database/clients.csv", "r");
+    vector dbclient = lecture_table_clients(fichierclient_read);
+    fclose(fichierclient_read);  
+
+    iterator iterateur = at(&dbclient, id);
+    client * client_connecte;
+
+
+    client_connecte = (struct client*) iterateur.element;
+    
+    client_connecte -> solde -= val;
+
+    printf("Votre compte à été débité de %.2f euros \n", val);
+    
+    set(iterateur, (void *)client_connecte);
+
+    FILE *fichierclient_write = fopen("database/clients.csv", "w");
+    ecriture_table_clients(fichierclient_write, &dbclient);
+
+    fclose(fichierclient_write);
+
+    destroy(&dbclient); 
+
+    return;
 }
 
 //Permet de créditer le solde du restaurant
 
-void crediter_solde_restaurant(){
+void crediter_solde_restaurant(int id, float val){
+    //On ouvre la bd restaurant et on additionne la valeur du solde de la ligne de compte à la valeur entrée en paramètre 
+    //du compte auquel on est connecté
 
+    FILE *fichierresto_read = fopen("database/restaurants.csv", "r");
+    vector dbresto = lecture_table_restaurants(fichierresto_read);
+    fclose(fichierresto_read);  
+
+    iterator iterateur = at(&dbresto, id);
+    restaurant * resto_connecte;
+
+    resto_connecte = (struct restaurant*) iterateur.element;
+
+    resto_connecte -> solde += val;
+
+    printf("Le compte %s a bien été crédité de %.2f euros \n", resto_connecte -> nom, val);
+    
+    set(iterateur, (void *)resto_connecte);
+
+    FILE *fichierresto_write = fopen("database/restaurants.csv", "w");
+    ecriture_table_restaurants(fichierresto_write, &dbresto);
+
+    fclose(fichierresto_write);
+
+    destroy(&dbresto); 
+
+    return;
 }
 
 //Permet de crediter le solde d'un livreur
 
-void crediter_solde_livreur(){
-    
-}
+void crediter_solde_livreur(int id, float val){
+    //On ouvre la bd livreur et on additionne la valeur du solde de la ligne de compte à la valeur entrée en paramètre 
+    //du compte auquel on est connecté
 
+    FILE *fichierlivreur_read = fopen("database/livreurs.csv", "r");
+    vector dblivreur = lecture_table_livreurs(fichierlivreur_read);
+    fclose(fichierlivreur_read);  
+
+    iterator iterateur = at(&dblivreur, id);
+    livreur * livreur_connecte;
+
+    livreur_connecte = (struct livreur*) iterateur.element;
+
+    livreur_connecte -> solde += val;
+
+    printf("Le compte %s a bien été crédité de %.2f euros \n", livreur_connecte -> nom, val);
+    
+    set(iterateur, (void *)livreur_connecte);
+
+    FILE *fichierlivreur_write = fopen("database/livreurs.csv", "w");
+    ecriture_table_livreurs(fichierlivreur_write, &dblivreur);
+
+    fclose(fichierlivreur_write);
+
+    destroy(&dblivreur); 
+
+    return;
+}
 
                          /*----------LISTE DES RESTAU----------*/
 
