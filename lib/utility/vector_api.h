@@ -108,6 +108,10 @@ iterator at(
     vector const* v,
     size_t const index);
 
+iterator at_origin(
+    vector const* v,
+    size_t const index);
+
 // Si 'a' précède 'b', renvoie un nombre négatif.
 // Si 'a' égale 'b', renvoie zéro.
 // Si 'a' succède 'b', renvoie un nombre positif.

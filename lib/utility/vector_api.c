@@ -268,6 +268,16 @@ iterator at(
     };
 }
 
+iterator at_origin(
+    vector const* v,
+    size_t const index)
+{
+    return (iterator){
+        .element = v->data + index * v->element_size,
+        .elem_size = v -> element_size,
+    };
+}
+
 int compare(
     iterator const a,
     iterator const b)

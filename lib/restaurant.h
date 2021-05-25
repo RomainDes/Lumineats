@@ -1,11 +1,10 @@
-#ifndef DEF_RESTAURANT
-#define DEF_RESTAURANT
-
 #include "utility/vector.h"
 #include "utility/db.h"
 
 #include <stdlib.h>
 #include <unistd.h>
+#include <assert.h>
+
 
 
 
@@ -35,8 +34,6 @@ int index_counter(vector const* dbresto, char structure);
 
 int compare_char(const char *a,const char*b);
 
-//restaurant make_restaurant();
-
 
 //Permet de créer un compte pour un restaurant avec les 
 //informations suivante : le nom, le code postal, 
@@ -53,7 +50,7 @@ int connecter_compte_resto();
 
 //Permet de supprimer un compte de la base de données et 
 //les références dans les items créé par celui-ci.
-void supprimer_compte_resto();
+int supprimer_compte_resto();
 
 
 //Permet de modifier le menu d'un restaurant grâce aux trois 
@@ -81,4 +78,8 @@ void supprimer_item();
 //Permet de consulter le solde du restaurant 
 void consulter_solde_restaurant();
 
-#endif
+//INTERFACE//
+
+int menu_restaurant();
+
+int menu_restaurant_compte();

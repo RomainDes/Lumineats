@@ -172,6 +172,39 @@ int main()
 
     //Tests pour les fonctions de restaurant.c
     {
+        //Tests de l'interface
+        {
+            int again = 0;
+            do{
+                printf("\n");
+                system("clear");
+                //Page principal
+
+                printf("*** Bienvenue sur Lumineats, la livraison à vitesse luminique ***\n\n* Menu Principal *\n\nVous êtes :\n1. Un·e restaurateur(trice)\n2. Un·e livreur(se)\n3. Un·e client(e)\nVotre choix ('q' pour quitter) : ");
+
+                char operation = getchar();
+                switch(operation)
+                {
+                    
+                    case '1':
+                        again = menu_restaurant();
+                        break;
+                    case '2':
+                        printf("Livreur\n");
+                        break;
+                    case '3':
+                        printf("Client\n");
+                        break;
+                    case 'q':
+                        again = 1;
+                        break;
+                    default :
+                        again = 0;
+                        
+                }
+            }   while(again == 0);
+
+        }
         // //Tests pour créer un compte restaurant
         // {
         //     index_resto = 0;
@@ -188,15 +221,15 @@ int main()
         //     index_resto = connecter_compte_resto();
 
         // }
-        //Tests pour supprimer un compte restaurant et les items qu'il a crée
+        // //Tests pour supprimer un compte restaurant et les items qu'il a crée
         // {
-            // //Se déconnecter
-            // index_resto = 0;
+        //     //Se déconnecter
+        //     index_resto = 0;
 
-            // index_resto = creer_compte_resto();
+        //     index_resto = creer_compte_resto();
 
-            // //Se déconnecter
-            // index_resto = 0;
+        //     //Se déconnecter
+        //     index_resto = 0;
 
         //     index_resto = connecter_compte_resto();
         //     supprimer_compte_resto(index_resto);

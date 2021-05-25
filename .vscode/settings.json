@@ -10,6 +10,11 @@
         "stdbool.h": "c",
         "vector_types.h": "c",
         "unistd.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "vector_api.h": "c",
+        "link.h": "c",
+        "main.h": "c",
+        "interface.h": "c",
+        "test_harness.h": "c"
     }
 }

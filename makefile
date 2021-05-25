@@ -32,6 +32,12 @@ build/client.o: lib/client.c lib/client.h lib/restaurant.h lib/utility/vector.h 
 build/restaurant.o: lib/restaurant.c lib/restaurant.h lib/utility/vector.h lib/utility/db.h | build
 	gcc -Wno-pointer-arith -Wall -Werror -pedantic --debug -c lib/restaurant.c -I ./lib -o build/restaurant.o
 
+# build/interface.o: lib/interface.c | build
+# 	gcc -Wno-pointer-arith -Wall -Werror -pedantic --debug -c lib/interface.c -I ./lib -o build/interface.o
+
+# build/interface: build/interface.o build/libvector.a build/libdb.a build/liblink.a | build
+# 	gcc build/interface.o -L build -l vector -l db -l link -o build/interface
+
 
 # Lier les bibliothèques statique (ajout des fichiers objets dans la ligne de commande)
 
