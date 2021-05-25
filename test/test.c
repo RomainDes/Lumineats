@@ -252,6 +252,67 @@ int main()
 
         //     consulter_solde_restaurant();
         // }
+
+    }
+
+        //Tests pour les fonctions de client.c
+    {
+        //Tests pour créer un compte client
+        {
+            //Créer un nouveau compte resto introduit dans la db client
+            // creer_compte_client();
+
+            //Se déconnecter
+            //index_resto = 0;
+
+            // FILE *test_db_clients = fopen("database/clients.csv", "r");
+            // vector clients = lecture_table_clients(test_db_clients);
+            // fclose(test_db_clients);
+            // TEST(size(clients) == 1);
+            // destroy(&clients);
+        }
+        //Tests pour se connecter à un compte client
+        {
+            
+            // int index_client;
+            // index_client = connecter_compte_client();
+
+            // TEST(index_client == 1);
+        }
+        //Tests pour supprimer un compte client
+        {
+            //Se déconnecter
+            // index_client = 0;
+
+            // creer_compte_client();
+            // creer_compte_client();
+
+            //Se déconnecter
+            // int index_client = 0;
+
+            // index_client = connecter_compte_client();
+            // modifier_cp_client(index_client);
+            // modifier_tel_client(index_client);
+            // consulter_solde_client(index_client);
+            // crediter_solde_client(index_client);
+            // consulter_solde_client(index_client);
+            // debiter_solde_client(index_client, 10.25);
+            // consulter_solde_client(index_client);
+            // int index_resto = creer_compte_resto();
+            // crediter_solde_restaurant(index_resto, 10.25);
+            int index_client = connecter_compte_client();
+            voir_liste_restau();
+            restreindre_liste_restau(index_client);
+                
+            FILE *test_db_client = fopen("database/clients.csv", "r");
+            vector clients = lecture_table_clients(test_db_client);
+            fclose(test_db_client);
+
+            TEST(size(clients) == 1);
+
+
+            // destroy(&clients);
+        }
     }
     
 
