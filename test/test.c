@@ -248,22 +248,25 @@ int main()
             //Se déconnecter
             // index_client = 0;
 
-            creer_compte_client();
-            creer_compte_client();
+            // creer_compte_client();
+            // creer_compte_client();
 
             //Se déconnecter
-            int index_client = 0;
+            // int index_client = 0;
 
-            index_client = connecter_compte_client();
-            modifier_cp_client(index_client);
-            modifier_tel_client(index_client);
-            consulter_solde_client(index_client);
-            crediter_solde_client(index_client);
-            consulter_solde_client(index_client);
-            debiter_solde_client(index_client, 10.25);
-            consulter_solde_client(index_client);
-            int index_resto = creer_compte_resto();
-            crediter_solde_restaurant(index_resto, 10.25);
+            // index_client = connecter_compte_client();
+            // modifier_cp_client(index_client);
+            // modifier_tel_client(index_client);
+            // consulter_solde_client(index_client);
+            // crediter_solde_client(index_client);
+            // consulter_solde_client(index_client);
+            // debiter_solde_client(index_client, 10.25);
+            // consulter_solde_client(index_client);
+            // int index_resto = creer_compte_resto();
+            // crediter_solde_restaurant(index_resto, 10.25);
+            int index_client = connecter_compte_client();
+            voir_liste_restau();
+            restreindre_liste_restau(index_client);
                 
             FILE *test_db_client = fopen("database/clients.csv", "r");
             vector clients = lecture_table_clients(test_db_client);

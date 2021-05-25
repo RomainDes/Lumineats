@@ -42,7 +42,11 @@ void crediter_solde_livreur(int id, float val);
 
 void voir_liste_restau();
 
-void restreindre_liste_restau();
+vector voir_qui_liste_restau(int id);
+
+void voir_type_liste_restau(int id, vector dbresto);
+
+void restreindre_liste_restau(int id);
 
 void voir_liste_item();
 

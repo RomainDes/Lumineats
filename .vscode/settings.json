@@ -10,6 +10,16 @@
         "stdbool.h": "c",
         "vector_types.h": "c",
         "unistd.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "*.tcc": "c",
+        "string": "c",
+        "string_view": "c",
+        "memory_resource": "c",
+        "array": "c",
+        "deque": "c",
+        "list": "c",
+        "unordered_map": "c",
+        "vector": "c",
+        "initializer_list": "c"
     }
 }
