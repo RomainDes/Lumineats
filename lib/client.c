@@ -6,7 +6,7 @@
 
 //Permet de mettre en place l'index, à chaque fois qu'on appelle la fonction l'id incrémente de 1
 int index_client_counter(vector const* dbclient){
-    client *c = (client*)value(at(dbclient, dbclient->num_elements - 1));
+    client *c = (client*)value(at(dbclient, dbclient->num_elements));
     return c->id + 1;
 }
 
@@ -15,28 +15,28 @@ int index_client_counter(vector const* dbclient){
 
 //Fonction utilitaire permettant de trouver dans la base de donnee
 //les informations du compte avec l'id id
-iterator trouver_client_avec_id(int id){
-    FILE* fichierclient;
-    fichierclient = fopen("database/clients.csv", "r");
-    vector dbclient = lecture_table_clients(fichierclient);
-    fclose(fichierclient);
+// iterator trouver_client_avec_id(int id){
+//     FILE* fichierclient;
+//     fichierclient = fopen("database/clients.csv", "r");
+//     vector dbclient = lecture_table_clients(fichierclient);
+//     fclose(fichierclient);
 
-    iterator actu;
-    int trouve = 0;
-    client * client_dans_bd;
+//     iterator actu;
+//     int trouve = 0;
+//     client * client_dans_bd;
 
-    actu = begin(&dbclient);
+//     actu = begin(&dbclient);
 
-    while(trouve == 0){
-        client_dans_bd = (struct client*) actu.element;
-        if(client_dans_bd->id == id){
-            trouve = 1;
-        }
-        increment(&actu, 1);
-    }
+//     while(trouve == 0){
+//         client_dans_bd = (struct client*) actu.element;
+//         if(client_dans_bd->id == id){
+//             trouve = 1;
+//         }
+//         increment(&actu, 1);
+//     }
 
-    return actu;
-}
+//     return actu;
+// }
 
 
 //Permet a un client de se connecter a son compte, renvoie l'id du compte ou on se 
@@ -188,15 +188,26 @@ int nom_client_exist(vector const* dbclient, char nom[TAILLE_NOM]){
 //Permet a un client de supprimer son compte et toutes les information y etant contenues
 
 void supprimer_compte_client(int id){
-    FILE* fichierclient;
-    fichierclient = fopen("database/clients.csv","r+");
-    vector dbclient = lecture_table_clients(fichierclient);
+    if(id > 0){
+        //Supprimer le client index
 
-    iterator iterateur;
+        FILE * fichierclient_read = fopen("database/clients.csv", "r");
+        vector dbclient = lecture_table_clients(fichierclient_read);
+        fclose(fichierclient_read);
 
-    iterateur = trouver_client_avec_id(id);
+        erase(&dbclient, at(&dbclient,id));
 
-    erase(&dbclient, iterateur);
+        if(dbclient.num_elements != 0){
+            FILE * fichierclient_write = fopen("database/clients.csv", "w");
+            ecriture_table_clients(fichierclient_write, &dbclient);
+            fclose(fichierclient_write);
+        }
+        else    remove("database/clients.csv");
+        
+
+        id = 0;
+    }
+    else    printf("Vous n'êtes pas connecté à un compte.\n");
 
     return;
 }
@@ -211,27 +222,33 @@ void modifier_cp_client(int id){
     //l'index du compte ou on est connecté, on récupere le code postal
     //On remplace avec le nouveau code postal
 
-    FILE* fichierclient;
-    fichierclient = fopen("database/clients.csv","r+");
-    vector dbclient = lecture_table_clients(fichierclient);
+    FILE* fichierclient_read;
+    fichierclient_read = fopen("database/clients.csv","r");
+    vector dbclient = lecture_table_clients(fichierclient_read);
+    fclose(fichierclient_read);
 
     client* client_connecte;
     iterator iterateur;
-    char cp_actu[5];
+    char cp_actu[6];
 
-    iterateur = trouver_client_avec_id(id);
+    iterateur = at(&dbclient, id);
     client_connecte = (struct client*) iterateur.element;
 
-    printf("Veuillez entrer un nouveau code postal\n");
-    scanf("%s", cp_actu);
-    for(int i = 0; i < 5; i++){
+    printf("Veuillez entrer un nouveau code postal :");
+    scanf("\n%127[^\n]", cp_actu);
+    for(int i = 0; i < 6; i++){
         client_connecte->code_postal[i]=cp_actu[i];
     }
 
     set(iterateur, (void *)client_connecte);
-    ecriture_table_clients(fichierclient, &dbclient);
 
-    fclose(fichierclient);
+    FILE* fichierclient_write;
+    fichierclient_write = fopen("database/clients.csv","w");
+    ecriture_table_clients(fichierclient_write, &dbclient);
+    fclose(fichierclient_write);
+    
+
+    destroy(&dbclient);
 
     return;
 }
@@ -240,27 +257,33 @@ void modifier_cp_client(int id){
 //Changer de numéro de téléphone
 void modifier_tel_client(int id){
 
-    FILE* fichierclient;
-    fichierclient = fopen("database/clients.csv","r+");
-    vector dbclient = lecture_table_clients(fichierclient);
+    FILE* fichierclient_read;
+    fichierclient_read = fopen("database/clients.csv","r");
+    vector dbclient = lecture_table_clients(fichierclient_read);
+    fclose(fichierclient_read);
 
     client* client_connecte;
     iterator iterateur;
-    char tel_actu[14];
+    char tel_actu[15];
 
-    iterateur = trouver_client_avec_id(id);
+    iterateur = at(&dbclient, id);
     client_connecte = (struct client*) iterateur.element;
 
-    printf("Veuillez entrer un nouveau numéro de téléphone\n");
-    scanf("%s", tel_actu);
-    for(int i = 0; i < 14; i++){
+    printf("Veuillez entrer un nouveau numéro de téléphone :");
+    scanf("\n%127[^\n]", tel_actu);
+    for(int i = 0; i < 15; i++){
         client_connecte->tel[i]=tel_actu[i];
     }
 
     set(iterateur, (void *)client_connecte);
-    ecriture_table_clients(fichierclient, &dbclient);
 
-    fclose(fichierclient);
+    FILE* fichierclient_write;
+    fichierclient_write = fopen("database/clients.csv","w");
+    ecriture_table_clients(fichierclient_write, &dbclient);
+    fclose(fichierclient_write);
+    
+
+    destroy(&dbclient);
 
     return;
 }
@@ -270,8 +293,8 @@ void modifier_compte_client(int id){
     //On combine les deux fonctions au dessus en demandant a l'utilisateur ce qu'il
     //souhaite  modifier
     int value;
-    printf("Veuillez taper 1 ou 2 selon ce que vous souhaitez modifier : \n1) Code postal\n2) Numero de tel");
-    scanf("\n%i\n",&value);
+    printf("Veuillez taper 1 ou 2 selon ce que vous souhaitez modifier : \n1) Code postal\n2) Numero de tel\n");
+    scanf("\n%i",&value);
 
     switch (value)
     {
@@ -299,14 +322,20 @@ void consulter_solde_client(int id){
     //On ouvre la bd client et on recupère la valeur du solde a la ligne du compte
     //auquel on est connecté
 
+    FILE* fichierclient;
+    fichierclient = fopen("database/clients.csv","r+");
+    vector dbclient = lecture_table_clients(fichierclient);
+
     iterator iterateur;
     client * client_dans_bd;
 
-    iterateur = trouver_client_avec_id(id);
+    iterateur = at(&dbclient, id);
 
     client_dans_bd = (struct client*) iterateur.element;
     
-    printf("Le solde sur ce compte est de %f euros", client_dans_bd->solde);
+    printf("Le solde sur ce compte est de %.2f euros\n", client_dans_bd->solde);
+
+    destroy(&dbclient);
 
     return;
 }
@@ -317,27 +346,33 @@ void crediter_solde_client(int id){
     //On ouvre la bd client et on demande à l'utilisateur le montant qu'il veut crediter 
     //sur son solde a la ligne du compte auquel on est connecté
 
-    FILE* fichierclient;
-    fichierclient = fopen("database/clients.csv","r+");
-    vector dbclient = lecture_table_clients(fichierclient);
+    FILE* fichierclient_lecture;
+    fichierclient_lecture = fopen("database/clients.csv","r");
+    vector dbclient = lecture_table_clients(fichierclient_lecture);
+    fclose(fichierclient_lecture);
 
 
     iterator iterateur;
     client * client_connecte;
 
     float nouv_solde;
-    iterateur = trouver_client_avec_id(id);
+    iterateur = at(&dbclient, id);
 
     client_connecte = (struct client*) iterateur.element;
     
-    printf("Indiquez le montant que vous voulez créditer sur votre compte\n");
-    scanf("%f", &nouv_solde);
+    printf("Indiquez le montant que vous voulez créditer sur votre compte :");
+    scanf("\n%f", &nouv_solde);
     client_connecte -> solde += nouv_solde;
     
     set(iterateur, (void *)client_connecte);
-    ecriture_table_clients(fichierclient, &dbclient);
 
-    fclose(fichierclient);
+    FILE* fichierclient_ecriture;
+    fichierclient_ecriture = fopen("database/clients.csv","w");
+    ecriture_table_clients(fichierclient_ecriture, &dbclient);
+    fclose(fichierclient_ecriture);
+    
+
+    destroy(&dbclient);
 
     return;
 }
@@ -443,13 +478,145 @@ void crediter_solde_livreur(int id, float val){
 //Permet à un client de voir la liste des restaurants
 
 void voir_liste_restau(){
+    FILE *fichierresto_read = fopen("database/restaurants.csv", "r");
+    vector dbresto = lecture_table_restaurants(fichierresto_read);
+    fclose(fichierresto_read);  
 
+    iterator iterateur = begin(&dbresto);
+    restaurant * resto_connecte;
+
+    printf("Liste des restaurants sur Lumineats ainsi que leur type de cuisine :\n\n");
+
+    while(compare(iterateur, end(&dbresto)) != 0){
+        resto_connecte = (struct restaurant*) iterateur.element;
+        printf("%s (Type : %s)\n", resto_connecte -> nom, resto_connecte -> type);
+        increment(&iterateur, 1);
+    }
+
+    destroy(&dbresto);
+
+    return;
 }
+
+vector voir_qui_liste_restau(int id){
+
+    restaurant resto;
+    vector liste = make_vector(sizeof(resto),0, 2.);
+
+    FILE *fichierresto_read = fopen("database/restaurants.csv", "r");
+    vector dbresto = lecture_table_restaurants(fichierresto_read);
+    fclose(fichierresto_read);  
+
+    FILE *fichierlivreur_read = fopen("database/livreurs.csv", "r");
+    vector dblivreur = lecture_table_livreurs(fichierlivreur_read);
+    fclose(fichierlivreur_read); 
+
+    FILE *fichierclient_read = fopen("database/clients.csv", "r");
+    vector dbclient = lecture_table_clients(fichierclient_read);
+    fclose(fichierclient_read);
+
+    iterator iterateur_resto = begin(&dbresto);
+    restaurant * resto_connecte;
+    
+
+    iterator iterateur_livreur = begin(&dblivreur);
+    livreur * livreur_connecte;
+
+    iterator iterateur_client = at(&dbclient, id);
+    client * client_connecte; 
+    client_connecte = (struct client*) iterateur_client.element;
+
+    printf("\nListe des restaurants sur Lumineats qui peuvent vous livrer :\n\n");
+    int res = 0;
+    while(compare(iterateur_livreur, end(&dblivreur)) != 0){
+        livreur_connecte = (struct livreur*) iterateur_livreur.element;
+
+        for(int i = 0; i < livreur_connecte -> nb_deplacements && res == 0; i++){
+            if(compare_char(client_connecte -> code_postal, livreur_connecte ->deplacements[i]) == 1 ){
+                res = 1;
+            }
+        }
+        if (res == 1){
+            while(compare(iterateur_resto, end(&dbresto)) != 0){
+                for(int i = 0; i < livreur_connecte -> nb_deplacements; i++){
+                    resto_connecte = (struct restaurant*) iterateur_resto.element;
+                    if(compare_char(resto_connecte -> code_postal, livreur_connecte ->deplacements[i]) == 1 ){
+                        printf("%s (Type : %s)\n", resto_connecte -> nom, resto_connecte -> type);
+                        push_back(&liste, iterateur_resto.element);
+                    }
+                } 
+                increment(&iterateur_resto, 1);
+            }
+        }
+                
+        iterateur_resto = begin(&dbresto);
+        increment(&iterateur_livreur, 1);
+    }
+
+    destroy(&dbresto);
+    destroy(&dblivreur);
+    destroy(&dbclient);
+
+    return liste;
+}
+
+void voir_type_liste_restau(int id, vector dbresto){
+
+    iterator iterateur_resto = begin(&dbresto);
+    restaurant * resto_connecte; 
+
+    char type_resto[TAILLE_TYPE];
+
+    printf("\nEntrez un type de cuisine pour afficher la liste des restaurants compatibles :");
+    scanf("\n%127[^\n]", type_resto);
+    printf("\n");
+    
+    while(compare(iterateur_resto, end(&dbresto)) != 0){
+        resto_connecte = (struct restaurant*) iterateur_resto.element;
+        if(compare_char(resto_connecte -> type, type_resto) == 1 ){
+            printf("%s (Type : %s)\n", resto_connecte -> nom, resto_connecte -> type);
+        }
+        increment(&iterateur_resto, 1);
+    }
+
+    destroy(&dbresto);
+
+    return;
+}
+
 
 //Permet à un client de restreindre la liste de restaurants qu'il peut voir
 
-void restreindre_liste_restau(){
+void restreindre_liste_restau(int id){
+    //On combine les deux fonctions au dessus en demandant a l'utilisateur ce qu'il
+    //souhaite  pouvoir voir
+    int value;
+    printf("Veuillez taper 1, 2 ou 3 selon ce que vous souhaitez pouvoir voir : \n1) Qui peut me livrer\n2) Entrer un type de cuisine\n3) Faire les deux\n");
+    scanf("\n%i",&value);
 
+    FILE *fichierresto_read = fopen("database/restaurants.csv", "r");
+    vector dbresto = lecture_table_restaurants(fichierresto_read);
+    fclose(fichierresto_read);
+
+    //vector dbresto2;
+
+    switch (value)
+    {
+    case 1:
+        voir_qui_liste_restau(id);
+        break;
+    case 2: 
+        voir_type_liste_restau(id, dbresto);
+        break;
+    case 3:
+        voir_type_liste_restau(id, voir_qui_liste_restau(id));
+        break;
+    default:
+        printf("Valeur incorrecte, veuillez recommencer\n");
+        break;
+    }
+
+    return; 
 }
 
 

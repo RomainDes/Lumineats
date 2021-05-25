@@ -14,7 +14,7 @@ typedef struct client              //Structure pour la table client
 
 int index_client_counter(vector const* dbclient);
 
-iterator trouver_client_avec_id(int id);
+// iterator trouver_client_avec_id(int id);
 
 void creer_compte_client();
 
@@ -42,7 +42,11 @@ void crediter_solde_livreur(int id, float val);
 
 void voir_liste_restau();
 
-void restreindre_liste_restau();
+vector voir_qui_liste_restau(int id);
+
+void voir_type_liste_restau(int id, vector dbresto);
+
+void restreindre_liste_restau(int id);
 
 void voir_liste_item();
 
