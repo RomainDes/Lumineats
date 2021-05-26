@@ -44,13 +44,23 @@ void voir_liste_restau();
 
 vector voir_qui_liste_restau(int id);
 
-void voir_type_liste_restau(int id, vector dbresto);
+void voir_type_liste_restau(vector dbresto);
 
 void restreindre_liste_restau(int id);
 
 void voir_liste_item();
 
-void restreindre_liste_item();
+vector voir_liste_unique_item(vector dbitem);
+
+vector voir_liste_type_item(vector dbitem);
+
+int type_resto_exist(vector const* dbresto, char type[TAILLE_TYPE]);
+
+vector voir_qui_liste_item(int id, vector dbitem);
+
+vector voir_liste_solde_item(int id, vector dbitem);
+
+void restreindre_liste_item(int id);
 
 void ajouter_item_commande();
 

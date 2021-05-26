@@ -56,12 +56,12 @@ int connecter_compte_client(){
 
     fichierclient = fopen("database/clients.csv", "r");
     vector dbclient = lecture_table_clients(fichierclient);
+    fclose(fichierclient);
 
     //On demande le nom d'utilisateur et vérifie qu'il est bien dans la db
 
         printf("Veuillez entrer votre nom d'utilisateur : ");
         scanf("\n%127[^\n]", username);
-        fclose(fichierclient);
         int index = nom_client_exist(&dbclient, username);
 
         while( index == 0){
@@ -495,6 +495,8 @@ void voir_liste_restau(){
 
     destroy(&dbresto);
 
+    printf("\n");
+
     return;
 }
 
@@ -557,19 +559,29 @@ vector voir_qui_liste_restau(int id){
     destroy(&dblivreur);
     destroy(&dbclient);
 
+    printf("\n");
+
     return liste;
 }
 
-void voir_type_liste_restau(int id, vector dbresto){
+void voir_type_liste_restau(vector dbresto){
 
     iterator iterateur_resto = begin(&dbresto);
     restaurant * resto_connecte; 
 
+    int index = 0;
     char type_resto[TAILLE_TYPE];
 
-    printf("\nEntrez un type de cuisine pour afficher la liste des restaurants compatibles :");
-    scanf("\n%127[^\n]", type_resto);
+    while(index == 0){
+        printf("\nEntrez un type de cuisine pour afficher la liste des restaurants compatibles :");
+        scanf("\n%127[^\n]", type_resto);
+        index = type_resto_exist(&dbresto, type_resto);
+        if(index == 0){
+            printf("Le type que vous avez entré n'existe pas. Veuillez recommencer\n");
+        }
+    }
     printf("\n");
+
     
     while(compare(iterateur_resto, end(&dbresto)) != 0){
         resto_connecte = (struct restaurant*) iterateur_resto.element;
@@ -580,6 +592,8 @@ void voir_type_liste_restau(int id, vector dbresto){
     }
 
     destroy(&dbresto);
+
+    printf("\n");
 
     return;
 }
@@ -598,18 +612,16 @@ void restreindre_liste_restau(int id){
     vector dbresto = lecture_table_restaurants(fichierresto_read);
     fclose(fichierresto_read);
 
-    //vector dbresto2;
-
     switch (value)
     {
     case 1:
         voir_qui_liste_restau(id);
         break;
     case 2: 
-        voir_type_liste_restau(id, dbresto);
+        voir_type_liste_restau(dbresto);
         break;
     case 3:
-        voir_type_liste_restau(id, voir_qui_liste_restau(id));
+        voir_type_liste_restau(voir_qui_liste_restau(id));
         break;
     default:
         printf("Valeur incorrecte, veuillez recommencer\n");
@@ -626,13 +638,309 @@ void restreindre_liste_restau(int id){
 //Permet à un client de consulter la liste des items
 
 void voir_liste_item(){
+    //On ouvre la db item et on affiche tous les items ainsi que leur prix correspondant 
 
+    FILE *fichieritem_read = fopen("database/items.csv", "r");
+    vector dbitem = lecture_table_items(fichieritem_read);
+    fclose(fichieritem_read);  
+
+    iterator iterateur = begin(&dbitem);
+    item * item_connecte;
+
+    printf("Liste des items proposés sur Lumineats :\n\n");
+
+    while(compare(iterateur, end(&dbitem)) != 0){
+        item_connecte = (struct item*) iterateur.element;
+            printf("%s (Prix : %.2f euros)\n", item_connecte -> nom, item_connecte -> prix);
+        increment(&iterateur, 1);
+    }
+
+    destroy(&dbitem);
+
+    printf("\n");
+
+    return;
+}
+
+//Permet à un client de consulter les items d'un restaurant qu'il aura choisit
+
+vector voir_liste_unique_item(vector dbitem){
+
+    printf("\n");
+    system("clear");
+
+    FILE *fichierresto_read = fopen("database/restaurants.csv", "r");
+    vector dbresto = lecture_table_restaurants(fichierresto_read);
+    fclose(fichierresto_read);  
+
+    item items;
+    vector liste = make_vector(sizeof(items),0, 2.);
+
+    
+    int index = 0;
+    char nom_resto[TAILLE_NOM];
+
+    while(index == 0){
+        printf("Entrez le nom du restaurant dont vous voulez voir les items :");
+        scanf("\n%127[^\n]", nom_resto);
+        index = nom_resto_exist(&dbresto, nom_resto);
+        if(index == 0){
+            printf("Le nom que vous avez entré n'existe pas. Veuillez recommencer\n");
+        }
+    }
+
+    iterator iterateur_resto = at(&dbresto, index);
+    restaurant * resto_connecte;
+
+    resto_connecte = (struct restaurant*) iterateur_resto.element;
+
+    printf("Liste des items proposés par ce restaurant :\n\n");
+
+    for(int i = 0; i < resto_connecte -> nb_menu; i++){
+
+        iterator iterateur_item = at(&dbitem, resto_connecte -> menu[i]);
+        item *item_connecte = (struct item*) iterateur_item.element;
+        printf("Menu %i: %s (Prix : %.2f euros)\n", i+1, item_connecte -> nom, item_connecte -> prix);
+        push_back(&liste, iterateur_item.element);
+    }
+
+    destroy(&dbitem);
+    destroy(&dbresto);
+
+    printf("\n");
+
+    return liste;
+}
+
+//Permet à un client de consulter les items des restaurants liés à un type de cuisine qu'il aura choisit
+
+vector voir_liste_type_item(vector dbitem){
+
+    printf("\n");
+    system("clear");
+
+    FILE *fichierresto_read = fopen("database/restaurants.csv", "r");
+    vector dbresto = lecture_table_restaurants(fichierresto_read);
+    fclose(fichierresto_read);  
+
+    item items;
+    vector liste = make_vector(sizeof(items),0, 2.);
+
+    int index = 0;
+    char type_resto[TAILLE_TYPE];
+
+    while(index == 0){
+        printf("Entrez le type de cuisine dont vous voulez voir les items :");
+        scanf("\n%127[^\n]", type_resto);
+        index = type_resto_exist(&dbresto, type_resto);
+        if(index == 0){
+            printf("Le type que vous avez entré n'existe pas. Veuillez recommencer\n");
+        }
+    }
+
+    iterator iterateur_resto = begin(&dbresto);
+    restaurant * resto_connecte;
+
+
+    while(compare(iterateur_resto, end(&dbresto)) != 0){
+        resto_connecte = (struct restaurant*) iterateur_resto.element;
+        if(compare_char(resto_connecte -> type, type_resto) == 1 ){
+            printf("Le restaurant %s propose ces items pour le type de cuisine que vous avez sélectionné :\n\n", resto_connecte -> nom);
+            for(int i = 0; i < resto_connecte -> nb_menu; i++){
+                iterator iterateur_item = at(&dbitem, resto_connecte -> menu[i]);
+                if(iterateur_item.element != NULL){
+                    item *item_connecte = (struct item*) iterateur_item.element;
+                    printf("Menu %i: %s (Prix : %.2f euros)\n", i+1, item_connecte -> nom, item_connecte -> prix);
+                    push_back(&liste, iterateur_item.element);
+                }
+            }
+        }
+        increment(&iterateur_resto, 1);
+    }
+
+    destroy(&dbitem);
+    destroy(&dbresto);
+
+    printf("\n");
+
+    return liste;
+}
+
+//Fonction permettant de savoir si un type de cuisine existe dans la db 
+//On lit toute la base de donnée pour savoir si il existe déjà le typ, renvoie 0 si il n'existe pas sinon l'index où il existe
+int type_resto_exist(vector const* dbresto, char type[TAILLE_TYPE]){
+
+    int index = 1;
+    for(iterator r = begin(dbresto), e = end(dbresto); compare(r, e) != 0; increment(&r, 1)){
+        restaurant const* resto = (restaurant*)r.element;
+
+        if(compare_char(resto->type,type) == 1)   return index;
+        else {
+            index++;
+        }
+    }
+
+    return 0;
+}
+
+//Permet à un client de consulter les items qui peuvent lui être livrés
+
+vector voir_qui_liste_item(int id, vector dbitem){
+
+    printf("\n");
+    system("clear");
+
+    item items;
+    vector liste = make_vector(sizeof(items),0, 2.);
+
+    FILE *fichierresto_read = fopen("database/restaurants.csv", "r");
+    vector dbresto = lecture_table_restaurants(fichierresto_read);
+    fclose(fichierresto_read);  
+
+    FILE *fichierlivreur_read = fopen("database/livreurs.csv", "r");
+    vector dblivreur = lecture_table_livreurs(fichierlivreur_read);
+    fclose(fichierlivreur_read); 
+
+    FILE *fichierclient_read = fopen("database/clients.csv", "r");
+    vector dbclient = lecture_table_clients(fichierclient_read);
+    fclose(fichierclient_read);
+
+    iterator iterateur_resto = begin(&dbresto);
+    restaurant * resto_connecte;
+    
+    iterator iterateur_livreur = begin(&dblivreur);
+    livreur * livreur_connecte;
+
+    iterator iterateur_client = at(&dbclient, id);
+    client * client_connecte; 
+    client_connecte = (struct client*) iterateur_client.element;
+
+    printf("\nListe des items sur Lumineats qui peuvent vous être livrés :\n\n");
+    int res = 0;
+    while(compare(iterateur_livreur, end(&dblivreur)) != 0){
+        livreur_connecte = (struct livreur*) iterateur_livreur.element;
+
+        for(int i = 0; i < livreur_connecte -> nb_deplacements && res == 0; i++){
+            if(compare_char(client_connecte -> code_postal, livreur_connecte ->deplacements[i]) == 1 ){
+                res = 1;
+            }
+        }
+        if (res == 1){
+            while(compare(iterateur_resto, end(&dbresto)) != 0){
+                for(int i = 0; i < livreur_connecte -> nb_deplacements; i++){
+                    resto_connecte = (struct restaurant*) iterateur_resto.element;
+                    if(compare_char(resto_connecte -> code_postal, livreur_connecte ->deplacements[i]) == 1 ){
+                        printf("Le restaurant %s propose ces items et peut vous livrer :\n\n", resto_connecte -> nom);
+                        for(int i = 0; i < resto_connecte -> nb_menu; i++){
+                            iterator iterateur_item = at(&dbitem, resto_connecte -> menu[i]);
+                            if(iterateur_item.element != NULL){
+                                item *item_connecte = (struct item*) iterateur_item.element;
+                                printf("Menu %i: %s (Prix : %.2f euros)\n", i+1, item_connecte -> nom, item_connecte -> prix);
+                                push_back(&liste, iterateur_item.element);
+                            }
+                        }
+                    }
+                } 
+                increment(&iterateur_resto, 1);
+            }
+        }
+                
+        iterateur_resto = begin(&dbresto);
+        increment(&iterateur_livreur, 1);
+    }
+
+    destroy(&dbresto);
+    destroy(&dblivreur);
+    destroy(&dbclient);
+    destroy(&dbitem);
+
+    printf("\n");
+
+    return liste;
+}
+
+//Permet à un client de consulter les items qui sont moins cher que son solde actuel
+
+vector voir_liste_solde_item(int id, vector dbitem){
+    //On ouvre la db item et on affiche tous les items moins cher que le solde du client ainsi que leur prix correspondant 
+
+    printf("\n");
+    system("clear");
+
+    item items;
+    vector liste = make_vector(sizeof(items),0, 2.);
+
+    FILE *fichierclient_read = fopen("database/clients.csv", "r");
+    vector dbclient = lecture_table_clients(fichierclient_read);
+    fclose(fichierclient_read); 
+
+    iterator iterateur_item = begin(&dbitem);
+    item * item_connecte;
+
+    iterator iterateur_client = at(&dbclient, id);
+    client * client_connecte = (struct client*) iterateur_client.element;
+
+    printf("Votre solde actuel : %.2f\n\n", client_connecte -> solde);
+
+    printf("Liste des items proposés moins chers que votre solde disponible:\n\n");
+
+    while(compare(iterateur_item, end(&dbitem)) != 0){
+        item_connecte = (struct item*) iterateur_item.element;
+        if(client_connecte -> solde >= item_connecte -> prix){
+            printf("%s (Prix : %.2f euros)\n", item_connecte -> nom, item_connecte -> prix);
+            push_back(&liste, iterateur_item.element);
+        }
+        increment(&iterateur_item, 1);
+    }
+
+    destroy(&dbitem);
+    destroy(&dbclient);
+
+    printf("\n");
+
+    return liste;
 }
 
 //Permet à un client de restreindre la liste des items
 
-void restreindre_liste_item(){
+void restreindre_liste_item(int id){
+    //On combine les quatre fonctions au dessus en demandant a l'utilisateur ce qu'il
+    //souhaite  pouvoir voir
+    int value;
+    printf("Veuillez taper 1, 2, 3, 4 ou 5 selon ce que vous souhaitez pouvoir voir : \n1) Qui peut me livrer\n2) Entrer un type de cuisine\n3) Entrer un restaurant\n");
+    printf("4) Items moins chers que mon solde disponible\n5) Une combinaison de 1), 2) et 4)\n6) Une combinaison de 1), 3) et 4)\n");
+    scanf("\n%i",&value);
 
+    FILE *fichieritem_read = fopen("database/items.csv", "r");
+    vector dbitem = lecture_table_items(fichieritem_read);
+    fclose(fichieritem_read); 
+
+    switch (value)
+    {
+    case 1:
+        voir_qui_liste_item(id, dbitem);
+        break;
+    case 2: 
+        voir_liste_type_item(dbitem);
+        break;
+    case 3:
+        voir_liste_unique_item(dbitem);
+        break;
+    case 4:
+        voir_liste_solde_item(id, dbitem);
+        break;
+    case 5:
+        voir_qui_liste_item(id,voir_liste_type_item(voir_liste_solde_item(id, dbitem)));
+        break;
+    case 6:
+        voir_qui_liste_item(id,voir_liste_unique_item(voir_liste_solde_item(id, dbitem)));
+        break;
+    default:
+        printf("Valeur incorrecte, veuillez recommencer\n");
+        break;
+    }
+
+    return; 
 }
 
 //Permet à un client d'ajouter un item
