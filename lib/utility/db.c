@@ -31,7 +31,7 @@ vector lecture_table_livreurs(
     FILE* file)
 {
     
-    char c;
+    char c = ' ';
     int i = 0;
     int j = 0;
 
@@ -42,7 +42,7 @@ vector lecture_table_livreurs(
         
         fscanf(file, "%zu,%127[^,],", &livreurs.id, livreurs.nom);
 
-        while(c != ','){
+        while(c != ',' && c != EOF){
             if(j==0)    livreurs.deplacements[i] = malloc(sizeof(char));
             c = fgetc(file);
             if(c == ';' || c == ','){
