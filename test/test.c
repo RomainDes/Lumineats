@@ -172,6 +172,8 @@ int main()
 
     //Tests pour les fonctions de restaurant.c
     {
+        index_resto = 1;
+        supprimer_item();
         // //Tests pour créer un compte restaurant
         // {
         //     index_resto = 0;
