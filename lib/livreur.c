@@ -3,34 +3,6 @@
 #include "livreur.h"
 #include "restaurant.h"
 
-//Fonction utilitaire permettant de trouver dans la base de donnee
-//les informations du compte avec l'id id
-iterator trouver_livreur_avec_id(int id){
-    FILE* fichierlivreur;
-    fichierlivreur = fopen("database/livreurs.csv", "r");
-    vector dblivreur = lecture_table_livreurs(fichierlivreur);
-
-    iterator actu;
-    int trouve = 0;
-    livreur * livreur_dans_bd;
-
-    actu = begin(&dblivreur);
-
-    while(trouve == 0){
-        livreur_dans_bd = (struct livreur*) actu.element;
-        if(livreur_dans_bd->id == id){
-            trouve = 1;
-        }
-        else{
-            increment(&actu, 1);
-        }
-        
-    }
-
-    fclose(fichierlivreur);
-    return actu;
-}
-
 //Permet a un livreur de se connecter a son compte, renvoie l'id du compte ou on se 
 //connecte si on y parvient, 0 sinon
 int connecter_compte_livreur(){
@@ -47,6 +19,7 @@ int connecter_compte_livreur(){
     iterator actu, fin;
     int essai = 3;
     int res;
+
 
     fichierlivreur = fopen("database/livreurs.csv", "r");
     vector dblivreur = lecture_table_livreurs(fichierlivreur);
@@ -96,12 +69,16 @@ int connecter_compte_livreur(){
         res = 0;
     }
 
-    fclose(fichierlivreur);
+    fclose(fichierlivreur); 
+
+    FILE* flog = fopen("log.txt","a+");
+    fprintf(flog,"Le livreur %s s'est connecte a son compte (id %i)",username,res);
+    fclose(flog);  
     return res;
 }
 
 //Permet a un livreur de se creer un compte en entrant toutes ses informations
-void creer_compte_livreur(){
+int creer_compte_livreur(){
     //On commence par creer une structure livreur.
     //On fait entrer a l'utilisateur les valeurs de nom,mdp,tel et 
     //on cree un char* dans lequel l'utilisateur va rentrer
@@ -221,12 +198,16 @@ void creer_compte_livreur(){
     push_back(&dblivreur, &nouv_livreur);
     ecriture_table_livreurs(ecriturelivreur, &dblivreur);
 
+    FILE* flog = fopen("log.txt","a+");
+    fprintf(flog,"Le livreur %s a créé un nouveau compte (id %i)",nouv_livreur.nom, (int)nouv_livreur.id);
+    fclose(flog); 
+
     destroy(&dblivreur);
     destroy(&dbrestau);
     fclose(ecriturelivreur);
     fclose(fichierrestau);
 
-    return;
+    return nouv_livreur.id;
 }
 
 //Permet a un liveur de supprimer son compte et toutes les information y etant contenues
@@ -269,6 +250,11 @@ void supprimer_compte_livreur(int id){
 
     FILE* ecriturelivreur = fopen("database/livreurs.csv","w");
     ecriture_table_livreurs(ecriturelivreur, &dblivreur);
+
+    FILE* flog = fopen("log.txt","a+");
+    fprintf(flog,"Le compte livreur d'id %i a supprimé son compte", id);
+    fclose(flog); 
+
     fclose(ecriturelivreur);
     destroy(&dblivreur);
 
@@ -322,6 +308,10 @@ void modifier_cp_livreur(int id){
     FILE*ecriturelivreur = fopen("database/livreurs.csv","w");
     ecriture_table_livreurs(ecriturelivreur, &dblivreur);
 
+    FILE* flog = fopen("log.txt","a+");
+    fprintf(flog,"Le livreur d'id %i a modifié la liste de ses codes postaux", id);
+    fclose(flog); 
+
     fclose(ecriturelivreur);
     destroy(&dblivreur);
 
@@ -358,6 +348,10 @@ void modifier_tel_livreur(int id){
     set(actu, (void *)livreur_connecte);
     FILE* ecriturelivreur = fopen("database/livreurs.csv","w");
     ecriture_table_livreurs(ecriturelivreur, &dblivreur);
+
+    FILE* flog = fopen("log.txt","a+");
+    fprintf(flog,"Le livreur d'id %i a modifié son numéro de téléphone", id);
+    fclose(flog); 
 
     fclose(ecriturelivreur);
     destroy(&dblivreur);
@@ -439,6 +433,10 @@ void modifier_resto_livreur(int id){
     FILE* ecriturelivreur = fopen("database/livreurs.csv","w");
     ecriture_table_livreurs(ecriturelivreur, &dblivreur);
 
+    FILE* flog = fopen("log.txt","a+");
+    fprintf(flog,"Le livreur d'id %i a modifié sa dépendance à un restaurant",id);
+    fclose(flog); 
+
     fclose(ecriturelivreur);
     destroy(&dblivreur);
     destroy(&dbrestau);
@@ -478,16 +476,125 @@ void modifier_compte_livreur(int id){
 void consulter_solde_livreur(int id){
     //On ouvre la bd livreur et on recup la valeur de la solde a la ligne du compte
     //auquel on est connecté
-
+    FILE* fichierlivreurs = fopen("database/livreurs.csv","r");
+    vector dblivreur = lecture_table_livreurs(fichierlivreurs);
+    fclose(fichierlivreurs);
+    
     iterator iterateur;
     livreur * livreur_dans_bd;
+    int trouve = 0;
 
-    iterateur = trouver_livreur_avec_id(id);
+    iterateur = begin(&dblivreur);
 
-    livreur_dans_bd = (struct livreur*) iterateur.element;
+    while(trouve == 0){
+        livreur_dans_bd = (struct livreur*) iterateur.element;
+        if(livreur_dans_bd->id == id){
+            trouve = 1;
+        }
+        else{
+            increment(&iterateur, 1);
+        }
+    }
+
+    FILE* flog = fopen("log.txt","a+");
+    fprintf(flog,"Le livreur d'id %i a consulté son solde", id);
+    fclose(flog); 
     
-    printf("Le solde sue ce compte est de %.2f euros", livreur_dans_bd->solde);
+    destroy(&dblivreur);
+    printf("Le solde sue ce compte est de %.2f euros (Appuyez sur q pour quitter)", livreur_dans_bd->solde);
+
+    char quite =' ';
+    while( quite != 'q'){
+        scanf("%c", &quite);
+    }    
 
     return;
 }
+
+//----Fonctions de l'interface----//
+
+int gestion_compte_livreur(int idlivreur){
+    printf("\n");
+    system("clear");
+    
+    //La valeur de quite sera à 1 si on souhaite quitter l'application
+    int quite = 0;
+    char choice;
+
+    printf("* Menu Livreur *\n\nVous voulez :\n1. Supprimer votre compte\n2. Modifier votre compte\n3. Consulter votre solde\n\nVotre choix ('q' pour quitter, 'd' pour se déconnecter) : ");
+    choice = getchar();
+
+    switch(choice){
+        //On recupere l'id du livreur dans les deux cas pour appeler la fonction de gestion de compte
+        case '1':
+            supprimer_compte_livreur(idlivreur);
+            break;
+        case '2':
+            modifier_compte_livreur(idlivreur);
+            quite = gestion_compte_livreur(idlivreur);
+            break;
+        case'3':
+            consulter_solde_livreur(idlivreur);
+            quite = gestion_compte_livreur(idlivreur);
+            break;
+        case 'q':
+            quite = 1;
+            break;
+        case 'd':
+            break;
+        default :
+            //Si une valeur differente est entree, on renvoie sur le meme menu
+            quite = gestion_compte_livreur(idlivreur);
+    }
+    return quite;
+}
+
+int menu_livreur(){
+    //On fait le vide dans la fenetre d'interface
+    printf("\n");
+    system("clear");
+
+    int idlivreur,quite;
+    char choice, r = ' ';
+
+    printf("* Menu Livreur *\n\nVous voulez :\n1. Vous connecter à un compte\n2. Créer un nouveau compte\n\nVotre choix ('q' pour quitter) : ");
+    choice = getchar();
+
+    switch(choice){
+        //On recupere l'id du livreur dans les deux cas pour appeler la fonction de gestion de compte
+        case '1':
+            //On verifie qu'il existe des livreurs avant de tenter de se connecter
+            if (access("database/livreurs.csv", F_OK) == 0){
+                idlivreur = connecter_compte_livreur();
+                quite = gestion_compte_livreur(idlivreur);
+                if(quite == 0){
+                    menu_livreur();
+                }
+            }else{
+                printf("Aucun compte enregistré, impossible de se connecter(Appuyez sur q pour revenir en arriere)");
+                while(r != 'q'){
+                    scanf("%c", &r);
+                }
+                menu_livreur();
+            }
+            break;
+        case '2':
+            idlivreur = creer_compte_livreur();
+            quite = gestion_compte_livreur(idlivreur);
+            //Selon les choix de l'utilisateur dans gestion_compte_livreur, on le fait revenir a ce menu ou non
+            if(quite == 0){
+                menu_livreur();
+            }
+            break;
+        case 'q':
+            break;
+        default :
+            //Si une valeur differente est entree, on renvoie sur le meme menu
+            menu_livreur();
+    }
+
+
+    return 0;
+}
+
 
