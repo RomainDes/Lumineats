@@ -1,9 +1,12 @@
+#ifndef DEF_RESTAURANT
+#define DEF_RESTAURANT
+
+
 #include "utility/vector.h"
 #include "utility/db.h"
 
 #include <stdlib.h>
 #include <unistd.h>
-#include <assert.h>
 
 
 
@@ -83,3 +86,5 @@ void consulter_solde_restaurant();
 int menu_restaurant();
 
 int menu_restaurant_compte();
+
+#endif

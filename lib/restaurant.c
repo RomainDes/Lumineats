@@ -1,6 +1,3 @@
-#include "utility/vector.h"
-#include "utility/db.h"
-
 #include "restaurant.h"
 
 int where = 0;
@@ -23,7 +20,9 @@ int index_counter(vector const* db, char structure)
 //postal, le téléphone et le type de cuisine en les stockant 
 //dans un vecteur puis on copie ce vecteur dans la db restaurant. renvoie l'index du compte crée
 int creer_compte_resto(){
-    
+
+    FILE * fichierlog = fopen("log.txt", "a+");
+
     //Si on est pas déjà connecter sur un compte
     if(index_resto == 0){
         printf("\n");
@@ -89,6 +88,9 @@ int creer_compte_resto(){
 
         destroy(&dbresto);
 
+        fprintf(fichierlog, "Le restaurant %s a crée un compte.\n", restaurants.nom);
+        fclose(fichierlog);
+
         return restaurants.id;
     }
     else{
@@ -116,6 +118,7 @@ int nom_resto_exist(vector const* dbresto, char nom[TAILLE_NOM]){
 //present dans la db a la ligne correspondant au nom entré.
 //Si nom entré pas dans la db on redemande, idem pour mdp si il correspond pa
 int connecter_compte_resto(){
+    
     printf("\n");
     system("clear");
 
@@ -123,6 +126,8 @@ int connecter_compte_resto(){
 
     if(index_resto == 0){
 
+        FILE * fichierlog = fopen("log.txt", "a+");
+        
         int index = 0;
 
         if( access("database/restaurants.csv", F_OK ) != -1){
@@ -158,7 +163,12 @@ int connecter_compte_resto(){
                 scanf("\n%127[^\n]", mdp);
                 if(compare_char(mdp, "q") == 1)  return 0;
             }
+            fprintf(fichierlog, "Le restaurant %s s'est connecté a son compte.\n", r->nom);
+            fclose(fichierlog);
         }
+
+        
+
         return index;
     }
     else{
@@ -190,7 +200,7 @@ int supprimer_compte_resto(){
 
 
     if(index_resto > 0){
-        
+        FILE * fichierlog = fopen("log.txt", "a+");
 
         printf("Êtes-vous sur de supprimer votre compte ? Y/N\n");
         char choix;
@@ -236,8 +246,12 @@ int supprimer_compte_resto(){
             }
             else    remove("database/restaurants.csv");
             
+            fprintf(fichierlog, "Le restaurant d'index %li a été supprimé et les items qu'il a crée.\n", index_resto);
+            fclose(fichierlog);
 
             index_resto = 0;
+
+            
         }
         else    return 0;//retourne 0 pour dire que le compte n'a pas été supprimé
     }
@@ -291,6 +305,8 @@ void creer_nouvel_item(){
     system("clear");
 
     printf("* Menu Restaurateur *\n\n* Créer un nouvel item à votre menu *\n\n");
+
+    FILE * fichierlog = fopen("log.txt", "a+");
 
     item items;
 
@@ -357,6 +373,9 @@ void creer_nouvel_item(){
 
     ajouter_item_menu(menu);
 
+    fprintf(fichierlog, "Le restaurant d'index %li a crée un item nommé %s.\n", index_resto, items.nom);
+    fclose(fichierlog);
+
     printf("Le menu a été crée et ajouté à votre restaurant.\n");
 }
 
@@ -369,6 +388,8 @@ void ajouter_item(){
     printf("* Menu Restaurateur *\n\n* Ajouter un item à votre menu *\n\n");
 
     if( access("database/items.csv", F_OK ) != -1){
+        FILE * fichierlog = fopen("log.txt", "a+");
+
         int menu=-1;
         FILE * fichieritem_read = fopen("database/items.csv", "r");
         vector dbitems = lecture_table_items(fichieritem_read);
@@ -394,7 +415,9 @@ void ajouter_item(){
                 
             }
             else    printf("Aucun menu n'a été ajouté.\n");
+            fprintf(fichierlog, "Le restaurant d'index %li a ajouté l'item d'index %i.\n", index_resto, menu);
         }
+        fclose(fichierlog);
     }
     else    printf("Aucun item par défaut.\n");
 }
@@ -445,6 +468,9 @@ void supprimer_item(){
     printf("* Menu Restaurateur *\n\n* Supprimer un item de votre menu *\n\n");
 
     if( access("database/items.csv", F_OK ) != -1){
+
+        FILE * fichierlog = fopen("log.txt", "a+");
+
         if(index_resto > 0){    
             //Ouverture de la db item
             FILE * fichieritem_read = fopen("database/items.csv", "r");
@@ -480,8 +506,10 @@ void supprimer_item(){
                         erase(&dbitems, at(&dbitems,items->id));
                     }
                     printf("Item supprimé.\n");
+                    fprintf(fichierlog, "Le restaurant d'index %li a supprimé un item nommé %s.\n", index_resto, items->nom);
                 }
                 else    printf("Item non supprimé.\n");
+                fclose(fichierlog);
             }
             if(dbitems.num_elements != 0){
                 FILE * fichieritem_write = fopen("database/items.csv", "w");
@@ -510,6 +538,9 @@ void consulter_solde_restaurant(){
 
 //On affiche le solde du restaurant que l'on traite
     if(index_resto > 0){
+
+        FILE * fichierlog = fopen("log.txt", "a+");
+
         FILE * fichierresto_read = fopen("database/restaurants.csv", "r");
         vector dbresto = lecture_table_restaurants(fichierresto_read);
         fclose(fichierresto_read);
@@ -518,6 +549,8 @@ void consulter_solde_restaurant(){
         restaurant *const resto = (restaurant*)i.element;
 
         printf("Solde : %.2f ('q' pour quitter)\n", resto->solde);
+        fprintf(fichierlog, "Le restaurant d'index %li consulte son solde de %.2f€.\n", index_resto, resto->solde);
+        fclose(fichierlog);
     }
     else    printf("\n\nVous n'êtes pas connecté à un compte.\n");
 

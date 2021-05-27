@@ -4,7 +4,8 @@
 
 #include <stdio.h>
 
-int main(){
+int main()
+{
     int again = 0;
     do{
         printf("\n");

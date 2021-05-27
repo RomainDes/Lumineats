@@ -172,39 +172,6 @@ int main()
 
     //Tests pour les fonctions de restaurant.c
     {
-        // //Tests de l'interface
-        // {
-        //     int again = 0;
-        //     do{
-        //         printf("\n");
-        //         system("clear");
-        //         //Page principal
-
-        //         printf("*** Bienvenue sur Lumineats, la livraison à vitesse luminique ***\n\n* Menu Principal *\n\nVous êtes :\n1. Un·e restaurateur(trice)\n2. Un·e livreur(se)\n3. Un·e client(e)\nVotre choix ('q' pour quitter) : ");
-
-        //         char operation = getchar();
-        //         switch(operation)
-        //         {
-                    
-        //             case '1':
-        //                 again = menu_restaurant();
-        //                 break;
-        //             case '2':
-        //                 printf("Livreur\n");
-        //                 break;
-        //             case '3':
-        //                 printf("Client\n");
-        //                 break;
-        //             case 'q':
-        //                 again = 1;
-        //                 break;
-        //             default :
-        //                 again = 0;
-                        
-        //         }
-        //     }   while(again == 0);
-
-        // }
         // //Tests pour créer un compte restaurant
         // {
         //     index_resto = 0;
@@ -300,15 +267,15 @@ int main()
             // consulter_solde_client(index_client);
             // int index_resto = creer_compte_resto();
             // crediter_solde_restaurant(index_resto, 10.25);
-            int index_client = connecter_compte_client();
-            voir_liste_restau();
-            restreindre_liste_restau(index_client);
+            // int index_client = connecter_compte_client();
+            // voir_liste_restau();
+            // restreindre_liste_restau(index_client);
                 
-            FILE *test_db_client = fopen("database/clients.csv", "r");
-            vector clients = lecture_table_clients(test_db_client);
-            fclose(test_db_client);
+            // FILE *test_db_client = fopen("database/clients.csv", "r");
+            // vector clients = lecture_table_clients(test_db_client);
+            // fclose(test_db_client);
 
-            TEST(size(clients) == 1);
+            // TEST(size(clients) == 1);
 
 
             // destroy(&clients);
