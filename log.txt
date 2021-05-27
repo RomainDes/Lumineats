@@ -12,3 +12,4 @@ Le restaurant d'index 2 a ajouté l'item d'index 3.
 Le restaurant d'index 2 a ajouté l'item d'index 4.
 Le restaurant d'index 2 a ajouté l'item d'index 15.
 Le restaurant d'index 2 a ajouté l'item d'index 0.
+Le restaurant Chris a crée un compte.

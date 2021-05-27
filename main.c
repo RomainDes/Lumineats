@@ -22,7 +22,7 @@ int main()
                 again = menu_restaurant();
                 break;
             case '2':
-                printf("Livreur\n");
+                again = menu_livreur();
                 break;
             case '3':
                 printf("Client\n");
