@@ -60,7 +60,7 @@ build/test.o: test/test.c | build
 build/test: build/test.o build/libvector.a build/libdb.a build/liblink.a | build
 	gcc build/test.o -L build -l vector -l db -l link -o build/test
 
-test: build/test
+check: build/test
 	./build/test
 
 # Progamme main
@@ -72,6 +72,6 @@ build/main: build/main.o build/libvector.a build/libdb.a build/liblink.a | build
 	gcc build/main.o -L build -l link -l db -l vector -o build/main
 
 # S'assure que le programme build/main existe et le lance à l'invite de commande.
-check: build/main
+main: build/main
 	./build/main
 
