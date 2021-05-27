@@ -259,13 +259,22 @@ iterator at(
     size_t const index)
 {
     int i = 0;
-    while(*(char*)(v->data + i * v->element_size) != index){
+    while(*(char*)(v->data + i * v->element_size) != index && *(char*)(v->data + i * v->element_size) != '\0'){
         i++;
     }
-    return (iterator){
-        .element = v->data + i * v->element_size,
-        .elem_size = v -> element_size,
-    };
+    
+    if(*(char*)(v->data + i * v->element_size) == '\0'){
+        return (iterator){
+            .element = NULL,
+            .elem_size = v -> element_size,
+        };
+    }
+    else{
+        return (iterator){
+            .element = v->data + i * v->element_size,
+            .elem_size = v -> element_size,
+        };
+    }
 }
 
 iterator at_origin(
