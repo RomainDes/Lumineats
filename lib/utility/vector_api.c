@@ -130,7 +130,7 @@ void erase(
     //Sinon on décale tout ceux après d'un (si on dépasse la capacité on realloc) et on met data à i
     else{
 
-        for(int j = 0; j < v->num_elements -1; j++){
+        for(int j = 0; j < v->num_elements; j++){
             if(v->data + j*v->element_size == *&i.element){//On cherche l'index de l'iterator i
                 for(;j<v->num_elements;j++){ //A partir de celui ci on remplace la case par celle d'aprés jusqu'à num_element
                     memcpy(v->data + j*v->element_size, v->data + (j + 1)*v->element_size, v->element_size);
@@ -275,6 +275,16 @@ iterator at(
             .elem_size = v -> element_size,
         };
     }
+}
+
+iterator at_origin(
+    vector const* v,
+    size_t const index)
+{
+    return (iterator){
+        .element = v->data + index * v->element_size,
+        .elem_size = v -> element_size,
+    };
 }
 
 int compare(

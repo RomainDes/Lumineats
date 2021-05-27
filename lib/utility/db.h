@@ -16,6 +16,10 @@
 #define MAX_CP 15
 #define MAX_INGRE 10
 
+//Ouverture du fichier log
+
+
+
 //Compte auquel on est connecté
 size_t index_resto;
 

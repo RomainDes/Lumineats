@@ -11,15 +11,11 @@
         "vector_types.h": "c",
         "unistd.h": "c",
         "string.h": "c",
-        "*.tcc": "c",
-        "string": "c",
-        "string_view": "c",
-        "memory_resource": "c",
-        "array": "c",
-        "deque": "c",
-        "list": "c",
-        "unordered_map": "c",
-        "vector": "c",
-        "initializer_list": "c"
+        "vector_api.h": "c",
+        "link.h": "c",
+        "main.h": "c",
+        "interface.h": "c",
+        "test_harness.h": "c"
+
     }
 }

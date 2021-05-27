@@ -115,7 +115,7 @@ vector lecture_table_items(
         
         fscanf(file, "%zu,%zu,%127[^,],", &items.id, &items.restaurant, items.nom);
 
-        while(c != ','){
+        while(c != ',' && c != EOF){
             if(j==0)    items.ingredients[i] = malloc(sizeof(char));
             c = fgetc(file);
             if(c == ';' || c == ','){

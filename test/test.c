@@ -179,42 +179,45 @@ int main()
         //     index_resto = creer_compte_resto();
 
         //     //Se déconnecter
-        //     //index_resto = 0;
+        //     index_resto = 0;
 
-        //     FILE *test_db_restaurants = fopen("database/restaurants.csv", "r");
-        //     vector restaurants = lecture_table_restaurants(test_db_restaurants);
-        //     fclose(test_db_restaurants);
-        //     TEST(size(restaurants) == 1);
-        //     destroy(&restaurants);
         // }
         // //Tests pour se connecter à un compte restaurant
         // {
             
         //     index_resto = connecter_compte_resto();
 
-        //     TEST(index_resto == 1);
         // }
         // //Tests pour supprimer un compte restaurant et les items qu'il a crée
         // {
         //     //Se déconnecter
         //     index_resto = 0;
 
-        //     creer_compte_resto();
+        //     index_resto = creer_compte_resto();
 
         //     //Se déconnecter
         //     index_resto = 0;
 
         //     index_resto = connecter_compte_resto();
         //     supprimer_compte_resto(index_resto);
-                
-        //     FILE *test_db_restaurants = fopen("database/restaurants.csv", "r");
-        //     vector restaurants = lecture_table_restaurants(test_db_restaurants);
-        //     fclose(test_db_restaurants);
+        // }
+        // //Tests pour ajouter un nouvel items dans la db items
+        // {
+            
+        //     index_resto = connecter_compte_resto();
 
-        //     TEST(size(restaurants) == 1);
+        //     modifier_menu();
 
 
-        //     destroy(&restaurants);
+        // }
+        // //Tests pour supprimer un item
+        // {
+        //     supprimer_item();
+        // }
+        // //Tests pour consulter le solde du restaurant
+        // {
+
+        //     consulter_solde_restaurant();
         // }
 
     }
@@ -274,6 +277,9 @@ int main()
             // voir_qui_liste_item(index_client);
             // voir_liste_solde_item(index_client);
             // restreindre_liste_item(index_client);
+            // voir_liste_restau();
+            // restreindre_liste_restau(index_client);
+
                 
             // FILE *test_db_client = fopen("database/clients.csv", "r");
             // vector clients = lecture_table_clients(test_db_client);
