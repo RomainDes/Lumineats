@@ -23,14 +23,14 @@ int creer_compte_resto(){
 
     FILE * fichierlog = fopen("log.txt", "a+");
 
+    printf("\n");
+    system("clear");
+
+    printf("* Menu Restaurateur *\n\n* Créer un compte *\n\n");
+
     //Si on est pas déjà connecter sur un compte
     if(index_resto == 0){
-        printf("\n");
-        system("clear");
-
-        printf("* Menu Restaurateur *\n\n* Créer un compte *\n\n");
-
-
+        
         restaurant restaurants;
 
         int exist;
@@ -80,21 +80,43 @@ int creer_compte_resto(){
         restaurants.menu[0] = 0;
         restaurants.nb_menu = 0;
         restaurants.solde = 0.00;
-        push_back(&dbresto, &restaurants);
 
-        FILE *fichierresto_write = fopen("database/restaurants.csv", "w");
-        ecriture_table_restaurants(fichierresto_write, &dbresto);
-        fclose(fichierresto_write);
+        //Confirmer la création du compte
+        printf("\nConfirmer la création de votre compte ('y' pour valider, 'r' pour recommencer, 'q' pour quitter) : ");
+        char operation;
 
-        destroy(&dbresto);
+        operation = getchar();
+        operation = getchar();
 
-        fprintf(fichierlog, "Le restaurant %s a crée un compte.\n", restaurants.nom);
-        fclose(fichierlog);
+        switch(operation)
+        {   
+            case 'y':
+                push_back(&dbresto, &restaurants);
 
-        return restaurants.id;
+                FILE *fichierresto_write = fopen("database/restaurants.csv", "w");
+                ecriture_table_restaurants(fichierresto_write, &dbresto);
+                fclose(fichierresto_write);
+
+                destroy(&dbresto);
+
+                fprintf(fichierlog, "Le restaurant %s a crée un compte.\n", restaurants.nom);
+                fclose(fichierlog);
+
+                return restaurants.id;
+                break;
+            case 'r':
+                if(exist == 0)  remove("database/restaurants.csv");
+                return creer_compte_resto();
+                break;
+            case 'q':
+                if(exist == 0)  remove("database/restaurants.csv");
+                break;
+        }
+        return index_resto;
     }
     else{
-        printf("Vous êtes déjà connecter à un compte.\n");
+        printf("Vous êtes déjà connecter à un compte.\n\nLoading...");
+        sleep(4);
         return index_resto;
     }
 
@@ -166,13 +188,18 @@ int connecter_compte_resto(){
             fprintf(fichierlog, "Le restaurant %s s'est connecté a son compte.\n", r->nom);
             fclose(fichierlog);
         }
+        else{
+            printf("Félicitation, vous êtes la premiere personne sur cette application, veuillez créer un compte !\n\nLoading...\n");
+            sleep(4);
+        }
 
         
 
         return index;
     }
     else{
-        printf("Vous êtes déjà connecter à un compte.\n");
+        printf("Vous êtes déjà connecter à un compte.\n\nLoading...");
+        sleep(4);
         return index_resto;
     }
 }
@@ -202,10 +229,10 @@ int supprimer_compte_resto(){
     if(index_resto > 0){
         FILE * fichierlog = fopen("log.txt", "a+");
 
-        printf("Êtes-vous sur de supprimer votre compte ? Y/N\n");
+        printf("Confirmer la suppression du compte ('y' pour valider, 'r' pour refuser) : ");
         char choix;
         scanf("\n%c", &choix);
-        if(choix == 'Y'){
+        if(choix == 'y'){
             //Supprimer les items créer par le resto index
             if( access("database/items.csv", F_OK ) != -1){
                 FILE * fichieritems_read = fopen("database/items.csv", "r");
@@ -246,16 +273,26 @@ int supprimer_compte_resto(){
             }
             else    remove("database/restaurants.csv");
             
-            fprintf(fichierlog, "Le restaurant d'index %li a été supprimé et les items qu'il a crée.\n", index_resto);
+            fprintf(fichierlog, "Le restaurant d'index %li a été supprimé et les items qu'il a crée.\nLoading...\n", index_resto);
             fclose(fichierlog);
 
             index_resto = 0;
-
+            sleep(4);
             
         }
-        else    return 0;//retourne 0 pour dire que le compte n'a pas été supprimé
+        else if(choix == 'r'){
+            printf("Compte non supprimé.\nLoading...\n");
+            sleep(4);
+            return 0;//retourne 0 pour dire que le compte n'a pas été supprimé
+        }
+        else{
+            return supprimer_compte_resto();
+        }
     }
-    else    printf("Vous n'êtes pas connecter à un compte.\n");
+    else{
+        printf("Vous n'êtes pas connecter à un compte.\nLoading...\n");
+        sleep(4);
+    }
     
     return 1;
 }
@@ -269,7 +306,7 @@ void modifier_menu(){
     printf("* Menu Restaurateur *\n\n* Modifier votre menu *\n\n");
 
     if(index_resto > 0){
-        printf("1. Créer nouvel item\n2. Ajouter un item\n3. Supprimer un item\nVotre choix ('q' pour quitter) :");
+        printf("1. Créer nouvel item\n2. Ajouter un item\n3. Supprimer un item\n\nVotre choix ('q' pour quitter) :");
     
         char operation = getchar();
         switch(operation)
@@ -293,7 +330,10 @@ void modifier_menu(){
                 modifier_menu();
             }
     }
-    else    printf("Vous n'êtes pas connecté à un compte.\n");
+    else{    
+        printf("Vous n'êtes pas connecté à un compte.\nLoading...\n");
+        sleep(4);
+    }
 }
 
 void creer_nouvel_item(){
@@ -338,14 +378,15 @@ void creer_nouvel_item(){
     printf("Entrez le nom de l'item :");
     scanf("\n%127[^\n]", items.nom); 
 
-    char ingredient[TAILLE_INGRE] = "0";
+    char ingredient[TAILLE_INGRE] = " ";
     int i = 1;
     int j;
-    while(compare_char(ingredient, "-1") == 0){
+    printf("\nListe des ingrédients ('0' pour plus d'ingrédients) :\n");
+    while(compare_char(ingredient, "0") == 0){
         items.ingredients[i-1] = malloc(sizeof(char));
         printf("Entrez le nom de l'ingrédients n°%i :", i);
         scanf("\n%127[^\n]", ingredient);
-        if(compare_char(ingredient, "-1")== 0) {
+        if(compare_char(ingredient, "0")== 0) {
             for(j = 0; ingredient[j] != '\0'; j++){
                 items.ingredients[i-1][j] = ingredient[j];
             }
@@ -357,7 +398,7 @@ void creer_nouvel_item(){
     items.ingredients[i-1] = malloc(sizeof(char));
     items.ingredients[i-1][0] = '\0';
     
-    printf("Entrez le prix de l'item :");
+    printf("Entrez le prix de l'item (X.XX):");
     scanf("%f", &items.prix); 
 
     push_back(&dbitems, &items);
@@ -373,12 +414,21 @@ void creer_nouvel_item(){
 
     ajouter_item_menu(menu);
 
-    fprintf(fichierlog, "Le restaurant d'index %li a crée un item nommé %s.\n", index_resto, items.nom);
+    fprintf(fichierlog, "Le restaurant d'index %li a crée un item nommé %s et a été ajouté.\n", index_resto, items.nom);
     fclose(fichierlog);
 
-    printf("Le menu a été crée et ajouté à votre restaurant.\n");
+    printf("\nLoading...\n");
+    sleep(4);
 }
 
+int compare_int(int *a, int b){
+    int cpt = 0;
+    while(a[cpt] != 0){
+        if(a[cpt] == b)  return 0;
+        cpt++;
+    }
+    return 1;//quand il y en a un b dans a sinon retourne 1
+}
 void ajouter_item(){
 //On ajoute l'id d'un item de la db menu dans les menus du 
 //restaurant que l'on traite dans la db restaurant.
@@ -388,7 +438,9 @@ void ajouter_item(){
     printf("* Menu Restaurateur *\n\n* Ajouter un item à votre menu *\n\n");
 
     if( access("database/items.csv", F_OK ) != -1){
-        FILE * fichierlog = fopen("log.txt", "a+");
+        
+        //Prends la liste des menus pouvant être ajouté
+        int *liste_menu = malloc(sizeof(int));
 
         int menu=-1;
         FILE * fichieritem_read = fopen("database/items.csv", "r");
@@ -397,35 +449,56 @@ void ajouter_item(){
 
         printf("Liste des items :\n\n");
 
+        int affiche = 0;
         for(iterator i = begin(&dbitems), e = end(&dbitems); compare(i, e) != 0; increment(&i, 1))
         {
             
             item const* items = (item*)i.element;
             if(items->restaurant != index_resto){
                 printf("Items n°%zu : %s\n", items->id, items->nom);
+                liste_menu[affiche] = items->id;
+                liste_menu[affiche + 1] = 0;
+                affiche++;
             }
             
         }
-        
-        while( menu != 0 ){
-            printf("\nVous voulez ajouter l'item n° (0 pour quitter):\n");
-            scanf("%i", &menu);
-            if (menu != 0){
+        if( affiche == 0){
+            printf("Aucun item par défaut. Veuillez en créer un.\nLoading...\n");
+            sleep(4);
+        }           
+        else{
+            printf("\nAjouter Item n° (0 pour quitter) : ");
+            scanf("\n%i", &menu);
+            if (compare_int(liste_menu, menu) == 0){
                 ajouter_item_menu(menu);
-                
+                printf("\nLoading...\n");
+                sleep(4);
+                ajouter_item();
             }
-            else    printf("Aucun menu n'a été ajouté.\n");
-            fprintf(fichierlog, "Le restaurant d'index %li a ajouté l'item d'index %i.\n", index_resto, menu);
+            else if(menu == 0){
+                printf("\n\nAucun Item ajouté.\nLoading...\n");
+                sleep(4);
+            }
+            else{
+                printf("\n\nItem inexistant.\nLoading...\n");
+                sleep(4);
+                ajouter_item();
+            }
+            
         }
-        fclose(fichierlog);
     }
-    else    printf("Aucun item par défaut.\n");
+    else{
+        printf("Aucun item par défaut. Veuillez en créer un.\nLoading...\n");
+        sleep(4);
+    }
 }
 
 int ajouter_item_menu(int menu){
     FILE * fichierresto_read = fopen("database/restaurants.csv", "r");
     vector dbresto = lecture_table_restaurants(fichierresto_read);
     fclose(fichierresto_read);
+
+    FILE * fichierlog = fopen("log.txt", "a+");
 
     //items prend la ligne du restaurant
     iterator i = at(&dbresto,index_resto);
@@ -451,7 +524,10 @@ int ajouter_item_menu(int menu){
         ecriture_table_restaurants(fichierresto_write, &dbresto);
         fclose(fichierresto_write);
 
-        printf("Le menu a été ajouté à votre restaurant.\n");
+        printf("\nLe menu a été ajouté à votre restaurant.");
+
+        fprintf(fichierlog, "Le restaurant d'index %li a ajouté l'item d'index %i.\n", index_resto, menu);
+        fclose(fichierlog);
     }
 
     return exist;
@@ -466,12 +542,14 @@ void supprimer_item(){
     system("clear");
 
     printf("* Menu Restaurateur *\n\n* Supprimer un item de votre menu *\n\n");
+    if(index_resto > 0){  
+        
+        
+        if( access("database/items.csv", F_OK ) != -1){
 
-    if( access("database/items.csv", F_OK ) != -1){
+            FILE * fichierlog = fopen("log.txt", "a+");
 
-        FILE * fichierlog = fopen("log.txt", "a+");
-
-        if(index_resto > 0){    
+          
             //Ouverture de la db item
             FILE * fichieritem_read = fopen("database/items.csv", "r");
             vector dbitems = lecture_table_items(fichieritem_read);
@@ -486,7 +564,7 @@ void supprimer_item(){
             iterator r = at(&dbresto,index_resto);
             restaurant * resto = (restaurant*)r.element;
 
-            printf("Liste des items :\n\n");
+            printf("Liste des items a supprimer :\n");
 
             //Afficher tout les items du menu du restaurant
             for(int j = 0; j < resto->nb_menu; j++){
@@ -495,9 +573,9 @@ void supprimer_item(){
                 iterator i = at(&dbitems, resto->menu[j]);
                 item * items = (item*)i.element;
 
-                printf("Voulez-vous supprimer l'item n°%zu : %s ? Y/N\n\n", items->id, items->nom);
+                printf("- %s ('y' pour supprimer, autre pour ne pas supprimer) : ",items->nom);
                 scanf("\n%c", &choix);
-                if(choix == 'Y'){
+                if(choix == 'y'){
                     resto->menu[j] = resto->menu[resto->nb_menu - 1];
                     resto->menu[resto->nb_menu - 1] = 0;
                     resto->nb_menu--;
@@ -505,11 +583,14 @@ void supprimer_item(){
                     if(items->restaurant == index_resto){
                         erase(&dbitems, at(&dbitems,items->id));
                     }
-                    printf("Item supprimé.\n");
+                    printf("\nItem supprimé.\n\n");
                     fprintf(fichierlog, "Le restaurant d'index %li a supprimé un item nommé %s.\n", index_resto, items->nom);
+                    
                 }
-                else    printf("Item non supprimé.\n");
-                fclose(fichierlog);
+                else{
+                    printf("Item non supprimé.\n\n");
+                    
+                }
             }
             if(dbitems.num_elements != 0){
                 FILE * fichieritem_write = fopen("database/items.csv", "w");
@@ -522,10 +603,20 @@ void supprimer_item(){
             FILE * fichierresto_write = fopen("database/restaurants.csv", "w");
             ecriture_table_restaurants(fichierresto_write, &dbresto);
             fclose(fichierresto_write);
+            fclose(fichierlog);
+            
+            printf("Loading...\n");
+            sleep(4);
         }
-        else    printf("Vous n'êtes pas connecté à un compte.\n");
+        else{
+            printf("Aucun item par défaut. Veuillez en créer un.\nLoading...\n");
+            sleep(4);
+        }
     }
-    else    printf("Aucun item par défaut.\n");
+    else{
+        printf("Vous n'êtes pas connecté à un compte.\nLoading...\n");
+        sleep(4);
+    }
 }
 
 void consulter_solde_restaurant(){
@@ -548,11 +639,14 @@ void consulter_solde_restaurant(){
         iterator i = at(&dbresto,index_resto);
         restaurant *const resto = (restaurant*)i.element;
 
-        printf("Solde : %.2f ('q' pour quitter)\n", resto->solde);
+        printf("Solde : %.2f ('q' pour quitter) : ", resto->solde);
         fprintf(fichierlog, "Le restaurant d'index %li consulte son solde de %.2f€.\n", index_resto, resto->solde);
         fclose(fichierlog);
     }
-    else    printf("\n\nVous n'êtes pas connecté à un compte.\n");
+    else {  
+        printf("\n\nVous n'êtes pas connecté à un compte.\nLoading...\n");
+        sleep(4);
+    }
 
     /* attente de saisie */
     char c =' ';
@@ -570,7 +664,7 @@ int menu_restaurant(){
     
     int compare;
 
-    printf("* Menu Restaurateur *\n\nVous voulez :\n1. Vous connecter à un compte\n2. Créer un nouveau compte\n\nVotre choix ('q' pour quitter) : ");
+    printf("* Menu Restaurateur *\n\nVous voulez :\n1. Vous connecter à un compte\n2. Créer un nouveau compte\n\nVotre choix ('p' pour retourner au menu principal) : ");
 
     char operation;
     
@@ -582,15 +676,17 @@ int menu_restaurant(){
     {
         case '1':
             index_resto = connecter_compte_resto();
-            compare = menu_restaurant_compte();
+            if(index_resto != 0)    compare = menu_restaurant_compte();
+            else    compare = 1;
             if(compare == 1)   menu_restaurant();
             break;
         case '2':
             index_resto = creer_compte_resto();
-            compare = menu_restaurant_compte();
+            if(index_resto != 0)    compare = menu_restaurant_compte();
+            else    compare = 1;
             if(compare == 1)   menu_restaurant();
             break;
-        case 'q':
+        case 'p':
             break;
         default :
             menu_restaurant();
