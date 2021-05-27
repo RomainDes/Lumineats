@@ -268,6 +268,24 @@ int main()
 
             // destroy(&clients);
         }
+
+        //Tests pour les fonctions de livreurs.c
+        {   
+            //int liv_connecte;
+            //Creer un nouveau compte de livreur
+            //creer_compte_livreur();
+            //Se connecter a un compte de livreur
+            //liv_connecte = connecter_compte_livreur();
+
+            //liv_connecte = 2;
+            //Consulter le solde du compte auquel on est connecté
+            //consulter_solde_livreur(liv_connecte);
+            //modifier le compte auquel on est connecté
+            //modifier_compte_livreur(liv_connecte);
+            //Supprimer le compte auquel on est connecté
+            //supprimer_compte_livreur(liv_connecte);
+
+        }
     }
     
 

@@ -13,9 +13,6 @@ typedef struct livreur {
     char mdp[TAILLE_MDP];
 } livreur;
 
-//Fonction servant a retrouver les informations d'un compte id
-iterator trouver_livreur_avec_id(int id);
-
 //Permet a un livreur de se connecter a son compte, renvoie l'id du compte ou on se 
 //connecte si on y parvient, 0 sinon
 int connecter_compte_livreur();
