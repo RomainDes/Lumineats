@@ -105,7 +105,7 @@ int connecter_compte_client(){
 
 
 //Permet a un client de se creer un compte en entrant toutes ses informations
-void creer_compte_client(){
+int creer_compte_client(){
     client c;                                 //   On crée un client c
 
     int exist;
@@ -132,7 +132,6 @@ void creer_compte_client(){
         c.id = 1;
     }
     else   c.id = index_client_counter(&dbclient); 
-
 
     printf("Veuillez entrer votre nom :");
     scanf("\n%127[^\n]", c.nom);
@@ -169,7 +168,7 @@ void creer_compte_client(){
 
     destroy(&dbclient);                 
 
-    return;
+    return c.id;
 }
 
 //On lit toute la base de donnée pour savoir si il existe déjà le nom, renvoie 0 si il n'existe pas sinon l'index où il existe
@@ -321,7 +320,8 @@ void modifier_compte_client(int id){
 void consulter_solde_client(int id){
     //On ouvre la bd client et on recupère la valeur du solde a la ligne du compte
     //auquel on est connecté
-
+    
+    
     FILE* fichierclient;
     fichierclient = fopen("database/clients.csv","r+");
     vector dbclient = lecture_table_clients(fichierclient);
@@ -955,5 +955,132 @@ void supprimer_item_commande(){
 
 }
 
+
+////INTERFACE/////
+
+int menu_client(){
+
+    printf("\n");
+    system("clear");
+    
+    int compare;
+
+    printf("* Menu Client *\n\nVous voulez :\n1. Vous connecter à un compte\n2. Créer un nouveau compte\n\nVotre choix ('p' pour retourner au menu principal) : ");
+
+    char operation;
+    
+
+    operation = getchar();
+    operation = getchar();
+
+    switch(operation)
+    {
+        case '1':
+            index_client = connecter_compte_client();
+            if(index_client != 0)    compare = menu_client_compte();
+            else    compare = 1;
+            if(compare == 1)   menu_client();
+            break;
+        case '2':
+            index_client = creer_compte_client();
+            if(index_client != 0)    compare = menu_client_compte();
+            else    compare = 1;
+            if(compare == 1)   menu_client();
+            break;
+        case 'p':
+            break;
+        default :
+            menu_client();
+    }
+    return 0;
+}
+
+int menu_client_compte(){
+    printf("\n");
+    system("clear");
+    
+    printf("* Menu Client *\n\nVous voulez :\n1. Supprimer votre compte\n2. Modifier votre compte\n3. Consulter votre solde\n4. Commander\n\nVotre choix ('q' pour quitter, 'd' pour se déconnecter) : ");
+    int where;
+    int again = 1;
+
+    char operation = getchar();
+    switch(operation)
+    {
+            
+        case '1':
+            supprimer_compte_client(index_client);
+            where = 1;
+            break;
+        case '2':
+            modifier_compte_client(index_client);
+            where = menu_client_compte();
+            break;
+        case '3':
+            while(again == 1){
+                printf("\n");
+                system("clear");
+
+                printf("* Menu Client *\n\n* Solde *\n\n");
+
+                consulter_solde_client(index_client);
+
+                printf("\nCréditer votre compte ('c' pour créditer, 'q' pour quitter) : ");
+
+                char operation2;
+                operation2 = getchar();
+                operation2 = getchar();
+                switch(operation2)
+                {
+                    case 'c':
+                        crediter_solde_client(index_client);
+                        again = 1;
+                        break;
+                    case 'q':
+                        again = 0;
+                        break;
+                    default:
+                        again = 1;
+                }
+            }
+            where = menu_client_compte();
+            break;
+            
+
+        case '4':
+            while(again == 1){
+                printf("\n");
+                system("clear");
+
+                printf("* Menu Client *\n\n* Commander *\n\nCommander selon :\n1. Restaurant\n2. Items\n\nVotre choix ('q' pour quitter) : ");
+
+                char operation3 = getchar();
+                switch(operation3)
+                {
+                    case '1':
+                        //Selon un restaurant
+                        break;
+                    case '2':
+                        //Selon un item
+                        break;
+                    case 'q':
+                        again = 0;
+                        break;
+                }
+            }
+            where = menu_client_compte();
+            break;
+        case 'd':
+            index_client = 0;
+            where = 1;
+            break;
+        case 'q':
+            index_client = 0;
+            where = 0;
+            break;
+        default :
+            where = menu_client_compte();
+        }
+    return where;
+}
 
 
