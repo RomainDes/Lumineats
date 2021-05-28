@@ -219,11 +219,11 @@ int compare_char(const char *a,const char*b){
 }
 
 
-int supprimer_compte_resto(){
+int supprimer_compte_resto(char nom[TAILLE_NOM]){
     printf("\n");
     system("clear");
 
-    printf("* Menu Restaurateur *\n\n* Supprimer votre compte *\n\n");
+    printf("* Menu Restaurateur *\n\n-- %s --\n\n* Supprimer votre compte *\n\n", nom);
 
 
     if(index_resto > 0){
@@ -273,10 +273,11 @@ int supprimer_compte_resto(){
             }
             else    remove("database/restaurants.csv");
             
-            fprintf(fichierlog, "Le restaurant d'index %li a été supprimé et les items qu'il a crée.\nLoading...\n", index_resto);
+            fprintf(fichierlog, "Le restaurant d'index %s a été supprimé et les items qu'il a crée.\nLoading...\n", nom);
             fclose(fichierlog);
 
             index_resto = 0;
+            printf("Le restaurant %s a été supprimé et les items qu'il a crée.\nLoading...\n", nom);
             sleep(4);
             
         }
@@ -286,7 +287,7 @@ int supprimer_compte_resto(){
             return 0;//retourne 0 pour dire que le compte n'a pas été supprimé
         }
         else{
-            return supprimer_compte_resto();
+            return supprimer_compte_resto(nom);
         }
     }
     else{
@@ -297,13 +298,13 @@ int supprimer_compte_resto(){
     return 1;
 }
 
-void modifier_menu(){
+void modifier_menu(char nom[TAILLE_NOM]){
 
 //On appelle les trois sous-fonctions suivante
     printf("\n");
     system("clear");
 
-    printf("* Menu Restaurateur *\n\n* Modifier votre menu *\n\n");
+    printf("* Menu Restaurateur *\n\n-- %s --\n\n* Modifier votre menu *\n\n", nom);
 
     if(index_resto > 0){
         printf("1. Créer nouvel item\n2. Ajouter un item\n3. Supprimer un item\n\nVotre choix ('q' pour quitter) :");
@@ -313,21 +314,21 @@ void modifier_menu(){
         {
                 
             case '1':
-                creer_nouvel_item();
-                modifier_menu();
+                creer_nouvel_item(nom);
+                modifier_menu(nom);
                 break;
             case '2':
-                ajouter_item();
-                modifier_menu();
+                ajouter_item(nom);
+                modifier_menu(nom);
                 break;
             case '3':
-                supprimer_item();
-                modifier_menu();
+                supprimer_item(nom);
+                modifier_menu(nom);
                 break;
             case 'q':
                 break;
             default :
-                modifier_menu();
+                modifier_menu(nom);
             }
     }
     else{    
@@ -336,7 +337,7 @@ void modifier_menu(){
     }
 }
 
-void creer_nouvel_item(){
+void creer_nouvel_item(char nom[TAILLE_NOM]){
 //On demande les informations suivante : le nom, les ingrédiants principaux et le prix en les stockant 
 //dans un vecteur puis on copie ce vecteuir dans la db menu. 
 //Et ensuite on ajoute l'id auquel il réfere dans la ligne 
@@ -344,7 +345,7 @@ void creer_nouvel_item(){
     printf("\n");
     system("clear");
 
-    printf("* Menu Restaurateur *\n\n* Créer un nouvel item à votre menu *\n\n");
+    printf("* Menu Restaurateur *\n\n-- %s --\n\n* Créer un nouvel item à votre menu *\n\n", nom);
 
     FILE * fichierlog = fopen("log.txt", "a+");
 
@@ -429,13 +430,13 @@ int compare_int(int *a, int b){
     }
     return 1;//quand il y en a un b dans a sinon retourne 1
 }
-void ajouter_item(){
+void ajouter_item(char nom[TAILLE_NOM]){
 //On ajoute l'id d'un item de la db menu dans les menus du 
 //restaurant que l'on traite dans la db restaurant.
     printf("\n");
     system("clear");
 
-    printf("* Menu Restaurateur *\n\n* Ajouter un item à votre menu *\n\n");
+    printf("* Menu Restaurateur *\n\n-- %s --\n\n* Ajouter un item à votre menu *\n\n", nom);
 
     if( access("database/items.csv", F_OK ) != -1){
         
@@ -473,7 +474,7 @@ void ajouter_item(){
                 ajouter_item_menu(menu);
                 printf("\nLoading...\n");
                 sleep(4);
-                ajouter_item();
+                ajouter_item(nom);
             }
             else if(menu == 0){
                 printf("\n\nAucun Item ajouté.\nLoading...\n");
@@ -482,7 +483,7 @@ void ajouter_item(){
             else{
                 printf("\n\nItem inexistant.\nLoading...\n");
                 sleep(4);
-                ajouter_item();
+                ajouter_item(nom);
             }
             
         }
@@ -534,14 +535,14 @@ int ajouter_item_menu(int menu){
     
 }
 
-void supprimer_item(){
+void supprimer_item(char nom[TAILLE_NOM]){
 //On supprime un ligne dans la db menu
     char choix = ' ';
 
     printf("\n");
     system("clear");
 
-    printf("* Menu Restaurateur *\n\n* Supprimer un item de votre menu *\n\n");
+    printf("* Menu Restaurateur *\n\n-- %s --\n\n* Supprimer un item de votre menu *\n\n", nom);
     if(index_resto > 0){  
         
         
@@ -619,12 +620,12 @@ void supprimer_item(){
     }
 }
 
-void consulter_solde_restaurant(){
+void consulter_solde_restaurant(char nom[TAILLE_NOM]){
 
     printf("\n");
     system("clear");
 
-    printf("* Menu Restaurateur *\n\n* Consulter solde restaurant *\n\n");
+    printf("* Menu Restaurateur *\n\n-- %s --\n\n* Consulter Solde *\n\n", nom);
 
 
 //On affiche le solde du restaurant que l'on traite
@@ -661,7 +662,10 @@ int menu_restaurant(){
 
     printf("\n");
     system("clear");
+
     
+
+
     int compare;
 
     printf("* Menu Restaurateur *\n\nVous voulez :\n1. Vous connecter à un compte\n2. Créer un nouveau compte\n\nVotre choix ('p' pour retourner au menu principal) : ");
@@ -676,13 +680,27 @@ int menu_restaurant(){
     {
         case '1':
             index_resto = connecter_compte_resto();
-            if(index_resto != 0)    compare = menu_restaurant_compte();
+            if(index_resto != 0){
+                FILE * fichierresto = fopen("database/restaurants.csv", "r");
+            vector dbresto = lecture_table_restaurants(fichierresto);
+            fclose(fichierresto);
+                restaurant *r = (restaurant*)value(at(&dbresto, index_resto));
+                destroy(&dbresto);
+                compare = menu_restaurant_compte(r->nom);
+            }
             else    compare = 1;
             if(compare == 1)   menu_restaurant();
             break;
         case '2':
             index_resto = creer_compte_resto();
-            if(index_resto != 0)    compare = menu_restaurant_compte();
+            if(index_resto != 0){
+                FILE * fichierresto = fopen("database/restaurants.csv", "r");
+                vector dbresto = lecture_table_restaurants(fichierresto);
+                fclose(fichierresto);
+                restaurant *r = (restaurant*)value(at(&dbresto, index_resto));
+                destroy(&dbresto);
+                compare = menu_restaurant_compte(r->nom);
+            }
             else    compare = 1;
             if(compare == 1)   menu_restaurant();
             break;
@@ -691,14 +709,17 @@ int menu_restaurant(){
         default :
             menu_restaurant();
     }
+    
     return 0;
 }
 
-int menu_restaurant_compte(){
+int menu_restaurant_compte(char nom[TAILLE_NOM]){
     printf("\n");
     system("clear");
+
+    int where;
     
-    printf("* Menu Restaurateur *\n\nVous voulez :\n1. Supprimer votre compte\n2. Modifier votre menu (ajouter/modifier/supprimer)\n3. Confirmer votre solde\n\nVotre choix ('q' pour quitter, 'd' pour se déconnecter) : ");
+    printf("* Menu Restaurateur *\n\n-- %s --\n\nVous voulez :\n1. Supprimer votre compte\n2. Modifier votre menu (ajouter/modifier/supprimer)\n3. Consulter votre solde\n\nVotre choix ('q' pour quitter, 'd' pour se déconnecter) : ", nom);
 
     int again = 1;
 
@@ -707,17 +728,17 @@ int menu_restaurant_compte(){
     {
             
         case '1':
-            again = supprimer_compte_resto();
-            if(again == 0)  menu_restaurant_compte();
-            where = 1;
+            again = supprimer_compte_resto(nom);
+            if(again == 0)  where = menu_restaurant_compte(nom);
+            else    where = 1;
             break;
         case '2':
-            modifier_menu();
-            menu_restaurant_compte();
+            modifier_menu(nom);
+            where = menu_restaurant_compte(nom);
             break;
         case '3':
-            consulter_solde_restaurant();
-            menu_restaurant_compte();
+            consulter_solde_restaurant(nom);
+            where = menu_restaurant_compte(nom);
             break;
         case 'd':
             index_resto = 0;
@@ -728,7 +749,10 @@ int menu_restaurant_compte(){
             where = 0;
             break;
         default :
-            menu_restaurant_compte();
+            where = menu_restaurant_compte(nom);
         }
+
+    
+
     return where;
 }
