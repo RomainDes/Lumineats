@@ -154,35 +154,34 @@ int creer_compte_livreur(){
     }while(compare_char(cp_actu, "0") != 1 && cpt<MAX_CP);
     nouv_livreur.nb_deplacements = cpt;
 
-    printf("Dependez vous d'un restaurant ? Si oui entrez 1 sinon entrez 0 : ");
-    scanf("%d[^\n] \n", &check);
-    if(check){
-        while(trouve == 0){
+    while (trouve == 0){
+        printf("Dependez vous d'un restaurant ? Si oui entrez 1 sinon entrez 0 : ");
+        scanf("%d[^\n] \n", &check);
+        if(check){
             printf("Entrez le nom du restaurant dont vous dependez : ");
             scanf("\n%127[^\n]", nom_restau);
 
             //Recherche de ce nom dans la bd et recuperation de l'id
             actu = begin(&dbrestau);
             fin = end(&dbrestau);
-            cpt = 0;
             while(actu.element != fin.element && trouve == 0){
                 restau_actuel = (struct restaurant*) actu.element;
                 if (compare_char(restau_actuel->nom,nom_restau) == 1){
                     trouve = 1;
                     nouv_livreur.restaurant = restau_actuel->id;
                 }
-                cpt += 1;
                 increment(&actu, 1);
             }
             if (trouve == 0){
                 printf("Erreur, restaurant non présent dans la base de donnee\n");
             }
         }
+        else{
+            nouv_livreur.restaurant = 0;
+            trouve = 1;
+        }
     }
-    else{
-        nouv_livreur.restaurant = 0;
-    }cpt = 0;
-    
+
     if(nouvfichier == 1){
         nouv_livreur.id = 1;
         clear(&dblivreur);
@@ -381,7 +380,6 @@ void modifier_resto_livreur(int id){
     char nom_restau[TAILLE_NOM];
     int check = 0, trouve = 0;
     restaurant* restau_actuel;
-    int cpt;
     livreur* livreur_connecte;
     iterator iterateur;
 
@@ -400,35 +398,33 @@ void modifier_resto_livreur(int id){
     //On remet trouve a 0 pour la recherche du resto
     trouve = 0;
 
-    printf("Dependez vous d'un restaurant ? Si oui entrez 1 sinon entrez 0 :");
-    scanf("%d[^\n] \n", &check);
-    if(check){
-        while(trouve == 0){
+    while(trouve == 0){
+        printf("Dependez vous d'un restaurant ? Si oui entrez 1 sinon entrez 0 :");
+        scanf("%d[^\n] \n", &check);
+        if(check){
             printf("Entrez le nom du restaurant dont vous dependez : ");
             scanf("\n%127[^\n]", nom_restau);
 
             //Recherche de ce nom dans la bd et recuperation de l'id
             actu = begin(&dbrestau);
             fin = end(&dbrestau);
-            cpt = 0;
             while(actu.element != fin.element && trouve == 0){
                 restau_actuel = (struct restaurant*) actu.element;
                 if (compare_char(restau_actuel->nom, nom_restau) == 1){
                     trouve = 1;
                     livreur_connecte->restaurant = restau_actuel->id;
                 }
-                cpt += 1;
                 increment(&actu, 1);
             }
             if (trouve == 0){
                 printf("Erreur, restaurant non présent dans la base de donnee\n");
             }
         }
+        else{
+            livreur_connecte->restaurant = 0;
+            trouve = 1;
+        }
     }
-    else{
-        livreur_connecte->restaurant = 0;
-    }
-
     set(iterateur, (void *)livreur_connecte);
     FILE* ecriturelivreur = fopen("database/livreurs.csv","w");
     ecriture_table_livreurs(ecriturelivreur, &dblivreur);

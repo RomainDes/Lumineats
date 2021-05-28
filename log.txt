@@ -13,3 +13,4 @@ Le restaurant d'index 2 a ajouté l'item d'index 4.
 Le restaurant d'index 2 a ajouté l'item d'index 15.
 Le restaurant d'index 2 a ajouté l'item d'index 0.
 Le restaurant Chris a crée un compte.
+Le livreur Marchal a créé un nouveau compte (id 1)Le livreur d'id 1 a modifié sa dépendance à un restaurant
