@@ -12,3 +12,10 @@ Le restaurant d'index 2 a ajouté l'item d'index 3.
 Le restaurant d'index 2 a ajouté l'item d'index 4.
 Le restaurant d'index 2 a ajouté l'item d'index 15.
 Le restaurant d'index 2 a ajouté l'item d'index 0.
+Le restaurant Chez Dobby a crée un compte.
+Le restaurant Mange ton assiette a crée un compte.
+Le restaurant Ko Ishi a crée un compte.
+Le restaurant Pacifique a crée un compte.
+Le restaurant ChamS Family a crée un compte.
+Le restaurant TrucMuche a crée un compte.
+Le restaurant d'index 6 a ajouté l'item d'index 0.

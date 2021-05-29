@@ -15,7 +15,14 @@
         "link.h": "c",
         "main.h": "c",
         "interface.h": "c",
-        "test_harness.h": "c"
-
+        "test_harness.h": "c",
+        "array": "c",
+        "list": "c",
+        "string": "c",
+        "unordered_map": "c",
+        "vector": "c",
+        "string_view": "c",
+        "initializer_list": "c",
+        "memory_resource": "c"
     }
 }
