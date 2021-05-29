@@ -13,15 +13,13 @@ typedef struct livreur {
     char mdp[TAILLE_MDP];
 } livreur;
 
-//Fonction servant a retrouver les informations d'un compte id
-iterator trouver_livreur_avec_id(int id);
-
 //Permet a un livreur de se connecter a son compte, renvoie l'id du compte ou on se 
 //connecte si on y parvient, 0 sinon
 int connecter_compte_livreur();
 
-//Permet a un livreur de se creer un compte en entrant toutes ses informations
-void creer_compte_livreur();
+//Permet a un livreur de se creer un compte en entrant toutes ses informations puis renvoie l'id du
+//compte nouvellement créé
+int creer_compte_livreur();
 
 //Permet a un liveur de supprimer son compte et toutes les information y etant contenues
 void supprimer_compte_livreur(int id);
@@ -40,3 +38,13 @@ void modifier_compte_livreur(int id);
 
 //Permet à un liveur de consulter la somme d'argent qu'il a sur son compte 
 void consulter_solde_livreur(int id);
+
+//----Fonctions de l'interface----//
+
+//Fonction de gestion de compte, prend en parametre l'id du compte connecté
+//et renvoie un int indiquant si on doit quitter le programme
+int gestion_compte_livreur(int idlivreur);
+
+//Fonction interface utilisateur
+int menu_livreur();
+

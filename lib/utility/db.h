@@ -22,6 +22,7 @@
 
 //Compte auquel on est connecté
 size_t index_resto;
+size_t index_client;
 
 vector lecture_table_clients(
     FILE* file);

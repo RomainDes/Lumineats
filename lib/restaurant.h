@@ -76,7 +76,7 @@ int ajouter_item_menu(int menu);
 //Permet de supprimer un item présent dans la db de menu
 void supprimer_item();
 
-
+int compare_int(int *a, int b);
 
 //Permet de consulter le solde du restaurant 
 void consulter_solde_restaurant();
