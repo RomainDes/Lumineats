@@ -16,7 +16,7 @@ int index_client_counter(vector const* dbclient);
 
 // iterator trouver_client_avec_id(int id);
 
-void creer_compte_client();
+int creer_compte_client();
 
 int nom_client_exist(vector const* dbclient, char nom[TAILLE_NOM]);
 
@@ -60,8 +60,16 @@ vector voir_qui_liste_item(int id, vector dbitem);
 
 vector voir_liste_solde_item(int id, vector dbitem);
 
-void restreindre_liste_item(int id);
+vector restreindre_liste_item(int id);
 
-void ajouter_item_commande();
+vector ajouter_item_commande(int id, vector *liste_commande);
+
+void voir_panier(int id, vector liste_commande);
 
 void supprimer_item_commande();
+
+////INTERFACE/////
+
+int menu_client();
+
+int menu_client_compte();
