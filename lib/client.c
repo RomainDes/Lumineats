@@ -21,6 +21,12 @@ int connecter_compte_client(){
     //present dans la db a la ligne correspondant au nom entré.
     //Si le nom entré n'est pas dans la db on redemande, idem pour mdp si il ne correspond pas
     //On laisse 3 essais pour rentrer le mot de passe
+
+    FILE * fichierlog = fopen("log.txt", "a+");
+
+    printf("\n");
+    system("clear");
+
     char username[TAILLE_NOM];
     char password[TAILLE_MDP];
     FILE * fichierclient;
@@ -70,6 +76,8 @@ int connecter_compte_client(){
     //On recupere l'id du compte si on a entré le bon mdp
     if (valid == 1){
         res = clients->id;
+        fprintf(fichierlog, "Le client %s s'est connecté a son compte.\n", clients->nom);
+        fclose(fichierlog);
     }
     else if(valid == -1){
         res = 0;
@@ -83,6 +91,12 @@ int connecter_compte_client(){
 
 //Permet a un client de se creer un compte en entrant toutes ses informations
 int creer_compte_client(){
+
+    FILE * fichierlog = fopen("log.txt", "a+");
+
+    printf("\n");
+    system("clear");
+
     client c;                                 //   On crée un client c
 
     int exist;
@@ -143,6 +157,9 @@ int creer_compte_client(){
 
     fclose(fichierclient_ecrire);
 
+    fprintf(fichierlog, "Le client %s a créé un compte.\n", c.nom);
+    fclose(fichierlog);
+
     destroy(&dbclient);                 
 
     return c.id;
@@ -164,24 +181,45 @@ int nom_client_exist(vector const* dbclient, char nom[TAILLE_NOM]){
 //Permet a un client de supprimer son compte et toutes les information y etant contenues
 
 void supprimer_compte_client(int id){
+
+    printf("\n");
+    system("clear");
+
     if(id > 0){
+
+        FILE * fichierlog = fopen("log.txt", "a+");
+
         //Supprimer le client index
+        printf("Confirmer la suppression du compte ('y' pour valider, 'r' pour refuser) : ");
+        char choix;
+        scanf("\n%c", &choix);
+        if(choix == 'y'){
 
-        FILE * fichierclient_read = fopen("database/clients.csv", "r");
-        vector dbclient = lecture_table_clients(fichierclient_read);
-        fclose(fichierclient_read);
+            FILE * fichierclient_read = fopen("database/clients.csv", "r");
+            vector dbclient = lecture_table_clients(fichierclient_read);
+            fclose(fichierclient_read);
 
-        erase(&dbclient, at(&dbclient,id));
+            erase(&dbclient, at(&dbclient,id));
 
-        if(dbclient.num_elements != 0){
-            FILE * fichierclient_write = fopen("database/clients.csv", "w");
-            ecriture_table_clients(fichierclient_write, &dbclient);
-            fclose(fichierclient_write);
+            if(dbclient.num_elements != 0){
+                FILE * fichierclient_write = fopen("database/clients.csv", "w");
+                ecriture_table_clients(fichierclient_write, &dbclient);
+                fclose(fichierclient_write);
+            }
+            else    remove("database/clients.csv");
+            id = 0;
+
+            fprintf(fichierlog, "Le client d'index %i a été supprimé.\n", id);
+            fclose(fichierlog);
         }
-        else    remove("database/clients.csv");
-        
-
-        id = 0;
+        else if(choix == 'r'){
+            printf("Compte non supprimé.\nLoading...\n");
+            sleep(4);
+            return;
+        }
+        else{
+            supprimer_compte_client(id);
+        }   
     }
     else    printf("Vous n'êtes pas connecté à un compte.\n");
 
@@ -197,6 +235,11 @@ void modifier_cp_client(int id){
     //On ouvre le fichier csv des clients, on récupere la ligne correspondant a 
     //l'index du compte ou on est connecté, on récupere le code postal
     //On remplace avec le nouveau code postal
+
+    FILE * fichierlog = fopen("log.txt", "a+");
+
+    printf("\n");
+    system("clear");
 
     FILE* fichierclient_read;
     fichierclient_read = fopen("database/clients.csv","r");
@@ -222,7 +265,10 @@ void modifier_cp_client(int id){
     fichierclient_write = fopen("database/clients.csv","w");
     ecriture_table_clients(fichierclient_write, &dbclient);
     fclose(fichierclient_write);
-    
+
+    fprintf(fichierlog, "Le client %s a changé son code postal.\n", client_connecte -> nom);
+    fclose(fichierlog);
+
 
     destroy(&dbclient);
 
@@ -232,6 +278,11 @@ void modifier_cp_client(int id){
 
 //Changer de numéro de téléphone
 void modifier_tel_client(int id){
+
+    FILE * fichierlog = fopen("log.txt", "a+");
+
+    printf("\n");
+    system("clear");
 
     FILE* fichierclient_read;
     fichierclient_read = fopen("database/clients.csv","r");
@@ -257,6 +308,9 @@ void modifier_tel_client(int id){
     fichierclient_write = fopen("database/clients.csv","w");
     ecriture_table_clients(fichierclient_write, &dbclient);
     fclose(fichierclient_write);
+
+    fprintf(fichierlog, "Le client %s a changé son numéro de téléphone.\n", client_connecte -> nom);
+    fclose(fichierlog);
     
 
     destroy(&dbclient);
@@ -268,6 +322,10 @@ void modifier_tel_client(int id){
 void modifier_compte_client(int id){
     //On combine les deux fonctions au dessus en demandant a l'utilisateur ce qu'il
     //souhaite  modifier
+
+    printf("\n");
+    system("clear");
+
     int value;
     printf("Veuillez taper 1 ou 2 selon ce que vous souhaitez modifier : \n1) Code postal\n2) Numero de tel\n");
     scanf("\n%i",&value);
@@ -321,6 +379,8 @@ void consulter_solde_client(int id){
 
 void crediter_solde_client(int id){
 
+    FILE * fichierlog = fopen("log.txt", "a+");
+
     printf("\n");
     system("clear");
 
@@ -351,8 +411,10 @@ void crediter_solde_client(int id){
     fichierclient_ecriture = fopen("database/clients.csv","w");
     ecriture_table_clients(fichierclient_ecriture, &dbclient);
     fclose(fichierclient_ecriture);
-    
 
+    fprintf(fichierlog, "Le client %s a crédité son compte de %.2f euros.\n", client_connecte -> nom, nouv_solde);
+    fclose(fichierlog);
+    
     destroy(&dbclient);
 
     return;
@@ -363,6 +425,8 @@ void crediter_solde_client(int id){
 void debiter_solde_client(int id, float val){
     //On ouvre la bd client et on soustrait la valeur du solde de la ligne de compte à la valeur entrée en paramètre
     //du compte auquel on est connecté
+
+    FILE * fichierlog = fopen("log.txt", "a+");
 
     FILE *fichierclient_read = fopen("database/clients.csv", "r");
     vector dbclient = lecture_table_clients(fichierclient_read);
@@ -382,8 +446,10 @@ void debiter_solde_client(int id, float val){
 
     FILE *fichierclient_write = fopen("database/clients.csv", "w");
     ecriture_table_clients(fichierclient_write, &dbclient);
-
     fclose(fichierclient_write);
+
+    fprintf(fichierlog, "Le client %s a été débité de %.2f euros.\n", client_connecte -> nom, val);
+    fclose(fichierlog);
 
     destroy(&dbclient); 
 
@@ -395,6 +461,8 @@ void debiter_solde_client(int id, float val){
 void crediter_solde_restaurant(int id, float val){
     //On ouvre la bd restaurant et on additionne la valeur du solde de la ligne de compte à la valeur entrée en paramètre 
     //du compte auquel on est connecté
+
+    FILE * fichierlog = fopen("log.txt", "a+");
 
     FILE *fichierresto_read = fopen("database/restaurants.csv", "r");
     vector dbresto = lecture_table_restaurants(fichierresto_read);
@@ -413,8 +481,10 @@ void crediter_solde_restaurant(int id, float val){
 
     FILE *fichierresto_write = fopen("database/restaurants.csv", "w");
     ecriture_table_restaurants(fichierresto_write, &dbresto);
-
     fclose(fichierresto_write);
+
+    fprintf(fichierlog, "Le restaurant %s a été crédité de %.2f euros.\n", resto_connecte -> nom, val);
+    fclose(fichierlog);
 
     destroy(&dbresto); 
 
@@ -426,6 +496,8 @@ void crediter_solde_restaurant(int id, float val){
 void crediter_solde_livreur(int id, float val){
     //On ouvre la bd livreur et on additionne la valeur du solde de la ligne de compte à la valeur entrée en paramètre 
     //du compte auquel on est connecté
+
+    FILE * fichierlog = fopen("log.txt", "a+");
 
     FILE *fichierlivreur_read = fopen("database/livreurs.csv", "r");
     vector dblivreur = lecture_table_livreurs(fichierlivreur_read);
@@ -444,8 +516,10 @@ void crediter_solde_livreur(int id, float val){
 
     FILE *fichierlivreur_write = fopen("database/livreurs.csv", "w");
     ecriture_table_livreurs(fichierlivreur_write, &dblivreur);
-
     fclose(fichierlivreur_write);
+
+    fprintf(fichierlog, "Le livreur %s a été crédité de %.2f euros.\n", livreur_connecte -> nom, val);
+    fclose(fichierlog);
 
     destroy(&dblivreur); 
 
@@ -950,6 +1024,10 @@ vector voir_liste_solde_item(int id, vector dbitem){
 vector restreindre_liste_item(int id){
     //On combine les quatre fonctions au dessus en demandant a l'utilisateur ce qu'il
     //souhaite  pouvoir voir
+
+    printf("\n");
+    system("clear");
+
     int value;
     printf("Veuillez taper 1, 2, 3, 4 ou 5 selon ce que vous souhaitez pouvoir voir : \n1) Qui peut me livrer\n2) Entrer un type de cuisine\n3) Entrer un restaurant\n");
     printf("4) Items moins chers que mon solde disponible\n5) Une combinaison de 1), 2) et 4)\n6) Une combinaison de 1), 3) et 4)\n");
@@ -991,6 +1069,8 @@ vector restreindre_liste_item(int id){
 
 void ajouter_item_commande(int id, vector *liste_commande){
 
+    FILE * fichierlog = fopen("log.txt", "a+");
+
     printf("\n");
     system("clear");
 
@@ -1025,6 +1105,9 @@ void ajouter_item_commande(int id, vector *liste_commande){
             if(compare_char(item_connecte -> nom, nom_item) == 1){
                 res = item_connecte -> prix;
                 push_back(liste_commande, iterateur_item.element);
+
+                fprintf(fichierlog, "Le client %s a ajouté l'item %s à son panier.\n", client_connecte -> nom, item_connecte -> nom);
+                fclose(fichierlog);
             }
             increment(&iterateur_item, 1);
         }
@@ -1126,6 +1209,8 @@ void voir_panier(int id, vector liste_commande){
 
 void supprimer_item_commande(int id, vector * liste_commande){
 
+    FILE * fichierlog = fopen("log.txt", "a+");
+
     printf("\n");
     system("clear");
 
@@ -1146,6 +1231,10 @@ void supprimer_item_commande(int id, vector * liste_commande){
         while(compare(iterateur_item, end(liste_commande)) != 0 && (val == 1)){
             item_connecte = (struct item*) iterateur_item.element;
             if(compare_char(item_connecte -> nom, nom_item) == 1){
+
+                fprintf(fichierlog, "Le client d'index %i a supprimé l'item %s de son panier.\n", id, item_connecte -> nom);
+                fclose(fichierlog);
+                
                 erase(liste_commande, at(liste_commande, item_connecte -> id));
                 val = 0;
             }
@@ -1188,6 +1277,8 @@ float total_commande(vector liste_commande){
 }
 
 void passer_commande(int id, vector *liste_commande){
+
+    FILE * fichierlog = fopen("log.txt", "a+");
 
     vector liste_resto = voir_qui_liste_restau(id);
     iterator iterateur_resto = begin(&liste_resto);
@@ -1261,6 +1352,9 @@ void passer_commande(int id, vector *liste_commande){
                 increment(&iterateur_item, 1);
             }
             printf("Votre solde a été débité de %.2f euros.\n", prix_total);
+
+            fprintf(fichierlog, "Le client %s a passé une commande de %.2f euros.\n", client_connecte -> nom, prix_total);
+            fclose(fichierlog);
 
             destroy(&dbclient);
             destroy(&dblivreur); 
