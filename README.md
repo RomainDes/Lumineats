@@ -18,7 +18,7 @@ Bienvenue sur la page du Projet final de la matiere Développer comme les pros d
         -[Gestion de compte livreur](#Gestion de compte livreur)
     -[Interface de compte client](#Interface de compte client)
         -[Gestion de compte client](#Gestion de compte client)
-<!-- TOC -->
+<!-- /TOC -->
 
 # Lancement du programme
 
