@@ -17,18 +17,25 @@ int connecter_compte_livreur(){
     livreur* livreur_dans_bd;
     FILE * fichierlivreur;
     iterator actu, fin;
-    int essai = 3;
+    //int essai = 3;
     int res;
 
+    printf("\n");
+    system("clear");
+
+    printf("* Menu Livreur *\n\n* Se connecter à un compte *\n\n");
 
     fichierlivreur = fopen("database/livreurs.csv", "r");
     vector dblivreur = lecture_table_livreurs(fichierlivreur);
 
+    printf("Entrez votre nom d'utilisateur ('q' pour quitter): ");
+    scanf("\n%127[^\n]", username);
     //On demande le nom d'utilisateur et virifie qu'il est bien dans la db
     while (valid == 0){
 
-        printf("Veuillez entrer votre nom d'utilisateur : ");
-        scanf("\n%127[^\n]", username);
+        
+
+        if(strcmp(username, "q") == 0) return 0;//quitter
 
         actu = begin(&dblivreur);
         fin = end(&dblivreur);
@@ -45,20 +52,24 @@ int connecter_compte_livreur(){
         //A la fin de cette boucle, on aura dans livreur_dans_db la struct livreur correspondant au compte auquel on veut
         //se connecter, on aura donc plus besoin de la chercher
         if(valid == 0){
-            printf("Nom d'utilisateur invalide, veuillez réessayer.\n");
+            printf("Nom invalide, veuillez réessayer ('q' pour quitter) : ");
+            scanf("\n%127[^\n]", username);
         }
     }
     //On remet valid a 0 pour le test du mot de passe
     valid = 0;
-    while(essai > 0 && valid == 0){
-        printf("Veuillez entrer votre mot de passe. Il vous reste %i essais : ", essai);
-        scanf("\n%127[^\n]", password);
+    printf("Entrez votre mot de passe ('q' pour quitter) : ");
+    scanf("\n%127[^\n]", password);
+    while(valid == 0){
+        
+        if(strcmp(password, "q") == 0) return 0;//quitter
+
         if (compare_char(livreur_dans_bd->mdp, password) == 1){
             valid = 1;
         }
         else{
-            printf("Mot de passe incorrect, veuillez reessayer.\n");
-            essai -= 1;
+            printf("Mot de passe invalide, veuillez réessayer ('q' pour quitter) : ");
+            scanf("\n%127[^\n]", password);
         }
     }
     //On recupere l'id du compte si on a entré le bon mdp
@@ -93,6 +104,10 @@ int creer_compte_livreur(){
     restaurant* restau_actuel;
     int trouve = 0, nouvfichier;
     livreur* dernier_livreur;
+    printf("\n");
+    system("clear");
+
+    printf("* Menu Livreur *\n\n* Créer un compte *\n\n");
 
     if(access("database/restaurants.csv", F_OK) == -1 ){
         FILE *creer_fichier_restaurant = fopen("database/restaurants.csv","w+");
@@ -121,7 +136,7 @@ int creer_compte_livreur(){
 
     valid = 0;
     while(valid == 0){
-        printf("Veuillez entrer votre nom : ");
+        printf("Entrez votre nom : ");
         scanf("\n%127[^\n]", nouv_livreur.nom);
         //On verifie que le nom n'est pas deja présent dans la bd
         actu = begin(&dblivreur);
@@ -136,15 +151,15 @@ int creer_compte_livreur(){
         }
     }
     
-    printf("Veuillez entrer votre mot de passe : ");
+    printf("Entrez votre mot de passe : ");
     scanf("\n%127[^\n]", nouv_livreur.mdp);
 
-    printf("Veuillez entrer votre numero de telephone (En entrant les espaces): ");
+    printf("Entrez votre numéro de téléphone (XX XX XX XX XX): ");
     scanf("\n%127[^\n]", nouv_livreur.tel);
 
     cpt = 0;
     do{
-        printf("Veuillez entrer un code postal ou vous pouvez livrer (Entrez 0 pour arreter) : ");
+        printf("Entrez un code postal où vous pouvez livrer ('0' pour arreter) : ");
         scanf("\n%127[^\n]", cp_actu);
         if (compare_char(cp_actu, "0") != 1){
             nouv_livreur.deplacements[cpt]=malloc(sizeof(cp_actu));
@@ -154,13 +169,12 @@ int creer_compte_livreur(){
     }while(compare_char(cp_actu, "0") != 1 && cpt<MAX_CP);
     nouv_livreur.nb_deplacements = cpt;
 
-    while (trouve == 0){
-        printf("Dependez vous d'un restaurant ? Si oui entrez 1 sinon entrez 0 : ");
-        scanf("%d[^\n] \n", &check);
-        if(check){
-            printf("Entrez le nom du restaurant dont vous dependez : ");
-            scanf("\n%127[^\n]", nom_restau);
-
+    printf("Dépendez-vous d'un restaurant ('1' si oui, '0' sinon) : ");
+    scanf("%d[^\n] \n", &check);
+    if(check != 0){
+        printf("Entrez le nom du restaurant dont vous dépendez : ");
+        scanf("\n%127[^\n]", nom_restau);
+        while (trouve == 0){
             //Recherche de ce nom dans la bd et recuperation de l'id
             actu = begin(&dbrestau);
             fin = end(&dbrestau);
@@ -173,14 +187,21 @@ int creer_compte_livreur(){
                 increment(&actu, 1);
             }
             if (trouve == 0){
-                printf("Erreur, restaurant non présent dans la base de donnee\n");
+                printf("Erreur, restaurant introuvable. Veuillez réessayer ('s' si vous ne trouvez pas le restaurant) : ");
+                scanf("\n%127[^\n]", nom_restau);
+            }
+            if(compare_char(nom_restau, "s") == 1){
+                printf("Vous ne dépendez d'aucun restaurant.\n\n");
+                nouv_livreur.restaurant = 0;
+                trouve=1;
             }
         }
-        else{
-            nouv_livreur.restaurant = 0;
-            trouve = 1;
-        }
     }
+    else{
+        nouv_livreur.restaurant = 0;
+    }
+
+    nouv_livreur.solde = 0.00;
 
     if(nouvfichier == 1){
         nouv_livreur.id = 1;
@@ -190,74 +211,120 @@ int creer_compte_livreur(){
         increment (&fin, -1);
         dernier_livreur = (struct livreur*)fin.element;
         nouv_livreur.id = dernier_livreur->id + 1;
+    }
+    int index_livreur;
+    printf("\nConfirmer la création de votre compte ('y' pour valider, 'r' pour recommencer, 'q' pour quitter) : ");
+    char operation;
+
+    operation = getchar();
+    operation = getchar();
+    
+    switch(operation)
+    {   
+        case 'y':
+            push_back(&dblivreur, &nouv_livreur);
+
+            FILE* ecriturelivreur = fopen("database/livreurs.csv", "w");
+            ecriture_table_livreurs(ecriturelivreur, &dblivreur);
+            fclose(ecriturelivreur);
+            
+
+            FILE* flog = fopen("log.txt","a+");
+            fprintf(flog,"Le livreur %s a créé un nouveau compte (id %i)",nouv_livreur.nom, (int)nouv_livreur.id);
+            fclose(flog);
+                
+            index_livreur = nouv_livreur.id;
+            break;
+        case 'r':
+            if(nouvfichier == 1)  remove("database/livreurs.csv");
+            index_livreur = creer_compte_livreur();
+            break;
+        case 'q':
+            if(nouvfichier == 1)  remove("database/livreurs.csv");
+            index_livreur = 0;
+            break;
     } 
-
-    FILE* ecriturelivreur = fopen("database/livreurs.csv", "w");
-
-    push_back(&dblivreur, &nouv_livreur);
-    ecriture_table_livreurs(ecriturelivreur, &dblivreur);
-
-    FILE* flog = fopen("log.txt","a+");
-    fprintf(flog,"Le livreur %s a créé un nouveau compte (id %i)",nouv_livreur.nom, (int)nouv_livreur.id);
-    fclose(flog); 
 
     destroy(&dblivreur);
     destroy(&dbrestau);
-    fclose(ecriturelivreur);
     fclose(fichierrestau);
+    
 
-    return nouv_livreur.id;
+
+    return index_livreur;
 }
 
 //Permet a un liveur de supprimer son compte et toutes les information y etant contenues
-void supprimer_compte_livreur(int id){
+int supprimer_compte_livreur(int id){
     //On ouvre le fichier csv des livreurs, on cherche l'index du compte ou on est 
     //connecté et on supprime la ligne dans le fichier csv
     //Ensuite, on fait "remonter" les lignes d'apres en réduisant tous leurs indexs
     //de 1
-    FILE* fichierlivreur;
-    fichierlivreur = fopen("database/livreurs.csv","r");
-    vector dblivreur = lecture_table_livreurs(fichierlivreur);
-    fclose(fichierlivreur);
+    printf("\n");
+    system("clear");
 
-    iterator iterateur, debut;
+    printf("* Menu Livreur *\n\n* Supprimer votre compte *\n\n");
 
-    debut = begin(&dblivreur);
-    
-    int trouve = 0;
-    livreur * livreur_dans_bd;
+    printf("Confirmer la suppression du compte ('y' pour valider, 'r' pour refuser) : ");
+    char choix;
+    scanf("\n%c", &choix);
+    if(choix == 'y'){
 
-    iterateur = begin(&dblivreur);
+        FILE* fichierlivreur;
+        fichierlivreur = fopen("database/livreurs.csv","r");
+        vector dblivreur = lecture_table_livreurs(fichierlivreur);
+        fclose(fichierlivreur);
 
-    while(trouve == 0){
-        livreur_dans_bd = (struct livreur*) iterateur.element;
-        if(livreur_dans_bd->id == id){
-            trouve = 1;
+
+        iterator iterateur;
+        
+        int trouve = 0;
+        livreur * livreur_dans_bd;
+
+        iterateur = begin(&dblivreur);
+
+        while(trouve == 0){
+            livreur_dans_bd = (struct livreur*) iterateur.element;
+            if(livreur_dans_bd->id == id){
+                trouve = 1;
+            }
+            else{
+                increment(&iterateur, 1);
+            }
+        }
+
+        if(dblivreur.num_elements == 1){
+            remove("database/livreurs.csv");
         }
         else{
-            increment(&iterateur, 1);
+            erase(&dblivreur, iterateur);
+            FILE* ecriturelivreur = fopen("database/livreurs.csv","w");
+            ecriture_table_livreurs(ecriturelivreur, &dblivreur);
+            fclose(ecriturelivreur);
         }
-    }
+        
 
-    if(debut.element == iterateur.element){
-        remove("database/livreurs.csv");
+       
+
+        FILE* flog = fopen("log.txt","a+");
+        fprintf(flog,"Le compte livreur d'id %i a supprimé son compte", id);
+        fclose(flog); 
+
+        
+        destroy(&dblivreur);
+
+        printf("Le compte a été supprimé.\nLoading...\n");
+        sleep(4);
+    }
+    else if(choix == 'r'){
+        printf("Compte non supprimé.\nLoading...\n");
+        sleep(4);
+        return 0;//retourne 0 pour dire que le compte n'a pas été supprimé
     }
     else{
-        erase(&dblivreur, iterateur);
+        return supprimer_compte_livreur(id);
     }
-    
-
-    FILE* ecriturelivreur = fopen("database/livreurs.csv","w");
-    ecriture_table_livreurs(ecriturelivreur, &dblivreur);
-
-    FILE* flog = fopen("log.txt","a+");
-    fprintf(flog,"Le compte livreur d'id %i a supprimé son compte", id);
-    fclose(flog); 
-
-    fclose(ecriturelivreur);
-    destroy(&dblivreur);
-
-    return;
+    return 1;
 }
 
 //Permet a un livreur de modifier les cp ou il lui est possible de livrer
@@ -523,7 +590,9 @@ int gestion_compte_livreur(int idlivreur){
     switch(choice){
         //On recupere l'id du livreur dans les deux cas pour appeler la fonction de gestion de compte
         case '1':
-            supprimer_compte_livreur(idlivreur);
+            if(supprimer_compte_livreur(idlivreur) == 0){
+                quite = gestion_compte_livreur(idlivreur);
+            }
             break;
         case '2':
             modifier_compte_livreur(idlivreur);
@@ -551,7 +620,7 @@ int menu_livreur(){
     system("clear");
 
     int idlivreur,quite;
-    char choice, r = ' ';
+    char choice;
 
     printf("* Menu Livreur *\n\nVous voulez :\n1. Vous connecter à un compte\n2. Créer un nouveau compte\n\nVotre choix ('q' pour quitter) : ");
     choice = getchar();
@@ -562,24 +631,35 @@ int menu_livreur(){
             //On verifie qu'il existe des livreurs avant de tenter de se connecter
             if (access("database/livreurs.csv", F_OK) == 0){
                 idlivreur = connecter_compte_livreur();
-                quite = gestion_compte_livreur(idlivreur);
-                if(quite == 0){
+                if(idlivreur == 0){
                     menu_livreur();
                 }
-            }else{
-                printf("Aucun compte enregistré, impossible de se connecter(Appuyez sur q pour revenir en arriere)");
-                while(r != 'q'){
-                    scanf("%c", &r);
+                else{
+                    quite = gestion_compte_livreur(idlivreur);
+                    if(quite == 0){
+                        menu_livreur();
+                    }
                 }
+            }else{
+                printf("\n");
+                system("clear");
+                printf("* Menu Livreur *\n\n* Se connecter à un compte *\n\n");
+                printf("Félicitation, vous êtes la premiere personne sur cette application, veuillez créer un compte !\n\nLoading...\n");
+                sleep(4);
                 menu_livreur();
             }
             break;
         case '2':
             idlivreur = creer_compte_livreur();
-            quite = gestion_compte_livreur(idlivreur);
-            //Selon les choix de l'utilisateur dans gestion_compte_livreur, on le fait revenir a ce menu ou non
-            if(quite == 0){
-                menu_livreur();
+            if(idlivreur == 0){
+                    menu_livreur();
+            }
+            else{
+                quite = gestion_compte_livreur(idlivreur);
+                //Selon les choix de l'utilisateur dans gestion_compte_livreur, on le fait revenir a ce menu ou non
+                if(quite == 0){
+                    menu_livreur();
+                }
             }
             break;
         case 'q':
