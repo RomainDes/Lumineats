@@ -258,13 +258,13 @@ int main()
             // index_resto = creer_compte_resto();
             // index_resto = creer_compte_resto();
             // index_resto = creer_compte_resto();
-            item items;
-            vector liste_commande = make_vector(sizeof(items),0, 2.);
+            // item items;
+            // vector liste_commande = make_vector(sizeof(items),0, 2.);
 
-            int index_client = connecter_compte_client();
-            //restreindre_liste_item(index_client);
-            ajouter_item_commande(index_client, &liste_commande);
-            voir_panier(index_client, liste_commande);
+            // int index_client = connecter_compte_client();
+            // //restreindre_liste_item(index_client);
+            // ajouter_item_commande(index_client, &liste_commande);
+            // voir_panier(index_client, liste_commande);
             
             // creer_compte_client();
 
