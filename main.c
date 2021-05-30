@@ -7,6 +7,10 @@
 int main()
 {
     int again = 0;
+
+    item items;
+    vector liste_commande = make_vector(sizeof(items),0, 2.);
+
     do{
         printf("\n");
         system("clear");
@@ -28,7 +32,7 @@ int main()
                 again = menu_livreur();
                 break;
             case '3':
-                again = menu_client();
+                again = menu_client(&liste_commande);
                 break;
             case 'q':
                 again = 1;
