@@ -265,6 +265,8 @@ int main()
             //restreindre_liste_item(index_client);
             ajouter_item_commande(index_client, &liste_commande);
             voir_panier(index_client, liste_commande);
+            supprimer_item_commande(index_client, &liste_commande);
+            voir_panier(index_client, liste_commande);
             
             // creer_compte_client();
 

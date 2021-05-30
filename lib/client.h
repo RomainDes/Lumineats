@@ -62,11 +62,11 @@ vector voir_liste_solde_item(int id, vector dbitem);
 
 vector restreindre_liste_item(int id);
 
-vector ajouter_item_commande(int id, vector *liste_commande);
+void ajouter_item_commande(int id, vector *liste_commande);
 
 void voir_panier(int id, vector liste_commande);
 
-void supprimer_item_commande();
+void supprimer_item_commande(int id, vector *liste_commande);
 
 ////INTERFACE/////
 

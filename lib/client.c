@@ -956,7 +956,7 @@ vector restreindre_liste_item(int id){
 
 //Permet à un client d'ajouter un item
 
-vector ajouter_item_commande(int id, vector *liste_commande){
+void ajouter_item_commande(int id, vector *liste_commande){
 
     printf("\n");
     system("clear");
@@ -1005,13 +1005,13 @@ vector ajouter_item_commande(int id, vector *liste_commande){
             printf("L'item sélectionné n'est pas livrable ou n'existe pas.\nSi vous voulez en sélectionner un autre entrez 1 et si vous voulez arrêter entrez 0\n\n");
             scanf("%i", &choix);
             if(choix == 1){
-                return ajouter_item_commande(id, liste_commande);
+                ajouter_item_commande(id, liste_commande);
             }
             else {
                 destroy(&dbclient);
                 destroy(&dbitem);
                 destroy(&dbitem_livrable);
-                return *liste_commande;
+                return;
             }
         }
 
@@ -1026,13 +1026,13 @@ vector ajouter_item_commande(int id, vector *liste_commande){
         printf("Si vous voulez changer votre recherche, entrez 1 et si vous voulez arrêter entrez 0\n\n");
         scanf("%i", &choix);
             if(choix == 1){
-                return ajouter_item_commande(id, liste_commande);
+                ajouter_item_commande(id, liste_commande);
             }
             else{
                 destroy(&dbclient);
                 destroy(&dbitem);
                 destroy(&dbitem_livrable);
-                return *liste_commande;
+                return;
             } 
     }
 
@@ -1040,7 +1040,7 @@ vector ajouter_item_commande(int id, vector *liste_commande){
     destroy(&dbitem);
     destroy(&dbitem_livrable);
 
-    return *liste_commande;
+    return;
 }
 
 //Permet à un client de consulter son panier
@@ -1087,8 +1087,49 @@ void voir_panier(int id, vector liste_commande){
 
 //Permet à un client de supprimer un item
 
-void supprimer_item_commande(){
+void supprimer_item_commande(int id, vector * liste_commande){
 
+    printf("\n");
+    system("clear");
+
+    voir_panier(id, *liste_commande);
+
+    iterator iterateur_item = begin(liste_commande);
+    item * item_connecte;
+
+    if(liste_commande -> data != NULL){
+
+        char nom_item[TAILLE_NOM];
+
+        printf("Entrez un item que vous voulez supprimer de votre commande: ");
+        scanf("\n%127[^\n]", nom_item);
+
+        int val = 1;
+
+        while(compare(iterateur_item, end(liste_commande)) != 0 && (val == 1)){
+            item_connecte = (struct item*) iterateur_item.element;
+            if(compare_char(item_connecte -> nom, nom_item) == 1){
+                erase(liste_commande, at(liste_commande, item_connecte -> id));
+                val = 0;
+            }
+            increment(&iterateur_item, 1);
+        }
+        if(val != 0){
+
+            printf("\n");
+            system("clear");
+
+            int choix;
+            printf("L'item que vous avez entré n'existe pas.\nSi vous voulez supprimer un item à votre commande entrez 1 et si vous voulez arrêter entrez 0\n\n");
+            scanf("%i", &choix);
+            if(choix == 1){
+                supprimer_item_commande(id, liste_commande);
+            }
+            else return;
+        }
+    }
+
+    return;
 }
 
 
