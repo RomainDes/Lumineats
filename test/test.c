@@ -262,12 +262,9 @@ int main()
             // vector liste_commande = make_vector(sizeof(items),0, 2.);
 
             // int index_client = connecter_compte_client();
-            //restreindre_liste_item(index_client);
+            // //restreindre_liste_item(index_client);
             // ajouter_item_commande(index_client, &liste_commande);
-            // ajouter_item_commande(index_client, &liste_commande);
-            // passer_commande(index_client, &liste_commande);
-
-            // ajouter_item_commande(index_client, &liste_commande);
+            // voir_panier(index_client, liste_commande);
             
             // creer_compte_client();
 

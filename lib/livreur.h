@@ -22,7 +22,7 @@ int connecter_compte_livreur();
 int creer_compte_livreur();
 
 //Permet a un liveur de supprimer son compte et toutes les information y etant contenues
-void supprimer_compte_livreur(int id);
+int supprimer_compte_livreur(int id);
 
 //Permet a un livreur de modifier les cp ou il lui est possible de livrer
 void modifier_cp_livreur(int id);
