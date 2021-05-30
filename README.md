@@ -25,7 +25,7 @@ Bienvenue sur la page du Projet final de la matiere Développer comme les pros d
 # Lancement du programme
 
 Le programme peut être lancé suivant 2 modes distincts, le premier est celui de test, qui nous a permi de tester les différentes fonctions du programme, il se lance en entrant dans le terminal la fonction :
-make test
+make
 Ensuite vient le mode utilisateur, celui ci permet d'utiliser le programme au travers de l'interface utilisateur. Pour lancer ce mode, la commande à entrer dans le terminal est 
 make main
 
