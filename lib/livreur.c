@@ -334,6 +334,11 @@ void modifier_cp_livreur(int id){
     //des codes postaux.
     //On remplace avec la nouvelle liste de ses codes postaux
 
+    printf("\n");
+    system("clear");
+
+    printf("* Menu Livreur *\n\n* Modifier les codes postaux *\n\n");
+
     FILE* fichierlivreur;
     fichierlivreur = fopen("database/livreurs.csv","r");
     vector dblivreur = lecture_table_livreurs(fichierlivreur);
@@ -359,8 +364,9 @@ void modifier_cp_livreur(int id){
 
     cp_actu = malloc(6*sizeof(char));
     cpt = 0;
+    printf("Entrez les codes postaux où vous pouvez livrer ('0' pour arreter) : \n\n");
     do{
-        printf("Veuillez entrer un code postal ou vous pouvez livrer (Entrez 0 pour arreter) : ");
+        printf("- Code postal n°%i (XXXXX) : ", cpt+1);
         scanf("\n%127[^\n]", cp_actu);
         if (compare_char(cp_actu, "0") != 1){
             livreur_connecte->deplacements[cpt]=malloc(sizeof(cp_actu));
@@ -381,11 +387,20 @@ void modifier_cp_livreur(int id){
     fclose(ecriturelivreur);
     destroy(&dblivreur);
 
+    printf("\nVotre compte a été modifié.\n\nLoading...\n");
+    sleep(4);
     return;
 }
 
 //Permet a un livreur de modifier son numero de telephone 
 void modifier_tel_livreur(int id){
+
+    printf("\n");
+    system("clear");
+
+    printf("* Menu Livreur *\n\n* Modifier le numéro de téléphone *\n\n");
+
+
     //Idem qu'au dessus sauf qu'on modifie le string du telephone
     FILE* fichierlivreur;
     fichierlivreur = fopen("database/livreurs.csv","r");
@@ -408,7 +423,7 @@ void modifier_tel_livreur(int id){
         }
     }
 
-    printf("Veuillez entrer votre numero de telephone (En entrant les espaces): ");
+    printf("Entrez votre nouveau numéro de téléphone (XX XX XX XX XX): ");
     scanf("\n%127[^\n]", livreur_connecte->tel);
 
     set(actu, (void *)livreur_connecte);
@@ -422,12 +437,20 @@ void modifier_tel_livreur(int id){
     fclose(ecriturelivreur);
     destroy(&dblivreur);
 
+    printf("\nVotre compte a été modifié.\n\nLoading...\n");
+    sleep(4);
+
     return;
 }
 
 
 //Permet a un livreur de modifier ou retirer son exclusivité à un restaurateur
 void modifier_resto_livreur(int id){
+    printf("\n");
+    system("clear");
+
+    printf("* Menu Livreur *\n\n* Modifier le restaurant affilié *\n\n");
+
     //On commence par faire la meme chose qu'au dessus
     //Ensuite on demande si on veut retirer ou changer l'exclu
     //Si on retire, on change la valeur a 0, et sinon on demande a l'utilisateur
@@ -464,14 +487,12 @@ void modifier_resto_livreur(int id){
 
     //On remet trouve a 0 pour la recherche du resto
     trouve = 0;
-
-    while(trouve == 0){
-        printf("Dependez vous d'un restaurant ? Si oui entrez 1 sinon entrez 0 :");
-        scanf("%d[^\n] \n", &check);
-        if(check){
-            printf("Entrez le nom du restaurant dont vous dependez : ");
-            scanf("\n%127[^\n]", nom_restau);
-
+    printf("Dépendez-vous d'un restaurant ('1' si oui, '0' sinon) : ");
+    scanf("%d[^\n] \n", &check);
+    if(check == 1){
+        printf("Entrez le nom du restaurant dont vous dépendez : ");
+        scanf("\n%127[^\n]", nom_restau);
+        while(trouve == 0){
             //Recherche de ce nom dans la bd et recuperation de l'id
             actu = begin(&dbrestau);
             fin = end(&dbrestau);
@@ -484,13 +505,18 @@ void modifier_resto_livreur(int id){
                 increment(&actu, 1);
             }
             if (trouve == 0){
-                printf("Erreur, restaurant non présent dans la base de donnee\n");
+                printf("Erreur, restaurant introuvable. Veuillez réessayer ('s' si vous ne trouvez pas le restaurant) : ");
+                scanf("\n%127[^\n]", nom_restau); 
             }
-        }
-        else{
+            if(compare_char(nom_restau, "s") == 1){
+                printf("Vous ne dépendez d'aucun restaurant.\n\n");
+                livreur_connecte->restaurant = 0;
+                trouve=1;
+            }
+        }    
+    }
+    else{
             livreur_connecte->restaurant = 0;
-            trouve = 1;
-        }
     }
     set(iterateur, (void *)livreur_connecte);
     FILE* ecriturelivreur = fopen("database/livreurs.csv","w");
@@ -504,6 +530,9 @@ void modifier_resto_livreur(int id){
     destroy(&dblivreur);
     destroy(&dbrestau);
 
+    printf("\nVotre compte a été modifié.\n\nLoading...\n");
+    sleep(4);
+
     return;
 }
 
@@ -511,23 +540,29 @@ void modifier_resto_livreur(int id){
 void modifier_compte_livreur(int id){
     //On combine les trois fonctions au dessus en demandant a l'utilisateur ce qu'il
     //souhaite  modifier
-    int value;
-    printf("Veuillez taper 1, 2 ou 3 selon ce que vous souhaitez modifier : \n1) Codes postaux de livraison\n2) Numero de tel\n3) Restaurant affilié\n");
-    scanf("%i",&value);
+    printf("\n");
+    system("clear");
+
+    printf("* Menu Livreur *\n\n* Modifier compte *\n\n");
+    char value;
+    printf("Vous voulez :\n1. Modifier les codes postaux de livraison\n2. Modifier votre numéro de téléphone\n3. Modifier le restaurant affilié\n\nVotre choix ('q' pour quitter) : ");
+    scanf("%c",&value);
 
     switch (value)
     {
-    case 1:
+    case '1':
         modifier_cp_livreur(id);
         break;
-    case 2:
+    case '2':
         modifier_tel_livreur(id);
         break;
-    case 3:
+    case '3':
         modifier_resto_livreur(id);
         break;
+    case 'q':
+        break;
     default:
-        printf("Valeur incorrecte, veuillez recommencer\n");
+        modifier_compte_livreur(id);
         break;
     }
 
@@ -539,6 +574,13 @@ void modifier_compte_livreur(int id){
 void consulter_solde_livreur(int id){
     //On ouvre la bd livreur et on recup la valeur de la solde a la ligne du compte
     //auquel on est connecté
+
+    printf("\n");
+    system("clear");
+
+    printf("* Menu Livreur *\n\n* Consulter Solde *\n\n");
+
+
     FILE* fichierlivreurs = fopen("database/livreurs.csv","r");
     vector dblivreur = lecture_table_livreurs(fichierlivreurs);
     fclose(fichierlivreurs);
@@ -564,7 +606,7 @@ void consulter_solde_livreur(int id){
     fclose(flog); 
     
     destroy(&dblivreur);
-    printf("Le solde sue ce compte est de %.2f euros (Appuyez sur q pour quitter)", livreur_dans_bd->solde);
+    printf("Solde : %.2f ('q' pour quitter) : ", livreur_dans_bd->solde);
 
     char quite =' ';
     while( quite != 'q'){
