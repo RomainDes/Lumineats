@@ -33,7 +33,11 @@ vector make_vector(
 void destroy(
     vector* v)
 {
-    if(v->data != NULL)  v->data = NULL;
+    if(v->data != NULL){
+        v->data = NULL;
+        v -> num_elements = 0;
+        v -> capacity = 0;
+    } 
 }
 
 size_t size(

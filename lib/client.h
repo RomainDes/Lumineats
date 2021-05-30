@@ -68,8 +68,12 @@ void voir_panier(int id, vector liste_commande);
 
 void supprimer_item_commande(int id, vector *liste_commande);
 
+float total_commande(vector liste_commande);
+
+void passer_commande(int id, vector *liste_commande);
+
 ////INTERFACE/////
 
-int menu_client();
+int menu_client(vector *liste_commande);
 
-int menu_client_compte();
+int menu_client_compte(vector *liste_commande);

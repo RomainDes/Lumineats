@@ -258,15 +258,16 @@ int main()
             // index_resto = creer_compte_resto();
             // index_resto = creer_compte_resto();
             // index_resto = creer_compte_resto();
-            item items;
-            vector liste_commande = make_vector(sizeof(items),0, 2.);
+            // item items;
+            // vector liste_commande = make_vector(sizeof(items),0, 2.);
 
-            int index_client = connecter_compte_client();
+            // int index_client = connecter_compte_client();
             //restreindre_liste_item(index_client);
-            ajouter_item_commande(index_client, &liste_commande);
-            voir_panier(index_client, liste_commande);
-            supprimer_item_commande(index_client, &liste_commande);
-            voir_panier(index_client, liste_commande);
+            // ajouter_item_commande(index_client, &liste_commande);
+            // ajouter_item_commande(index_client, &liste_commande);
+            // passer_commande(index_client, &liste_commande);
+
+            // ajouter_item_commande(index_client, &liste_commande);
             
             // creer_compte_client();
 
@@ -344,7 +345,7 @@ int main()
     //             again = menu_livreur();
     //             break;
     //         case '3':
-    //             printf("Client\n");
+    //             again = menu_client();
     //             break;
     //         case 'q':
     //             again = 1;
