@@ -40,6 +40,8 @@ int connecter_compte_livreur(){
         actu = begin(&dblivreur);
         fin = end(&dblivreur);
 
+        //A la fin de cette boucle, on aura dans livreur_dans_db la struct livreur correspondant au compte auquel on veut
+        //se connecter, on aura donc plus besoin de la chercher
         while(actu.element != fin.element && valid == 0){
             livreur_dans_bd = (struct livreur*) actu.element;
             if (compare_char(livreur_dans_bd->nom, username) == 1){
@@ -49,13 +51,13 @@ int connecter_compte_livreur(){
                 increment(&actu, 1);
             }
         }
-        //A la fin de cette boucle, on aura dans livreur_dans_db la struct livreur correspondant au compte auquel on veut
-        //se connecter, on aura donc plus besoin de la chercher
+        
         if(valid == 0){
             printf("Nom invalide, veuillez réessayer ('q' pour quitter) : ");
             scanf("\n%127[^\n]", username);
         }
     }
+
     //On remet valid a 0 pour le test du mot de passe
     valid = 0;
     printf("Entrez votre mot de passe ('q' pour quitter) : ");
@@ -150,6 +152,7 @@ int creer_compte_livreur(){
         increment(&actu, 1);
         }
     }
+
     
     printf("Entrez votre mot de passe : ");
     scanf("\n%127[^\n]", nouv_livreur.mdp);
@@ -255,7 +258,7 @@ int creer_compte_livreur(){
 }
 
 //Permet a un liveur de supprimer son compte et toutes les information y etant contenues
-int supprimer_compte_livreur(int id){
+int supprimer_compte_livreur(int id, char nomlivreur[TAILLE_NOM]){
     //On ouvre le fichier csv des livreurs, on cherche l'index du compte ou on est 
     //connecté et on supprime la ligne dans le fichier csv
     //Ensuite, on fait "remonter" les lignes d'apres en réduisant tous leurs indexs
@@ -263,7 +266,8 @@ int supprimer_compte_livreur(int id){
     printf("\n");
     system("clear");
 
-    printf("* Menu Livreur *\n\n* Supprimer votre compte *\n\n");
+    printf("* Menu Livreur *\n\n-- %s --\n\n* Supprimer votre compte *\n\n", nomlivreur);
+
 
     printf("Confirmer la suppression du compte ('y' pour valider, 'r' pour refuser) : ");
     char choix;
@@ -304,8 +308,6 @@ int supprimer_compte_livreur(int id){
         }
         
 
-       
-
         FILE* flog = fopen("log.txt","a+");
         fprintf(flog,"Le compte livreur d'id %i a supprimé son compte", id);
         fclose(flog); 
@@ -322,13 +324,13 @@ int supprimer_compte_livreur(int id){
         return 0;//retourne 0 pour dire que le compte n'a pas été supprimé
     }
     else{
-        return supprimer_compte_livreur(id);
+        return supprimer_compte_livreur(id,nomlivreur);
     }
     return 1;
 }
 
 //Permet a un livreur de modifier les cp ou il lui est possible de livrer
-void modifier_cp_livreur(int id){
+void modifier_cp_livreur(int id, char nomlivreur[TAILLE_NOM]){
     //On ouvre le fichier csv des livreurs, on récupere la ligne correspondant a 
     //l'index du compte ou on est connecté, on récupere la liste
     //des codes postaux.
@@ -337,7 +339,7 @@ void modifier_cp_livreur(int id){
     printf("\n");
     system("clear");
 
-    printf("* Menu Livreur *\n\n* Modifier les codes postaux *\n\n");
+    printf("* Menu Livreur *\n\n-- %s --\n\n* Modifier les codes postaux *\n\n", nomlivreur);
 
     FILE* fichierlivreur;
     fichierlivreur = fopen("database/livreurs.csv","r");
@@ -393,12 +395,12 @@ void modifier_cp_livreur(int id){
 }
 
 //Permet a un livreur de modifier son numero de telephone 
-void modifier_tel_livreur(int id){
+void modifier_tel_livreur(int id, char nomlivreur[TAILLE_NOM]){
 
     printf("\n");
     system("clear");
 
-    printf("* Menu Livreur *\n\n* Modifier le numéro de téléphone *\n\n");
+    printf("* Menu Livreur *\n\n-- %s --\n\n* Modifier le numéro de téléphone *\n\n", nomlivreur);
 
 
     //Idem qu'au dessus sauf qu'on modifie le string du telephone
@@ -445,11 +447,11 @@ void modifier_tel_livreur(int id){
 
 
 //Permet a un livreur de modifier ou retirer son exclusivité à un restaurateur
-void modifier_resto_livreur(int id){
+void modifier_resto_livreur(int id, char nomlivreur[TAILLE_NOM]){
     printf("\n");
     system("clear");
 
-    printf("* Menu Livreur *\n\n* Modifier le restaurant affilié *\n\n");
+    printf("* Menu Livreur *\n\n-- %s --\n\n* Modifier le restaurant affilié *\n\n", nomlivreur);
 
     //On commence par faire la meme chose qu'au dessus
     //Ensuite on demande si on veut retirer ou changer l'exclu
@@ -537,13 +539,14 @@ void modifier_resto_livreur(int id){
 }
 
 //Permet a un livreur de modifier les differents elements vu ci dessus
-void modifier_compte_livreur(int id){
+void modifier_compte_livreur(int id, char nomlivreur[TAILLE_NOM]){
     //On combine les trois fonctions au dessus en demandant a l'utilisateur ce qu'il
     //souhaite  modifier
     printf("\n");
     system("clear");
 
-    printf("* Menu Livreur *\n\n* Modifier compte *\n\n");
+    printf("* Menu Livreur *\n\n-- %s --\n\n* Modifier votre compte *\n\n", nomlivreur);
+
     char value;
     printf("Vous voulez :\n1. Modifier les codes postaux de livraison\n2. Modifier votre numéro de téléphone\n3. Modifier le restaurant affilié\n\nVotre choix ('q' pour quitter) : ");
     scanf("%c",&value);
@@ -551,18 +554,18 @@ void modifier_compte_livreur(int id){
     switch (value)
     {
     case '1':
-        modifier_cp_livreur(id);
+        modifier_cp_livreur(id,nomlivreur);
         break;
     case '2':
-        modifier_tel_livreur(id);
+        modifier_tel_livreur(id,nomlivreur);
         break;
     case '3':
-        modifier_resto_livreur(id);
+        modifier_resto_livreur(id,nomlivreur);
         break;
     case 'q':
         break;
     default:
-        modifier_compte_livreur(id);
+        modifier_compte_livreur(id,nomlivreur);
         break;
     }
 
@@ -571,14 +574,14 @@ void modifier_compte_livreur(int id){
 
 
 //Permet à un liveur de consulter la somme d'argent qu'il a sur son solde 
-void consulter_solde_livreur(int id){
+void consulter_solde_livreur(int id, char nomlivreur[TAILLE_NOM]){
     //On ouvre la bd livreur et on recup la valeur de la solde a la ligne du compte
     //auquel on est connecté
 
     printf("\n");
     system("clear");
 
-    printf("* Menu Livreur *\n\n* Consulter Solde *\n\n");
+    printf("* Menu Livreur *\n\n-- %s --\n\n* Consulter Solde*\n\n", nomlivreur);
 
 
     FILE* fichierlivreurs = fopen("database/livreurs.csv","r");
@@ -618,7 +621,7 @@ void consulter_solde_livreur(int id){
 
 //----Fonctions de l'interface----//
 
-int gestion_compte_livreur(int idlivreur){
+int gestion_compte_livreur(int idlivreur, char nomlivreur[TAILLE_NOM]){
     printf("\n");
     system("clear");
     
@@ -632,17 +635,17 @@ int gestion_compte_livreur(int idlivreur){
     switch(choice){
         //On recupere l'id du livreur dans les deux cas pour appeler la fonction de gestion de compte
         case '1':
-            if(supprimer_compte_livreur(idlivreur) == 0){
-                quite = gestion_compte_livreur(idlivreur);
+            if(supprimer_compte_livreur(idlivreur,nomlivreur) == 0){
+                quite = gestion_compte_livreur(idlivreur,nomlivreur);
             }
             break;
         case '2':
-            modifier_compte_livreur(idlivreur);
-            quite = gestion_compte_livreur(idlivreur);
+            modifier_compte_livreur(idlivreur,nomlivreur);
+            quite = gestion_compte_livreur(idlivreur,nomlivreur);
             break;
         case'3':
-            consulter_solde_livreur(idlivreur);
-            quite = gestion_compte_livreur(idlivreur);
+            consulter_solde_livreur(idlivreur,nomlivreur);
+            quite = gestion_compte_livreur(idlivreur,nomlivreur);
             break;
         case 'q':
             quite = 1;
@@ -651,7 +654,7 @@ int gestion_compte_livreur(int idlivreur){
             break;
         default :
             //Si une valeur differente est entree, on renvoie sur le meme menu
-            quite = gestion_compte_livreur(idlivreur);
+            quite = gestion_compte_livreur(idlivreur,nomlivreur);
     }
     return quite;
 }
@@ -663,6 +666,11 @@ int menu_livreur(){
 
     int idlivreur,quite;
     char choice;
+    char nomlivreur[TAILLE_NOM];
+
+    iterator actu;
+    livreur* livreur_connecte;
+    int trouve = 0;
 
     printf("* Menu Livreur *\n\nVous voulez :\n1. Vous connecter à un compte\n2. Créer un nouveau compte\n\nVotre choix ('q' pour quitter) : ");
     choice = getchar();
@@ -677,7 +685,25 @@ int menu_livreur(){
                     menu_livreur();
                 }
                 else{
-                    quite = gestion_compte_livreur(idlivreur);
+                    //Recuperation du nom pour l'interface
+                    FILE* fichierlivreur = fopen("database/livreurs.csv","r");
+                    vector dblivreur = lecture_table_livreurs(fichierlivreur);
+                    fclose(fichierlivreur);
+                    actu = begin(&dblivreur);
+                    while(trouve == 0){
+                        livreur_connecte = (struct livreur*) actu.element;
+                        if(livreur_connecte->id == idlivreur){
+                            trouve = 1;
+                        }
+                        else{
+                            increment(&actu, 1);
+                        }
+                    }
+                    destroy(&dblivreur);
+                    strcpy(nomlivreur,livreur_connecte->nom);
+
+                    //On peut maintenant appeler la fonction de gestion de compte
+                    quite = gestion_compte_livreur(idlivreur,nomlivreur);
                     if(quite == 0){
                         menu_livreur();
                     }
@@ -694,10 +720,27 @@ int menu_livreur(){
         case '2':
             idlivreur = creer_compte_livreur();
             if(idlivreur == 0){
-                    menu_livreur();
+                menu_livreur();
             }
             else{
-                quite = gestion_compte_livreur(idlivreur);
+                //Recuperation du nom pour l'interface
+                FILE* fichierlivreur = fopen("database/livreurs.csv","r");
+                vector dblivreur = lecture_table_livreurs(fichierlivreur);
+                fclose(fichierlivreur);
+                actu = begin(&dblivreur);
+                while(trouve == 0){
+                    livreur_connecte = (struct livreur*) actu.element;
+                    if(livreur_connecte->id == idlivreur){
+                        trouve = 1;
+                    }
+                    else{
+                        increment(&actu, 1);
+                    }
+                }
+                destroy(&dblivreur);
+                strcpy(nomlivreur,livreur_connecte->nom);
+                //On peut maintenant appreler la fonction de gestion de compte
+                quite = gestion_compte_livreur(idlivreur,nomlivreur);
                 //Selon les choix de l'utilisateur dans gestion_compte_livreur, on le fait revenir a ce menu ou non
                 if(quite == 0){
                     menu_livreur();
