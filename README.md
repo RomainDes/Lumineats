@@ -7,11 +7,11 @@ Bienvenue sur la page du Projet final de la matiere Développer comme les pros d
 
 <!-- TOC ignore:true -->
 # Table des matières
+
 <!-- TOC -->
+
 -[Lancement du programme](#lancement-du-programme)
-
 -[Protocole de tests](#protocole-de-tests)
-
 -[Interface utilisateur](#interface-utilisateur)
     -[Interface de compte restaurant](#interface-de-compte-restaurant)
         -[Gestion de compte restaurant](#gestion-de-compte-restaurant)
@@ -20,8 +20,8 @@ Bienvenue sur la page du Projet final de la matiere Développer comme les pros d
         -[Gestion de compte livreur](#gestion-de-compte-livreur)
     -[Interface de compte client](#interface-de-compte-client)
         -[Gestion de compte client](#gestion-de-compte-client)
+        
 <!-- /TOC -->
-
 # Lancement du programme
 
 Le programme peut être lancé suivant 2 modes distincts, le premier est celui de test, qui nous a permi de tester les différentes fonctions du programme, il se lance en entrant dans le terminal la fonction :
