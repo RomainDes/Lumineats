@@ -9,7 +9,9 @@ Bienvenue sur la page du Projet final de la matiere Développer comme les pros d
 # Table des matières
 <!-- TOC -->
 -[Lancement du programme](#lancement-du-programme)
+
 -[Protocole de tests](#protocole-de-tests)
+
 -[Interface utilisateur](#interface-utilisateur)
     -[Interface de compte restaurant](#interface-de-compte-restaurant)
         -[Gestion de compte restaurant](#gestion-de-compte-restaurant)
