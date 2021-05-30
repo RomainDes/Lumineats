@@ -8,16 +8,16 @@ Bienvenue sur la page du Projet final de la matiere Développer comme les pros d
 <!-- TOC ignore:true -->
 # Table des matières
 <!-- TOC -->
--[Lancement du programme](#Lancement du programme)
--[Protocole de tests](#Protocole de tests)
--[Interface utilisateur](#Interface utilisateur)
-    -[Interface de compte restaurant](#Interface de compte restaurant)
-        -[Gestion de compte restaurant](#Gestion de compte restaurant)
-            -[Gestion du menu d'un restaurant](#Gestion de menu d'un restaurant)
-    -[Interface de compte livreur](#Interface de compte livreur)
-        -[Gestion de compte livreur](#Gestion de compte livreur)
-    -[Interface de compte client](#Interface de compte client)
-        -[Gestion de compte client](#Gestion de compte client)
+-[Lancement du programme](#lancement-du-programme)
+-[Protocole de tests](#protocole-de-tests)
+-[Interface utilisateur](#interface-utilisateur)
+    -[Interface de compte restaurant](#interface-de-compte-restaurant)
+        -[Gestion de compte restaurant](#gestion-de-compte-restaurant)
+            -[Gestion du menu d'un restaurant](#gestion-de-menu-dun-restaurant)
+    -[Interface de compte livreur](#interface-de-compte-livreur)
+        -[Gestion de compte livreur](#gestion-de-compte-livreur)
+    -[Interface de compte client](#interface-de-compte-client)
+        -[Gestion de compte client](#gestion-de-compte-client)
 <!-- /TOC -->
 
 # Lancement du programme
