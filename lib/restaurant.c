@@ -273,7 +273,7 @@ int supprimer_compte_resto(char nom[TAILLE_NOM]){
             }
             else    remove("database/restaurants.csv");
             
-            fprintf(fichierlog, "Le restaurant d'index %s a été supprimé et les items qu'il a crée.\nLoading...\n", nom);
+            fprintf(fichierlog, "Le restaurant d'index %s a été supprimé et les items qu'il a crée.\n", nom);
             fclose(fichierlog);
 
             index_resto = 0;

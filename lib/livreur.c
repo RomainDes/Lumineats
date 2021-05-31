@@ -629,7 +629,7 @@ int gestion_compte_livreur(int idlivreur, char nomlivreur[TAILLE_NOM]){
     int quite = 0;
     char choice;
 
-    printf("* Menu Livreur *\n\nVous voulez :\n1. Supprimer votre compte\n2. Modifier votre compte\n3. Consulter votre solde\n\nVotre choix ('q' pour quitter, 'd' pour se déconnecter) : ");
+    printf("* Menu Livreur *\n\n-- %s --\n\nVous voulez :\n1. Supprimer votre compte\n2. Modifier votre compte\n3. Consulter votre solde\n\nVotre choix ('q' pour quitter, 'd' pour se déconnecter) : ", nomlivreur);
     choice = getchar();
 
     switch(choice){
