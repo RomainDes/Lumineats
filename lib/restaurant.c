@@ -58,7 +58,7 @@ int creer_compte_resto(){
         }
         else    restaurants.id = index_counter(&dbresto, 'r');
 
-        printf("Entrez votre nom :");
+        printf("Entrez le nom de votre restaurant :");
         scanf("\n%127[^\n]", restaurants.nom); //LaBoucherie
 
         while(nom_resto_exist(&dbresto, restaurants.nom) >= 1){
@@ -170,18 +170,18 @@ int connecter_compte_resto(){
                 //demander de nouveau le nom du restaurant
 
                 if(index == 0){
-                    printf("Nom invalide, veuillez réessayer ('q' pour quitter) :");
+                    printf("Nom invalide, veuillez réessayer ('q' pour quitter) : ");
                     scanf("\n%127[^\n]", nom);
                 }
             }
 
             restaurant *r = (restaurant*)value(at(&dbresto,index));
         
-            printf("Entrez votre mot de passe ('q' pour quitter) :");
+            printf("Entrez votre mot de passe ('q' pour quitter) : ");
             scanf("\n%127[^\n]", mdp);
 
             while(compare_char(r->mdp, mdp) != 1){
-                printf("Mot de passe invalide, veuillez réessayer ('q' pour quitter) :");
+                printf("Mot de passe invalide, veuillez réessayer ('q' pour quitter) : ");
                 scanf("\n%127[^\n]", mdp);
                 if(compare_char(mdp, "q") == 1)  return 0;
             }

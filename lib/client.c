@@ -21,71 +21,74 @@ int connecter_compte_client(){
     //present dans la db a la ligne correspondant au nom entré.
     //Si le nom entré n'est pas dans la db on redemande, idem pour mdp si il ne correspond pas
     //On laisse 3 essais pour rentrer le mot de passe
-
-    FILE * fichierlog = fopen("log.txt", "a+");
-
     printf("\n");
     system("clear");
 
-    char username[TAILLE_NOM];
-    char password[TAILLE_MDP];
-    FILE * fichierclient;
-    client const* clients;
-    int res;
+    printf("* Menu Client *\n\n* Se connecter à un compte *\n\n");
 
-    fichierclient = fopen("database/clients.csv", "r");
-    vector dbclient = lecture_table_clients(fichierclient);
-    fclose(fichierclient);
+    FILE * fichierlog = fopen("log.txt", "a+");
+    
+        char username[TAILLE_NOM];
+        char password[TAILLE_MDP];
+        FILE * fichierclient;
+        client const* clients;
+        int res;
 
-    //On demande le nom d'utilisateur et vérifie qu'il est bien dans la db
+        fichierclient = fopen("database/clients.csv", "r");
+        vector dbclient = lecture_table_clients(fichierclient);
+        fclose(fichierclient);
 
-        printf("Veuillez entrer votre nom d'utilisateur : ");
-        scanf("\n%127[^\n]", username);
-        int index = nom_client_exist(&dbclient, username);
+        //On demande le nom d'utilisateur et vérifie qu'il est bien dans la db
 
-        while( index == 0){
-            //demander de nouveau le nom du client
-            printf("Veuillez entrer un nom valide :");
+            printf("Entrez votre nom ('q' pour quitter) : ");
             scanf("\n%127[^\n]", username);
-            index = nom_client_exist(&dbclient, username);
-        }
-        //A la fin de cette boucle, on aura dans client_dans_db la struct client correspondant au compte auquel on veut
-        //se connecter, on aura donc plus besoin de la chercher
+            int index = nom_client_exist(&dbclient, username);
 
-
-    //On crée valid a 0 pour le test du mot de passe
-    int valid = 0;
-    while(valid == 0){
-        printf("Veuillez entrer votre mot de passe.('q' pour quitter) : ");
-        scanf("\n%127[^\n]", password);
-
-        if (compare_char(password, "q") != 1) {
-
-            iterator r = at(&dbclient, index);
-
-            clients = (client*)r.element;
-
-            if(compare_char(clients->mdp,password) == 1)  valid = 1; 
-
-            if(valid == 0){
-                printf("Mot de passe incorrect, veuillez reessayer.");
+            while( index == 0){
+                if(compare_char(username, "q") == 1)  return 0;
+                //demander de nouveau le nom du client
+                printf("Nom invalide, veuillez réessayer ('q' pour quitter) :");
+                scanf("\n%127[^\n]", username);
+                index = nom_client_exist(&dbclient, username);
             }
-        }
-        else valid = -1;
-    }
-    //On recupere l'id du compte si on a entré le bon mdp
-    if (valid == 1){
-        res = clients->id;
-        fprintf(fichierlog, "Le client %s s'est connecté a son compte.\n", clients->nom);
-        fclose(fichierlog);
-    }
-    else if(valid == -1){
-        res = 0;
-        return res;
-    }
+            //A la fin de cette boucle, on aura dans client_dans_db la struct client correspondant au compte auquel on veut
+            //se connecter, on aura donc plus besoin de la chercher
 
-    return res;
+
+        //On crée valid a 0 pour le test du mot de passe
+        int valid = 0;
+        printf("Entrez votre mot de passe ('q' pour quitter) : ");
+        scanf("\n%127[^\n]", password);
+        while(valid == 0){
+        
+            if (compare_char(password, "q") != 1) {
+
+                iterator r = at(&dbclient, index);
+
+                clients = (client*)r.element;
+
+                if(compare_char(clients->mdp,password) == 1)  valid = 1; 
+
+                if(valid == 0){
+                    printf("Mot de passe invalide, veuillez réessayer ('q' pour quitter) : ");
+                    scanf("\n%127[^\n]", password);
+                }
+            }
+            else valid = -1;
+        }
+        //On recupere l'id du compte si on a entré le bon mdp
+        if (valid == 1){
+            res = clients->id;
+            fprintf(fichierlog, "Le client %s s'est connecté a son compte.\n", clients->nom);
+            fclose(fichierlog);
+        }
+        else if(valid == -1){
+            res = 0;
+            return res;
+        }
+        return res;
 }
+
 
 
 
@@ -96,6 +99,8 @@ int creer_compte_client(){
 
     printf("\n");
     system("clear");
+
+    printf("* Menu Client *\n\n* Créer un compte *\n\n");
 
     client c;                                 //   On crée un client c
 
@@ -124,45 +129,68 @@ int creer_compte_client(){
     }
     else   c.id = index_client_counter(&dbclient); 
 
-    printf("Veuillez entrer votre nom :");
+    printf("Entrer votre nom : ");
     scanf("\n%127[^\n]", c.nom);
     while(nom_client_exist(&dbclient, c.nom) >= 1){
         //demander de nouveau le nom du client
-        printf("Ce nom existe déjà, veuillez en choisir un nouveau :");
+        printf("\nNom déjà existant, veuillez réessayer : ");
         scanf("\n%127[^\n]", c.nom);
     }
 
+    //On demande à l'utilisateur de rentrer son mot de passe
+    printf("Entrer votre mot de passe :");
+    scanf("\n%127[^\n]", c.mdp);  
+
     //On demande à l'utilisateur de rentrer son code postal
-    printf("Veuillez entrer votre code postal :"); 
+    printf("Entrer votre code postal : "); 
     scanf("\n%127[^\n]", c.code_postal);     
 
     //On demande à l'utilisateur de rentrer son téléphone
-    printf("Veuillez entrer votre numéro de téléphone (De la forme 04 XX XX XX XX) :"); 
+    printf("Entrer votre numéro de téléphone (XX XX XX XX XX) : "); 
     scanf("\n%127[^\n]", c.tel);                           
 
     //La valeur du solde de début du client est de 0
     c.solde = 0.;           
 
-    //On demande à l'utilisateur de rentrer son mot de passe
-    printf("Veuillez entrer votre mot de passe :");
-    scanf("\n%127[^\n]", c.mdp);  
+    //Confirmer la création du compte
+    printf("\nConfirmer la création de votre compte ('y' pour valider, 'r' pour recommencer, 'q' pour quitter) : ");
+    char operation;
 
+    operation = getchar();
+    operation = getchar();
+
+    switch(operation)
+    {   
+        case 'y':
+            //On finit par ajouter la struct client au fichier csv  
+
+            push_back(&dbclient, &c);
+
+            FILE *fichierclient_ecrire = fopen("database/clients.csv", "w");
+            ecriture_table_clients(fichierclient_ecrire, &dbclient);
+
+            fclose(fichierclient_ecrire);
+
+            fprintf(fichierlog, "Le client %s a créé un compte.\n", c.nom);
+            fclose(fichierlog);
+
+            return c.id;
+            break;
+        case 'r':
+            if(exist == 0)  remove("database/clients.csv");
+            return creer_compte_client();
+            break;
+        case 'q':
+            if(exist == 0)  remove("database/clients.csv");
+            return 0;
+            break;
+    }
+    return index_client;
     
-    //On finit par ajouter la struct client au fichier csv  
-
-    push_back(&dbclient, &c);
-
-    FILE *fichierclient_ecrire = fopen("database/clients.csv", "w");
-    ecriture_table_clients(fichierclient_ecrire, &dbclient);
-
-    fclose(fichierclient_ecrire);
-
-    fprintf(fichierlog, "Le client %s a créé un compte.\n", c.nom);
-    fclose(fichierlog);
 
     destroy(&dbclient);                 
 
-    return c.id;
+    
 }
 
 //On lit toute la base de donnée pour savoir si il existe déjà le nom, renvoie 0 si il n'existe pas sinon l'index où il existe
@@ -180,10 +208,13 @@ int nom_client_exist(vector const* dbclient, char nom[TAILLE_NOM]){
 
 //Permet a un client de supprimer son compte et toutes les information y etant contenues
 
-void supprimer_compte_client(int id){
+int supprimer_compte_client(int id){
 
     printf("\n");
     system("clear");
+
+    printf("* Menu Client *\n\n* Supprimer votre compte *\n\n");
+
     //Si le client à supprimer existe...
     if(id > 0){
 
@@ -210,21 +241,24 @@ void supprimer_compte_client(int id){
             else    remove("database/clients.csv");
             id = 0;
 
+            printf("Compte a été supprimé.\nLoading...\n");
+            sleep(4);
+
             fprintf(fichierlog, "Le client d'index %i a été supprimé.\n", id);
             fclose(fichierlog);
         }
         else if(choix == 'r'){
             printf("Compte non supprimé.\nLoading...\n");
             sleep(4);
-            return;
+            return 0;
         }
         else{
-            supprimer_compte_client(id);
+            return supprimer_compte_client(id);
         }   
     }
     else    printf("Vous n'êtes pas connecté à un compte.\n");
 
-    return;
+    return 1;
 }
 
 //Permet à un client de modifier son profil (Code postal et téléphone)
@@ -333,23 +367,28 @@ void modifier_compte_client(int id){
     //On combine les deux fonctions au dessus en demandant a l'utilisateur ce qu'il
     //souhaite  modifier
 
-    printf("\n");
+        printf("\n");
     system("clear");
 
-    int value;
-    printf("Veuillez taper 1 ou 2 selon ce que vous souhaitez modifier : \n1) Code postal\n2) Numero de tel\n");
-    scanf("\n%i",&value);
+    printf("* Menu Livreur *\n\n* Modifier votre compte *\n\n");
+
+
+    char value;
+    printf("Vous voulez :\n1. Modifier le code postal\n2. Modifier votre numéro de téléphone\n\nVotre choix ('q' pour quitter) : ");
+    scanf("\n%c",&value);
 
     switch (value)
     {
-    case 1:
+    case '1':
         modifier_cp_client(id);
         break;
-    case 2:
+    case '2':
         modifier_tel_client(id);
         break;
+    case 'q':
+        break;
     default:
-        printf("Valeur incorrecte, veuillez recommencer\n");
+        modifier_compte_client(id);
         break;
     }
 
@@ -380,7 +419,7 @@ void consulter_solde_client(int id){
 
     //On affiche ici la valeur du solde du client id
     
-    printf("Le solde sur ce compte est de %.2f euros\n", client_dans_bd->solde);
+    printf("Solde : %.2f\n", client_dans_bd->solde);
 
     destroy(&dbclient);
 
@@ -591,6 +630,10 @@ vector voir_qui_liste_restau(int id){
     printf("\n");
     system("clear");
 
+    printf("* Menu Client *\n\n* Liste des restaurants capables de livrer *\n\nListe des restaurants : ");
+
+
+
     //On crée un vecteur liste qui contiendra tous les restaurants pouvant livrer le client id et qui sera renvoyé à la fin de la fonction
 
     restaurant resto;
@@ -625,7 +668,6 @@ vector voir_qui_liste_restau(int id){
     //Pour afficher les restaurants qui peuvent livrer le client, on va comparer les codes postaux de tous les livreurs avec ceux des restaurants et le client
     //Si un livreur peut livrer un client et livrer pour un restaurant alors le restaurant est mis dans le vecteur liste
 
-    printf("\nListe des restaurants sur Lumineats qui peuvent vous livrer :\n\n");
     int res = 0;
     //Pour chaque livreur...
     while(compare(iterateur_livreur, end(&dblivreur)) != 0){
@@ -673,6 +715,9 @@ void voir_type_liste_restau(vector dbresto){
     printf("\n");
     system("clear");
 
+    printf("* Menu Client *\n\n* Liste des retaurants selon un type de cuisine *\n\n");
+
+
     iterator iterateur_resto = begin(&dbresto);
     restaurant * resto_connecte; 
 
@@ -683,14 +728,14 @@ void voir_type_liste_restau(vector dbresto){
 
     while(index == 0){
 
-        printf("\nEntrez un type de cuisine pour afficher la liste des restaurants compatibles ('q' pour quitter) :");
+        printf("\nType de cuisine ('q' pour quitter) :");
         scanf("\n%127[^\n]", type_resto);
         //Si on veut continuer
         if (compare_char(type_resto, "q") != 1) {
             //On cherche si le type entré existe
             index = type_resto_exist(&dbresto, type_resto);
             if(index == 0){
-                printf("\nLe type que vous avez entré n'existe pas ou n'est pas compatible avec votre recherche. Veuillez recommencer\n");
+                printf("\nLe type que vous avez entré n'existe pas ou n'est pas compatible avec votre recherche. Veuillez recommencer.\n");
             }
         }
         //Si on veut arrêter 
@@ -723,13 +768,13 @@ void restreindre_liste_restau(int id){
     //On combine les deux fonctions au dessus en demandant a l'utilisateur ce qu'il
     //souhaite  pouvoir voir
 
+
+    char value;
     printf("\n");
     system("clear");
 
-
-    int value;
-    printf("Veuillez taper 1, 2 ou 3 selon ce que vous souhaitez pouvoir voir : \n1) Qui peut me livrer\n2) Entrer un type de cuisine\n3) Faire les deux\n");
-    scanf("\n%i",&value);
+    printf("* Menu Client *\n\n* Liste des restaurants *\n\nTrier par :\n1. Possibilité de livrer\n2. Type de cuisine\n3. Les deux\n\nVotre choix ('q' pour quitter) : ");
+    scanf("\n%c",&value);
 
     FILE *fichierresto_read = fopen("database/restaurants.csv", "r");
     vector dbresto = lecture_table_restaurants(fichierresto_read);
@@ -737,17 +782,19 @@ void restreindre_liste_restau(int id){
 
     switch (value)
     {
-    case 1:
+    case '1':
         voir_qui_liste_restau(id);
         break;
-    case 2: 
+    case '2': 
         voir_type_liste_restau(dbresto);
         break;
-    case 3:
+    case '3':
         voir_type_liste_restau(voir_qui_liste_restau(id));
         break;
+    case 'q':
+        break;
     default:
-        printf("Valeur incorrecte, veuillez recommencer\n");
+        restreindre_liste_restau(id);
         break;
     }
 
@@ -1112,9 +1159,12 @@ vector restreindre_liste_item(int id){
     printf("\n");
     system("clear");
 
-    int value;
+    printf("* Menu Client *\n\n* Liste des items *\n\n");
+
     printf("Veuillez taper 1, 2, 3, 4 ou 5 selon ce que vous souhaitez pouvoir voir : \n1) Qui peut me livrer\n2) Entrer un type de cuisine\n3) Entrer un restaurant\n");
     printf("4) Items moins chers que mon solde disponible\n5) Une combinaison de 1), 2) et 4)\n6) Une combinaison de 1), 3) et 4)\n");
+
+    int value;
     scanf("\n%i",&value);
 
     FILE *fichieritem_read = fopen("database/items.csv", "r");
@@ -1535,7 +1585,9 @@ int menu_client(vector *liste_commande){
                     printf("\n");
                     system("clear");
 
-                    printf("Aucun compte enregistré, impossible de se connecter.\nVous allez être redirigé au menu principal.\n\nLoading...\n");
+                    printf("* Menu Client *\n\n* Se connecter à un compte *\n\n");
+
+                    printf("Félicitation, vous êtes la premiere personne sur cette application, veuillez créer un compte !\n\nLoading...\n");
                     sleep(4);
                     menu_client(liste_commande);
                 }
@@ -1571,7 +1623,7 @@ int menu_client_compte(vector *liste_commande){
     switch(operation)
     {  
         case '1':
-            supprimer_compte_client(index_client);
+            if(supprimer_compte_client(index_client) == 0)  where = menu_client_compte(liste_commande);
             where = 1;
             break;
         case '2':
@@ -1621,14 +1673,14 @@ int menu_client_compte(vector *liste_commande){
                 {
                     case '1':
                         restreindre_liste_restau(index_client);
-                        printf("Appuyez sur une entrée pour revenir à la page d'accueil de votre compte.\n");
+                        printf("\n('press enter' pour quitter)");
                         getchar();
                         getchar();
                         again = 0;
                         break;
                     case '2':
                         restreindre_liste_item(index_client);
-                        printf("Appuyez sur une entrée pour revenir à la page d'accueil de votre compte.\n");
+                        printf("\n('press enter' pour quitter)");
                         getchar();
                         getchar();
                         again = 0;
@@ -1648,7 +1700,7 @@ int menu_client_compte(vector *liste_commande){
                 system("clear");
 
                 printf("* Menu Client *\n\n* Commande *\n\n");
-                printf("Voulez-vous :\n1. Voir votre panier\n2. Ajouter un item\n3.Supprimer un item\n4.Passer commande\n\nVotre choix ('q' pour quitter) : ");
+                printf("Voulez-vous :\n1. Voir votre panier\n2. Ajouter un item\n3. Supprimer un item\n4. Passer commande\n\nVotre choix ('q' pour quitter) : ");
 
                 char operation4 = getchar();
                 switch(operation4)

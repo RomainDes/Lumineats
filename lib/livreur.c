@@ -85,7 +85,7 @@ int connecter_compte_livreur(){
     fclose(fichierlivreur); 
 
     FILE* flog = fopen("log.txt","a+");
-    fprintf(flog,"Le livreur %s s'est connecte a son compte (id %i)",username,res);
+    fprintf(flog,"Le livreur %s s'est connecte a son compte (id %i)\n",username,res);
     fclose(flog);  
     return res;
 }
@@ -233,7 +233,7 @@ int creer_compte_livreur(){
             
 
             FILE* flog = fopen("log.txt","a+");
-            fprintf(flog,"Le livreur %s a créé un nouveau compte (id %i)",nouv_livreur.nom, (int)nouv_livreur.id);
+            fprintf(flog,"Le livreur %s a créé un nouveau compte (id %i)\n",nouv_livreur.nom, (int)nouv_livreur.id);
             fclose(flog);
                 
             index_livreur = nouv_livreur.id;
@@ -309,7 +309,7 @@ int supprimer_compte_livreur(int id, char nomlivreur[TAILLE_NOM]){
         
 
         FILE* flog = fopen("log.txt","a+");
-        fprintf(flog,"Le compte livreur d'id %i a supprimé son compte", id);
+        fprintf(flog,"Le compte livreur d'id %i a supprimé son compte\n", id);
         fclose(flog); 
 
         
@@ -383,7 +383,7 @@ void modifier_cp_livreur(int id, char nomlivreur[TAILLE_NOM]){
     ecriture_table_livreurs(ecriturelivreur, &dblivreur);
 
     FILE* flog = fopen("log.txt","a+");
-    fprintf(flog,"Le livreur d'id %i a modifié la liste de ses codes postaux", id);
+    fprintf(flog,"Le livreur d'id %i a modifié la liste de ses codes postaux\n", id);
     fclose(flog); 
 
     fclose(ecriturelivreur);
@@ -433,7 +433,7 @@ void modifier_tel_livreur(int id, char nomlivreur[TAILLE_NOM]){
     ecriture_table_livreurs(ecriturelivreur, &dblivreur);
 
     FILE* flog = fopen("log.txt","a+");
-    fprintf(flog,"Le livreur d'id %i a modifié son numéro de téléphone", id);
+    fprintf(flog,"Le livreur d'id %i a modifié son numéro de téléphone\n", id);
     fclose(flog); 
 
     fclose(ecriturelivreur);
@@ -525,7 +525,7 @@ void modifier_resto_livreur(int id, char nomlivreur[TAILLE_NOM]){
     ecriture_table_livreurs(ecriturelivreur, &dblivreur);
 
     FILE* flog = fopen("log.txt","a+");
-    fprintf(flog,"Le livreur d'id %i a modifié sa dépendance à un restaurant",id);
+    fprintf(flog,"Le livreur d'id %i a modifié sa dépendance à un restaurant\n",id);
     fclose(flog); 
 
     fclose(ecriturelivreur);
@@ -605,7 +605,7 @@ void consulter_solde_livreur(int id, char nomlivreur[TAILLE_NOM]){
     }
 
     FILE* flog = fopen("log.txt","a+");
-    fprintf(flog,"Le livreur d'id %i a consulté son solde", id);
+    fprintf(flog,"Le livreur d'id %i a consulté son solde\n", id);
     fclose(flog); 
     
     destroy(&dblivreur);
@@ -672,7 +672,7 @@ int menu_livreur(){
     livreur* livreur_connecte;
     int trouve = 0;
 
-    printf("* Menu Livreur *\n\nVous voulez :\n1. Vous connecter à un compte\n2. Créer un nouveau compte\n\nVotre choix ('q' pour quitter) : ");
+    printf("* Menu Livreur *\n\nVous voulez :\n1. Vous connecter à un compte\n2. Créer un nouveau compte\n\nVotre choix ('p' pour retourner au menu principal) : ");
     choice = getchar();
 
     switch(choice){
@@ -747,7 +747,7 @@ int menu_livreur(){
                 }
             }
             break;
-        case 'q':
+        case 'p':
             break;
         default :
             //Si une valeur differente est entree, on renvoie sur le meme menu

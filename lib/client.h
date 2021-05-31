@@ -22,7 +22,7 @@ int nom_client_exist(vector const* dbclient, char nom[TAILLE_NOM]);
 
 int connecter_compte_client();
 
-void supprimer_compte_client(int id);
+int supprimer_compte_client(int id);
 
 void modifier_cp_client(int id);
 
