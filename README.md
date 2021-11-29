@@ -1,7 +1,7 @@
 ![](https://github.com/RomainDes/DevCommeLesPros-2021-Projet/workflows/Run%20tests/badge.svg)
 
 <!-- TOC ignore:true -->
-# DevCommeLesPros-2021-Projet
+# Lumineats - Projet
 
 Bienvenue sur la page du Projet final de la matiere Développer comme les pros de Romain DESMARECAUX, Emilien MARCHAL et Guillaume POLVERELLI, réalisé en 2021. Vous trouverez dans cette page le manuel d'utilisation de l'application.
 
